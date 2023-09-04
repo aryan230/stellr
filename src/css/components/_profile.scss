@@ -1,0 +1,281 @@
+.profile-component {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .profile-inside {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 0.625rem 0.625rem 0.625rem 0.625rem;
+
+    .profile-header {
+      width: 80%;
+      margin: 0 auto;
+      height: 20%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .profile-header-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          border-radius: 15.625rem;
+          border: 2px solid #dfdfdf;
+        }
+        .phl-content {
+          margin-left: 1rem;
+
+          h1 {
+            color: #000;
+            font-family: Poppins;
+            font-size: 2.25rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+          a {
+            text-decoration: none;
+            color: #383838;
+            font-family: Poppins;
+            font-size: 0.9375rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+        }
+      }
+
+      .profile-header-right {
+        button {
+          padding: 1rem 2rem;
+          border-radius: 0.3125rem;
+          border: 1px solid #000;
+          color: #000;
+          background-color: transparent;
+          font-family: Poppins;
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+      }
+    }
+
+    .profile-inside-content {
+      width: 80%;
+      margin: 0 auto;
+      border-bottom: 1px solid #d9d9d9;
+      padding: 0.25rem 0;
+      h1 {
+        color: #000;
+        font-family: Poppins;
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+      p {
+        color: #635e5e;
+        font-family: Karla;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        padding-bottom: 0.5rem;
+      }
+    }
+
+    .inside-content-profile {
+      width: 80%;
+      margin: 0 auto;
+      form {
+        width: 80%;
+        padding: 1rem 0;
+        .switch-label {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .label-input {
+          label {
+            color: #818181;
+            font-size: 1rem;
+          }
+          input {
+            margin: 0;
+            margin-bottom: 1rem;
+            width: 100%;
+            padding: 1rem 0.8rem;
+            border-radius: 0.125rem;
+            border: 1px solid #d1c9c9;
+            color: #000000;
+            font-family: Poppins;
+            font-size: 1rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            &::placeholder {
+              color: #8f8585;
+            }
+            &:focus {
+              outline: 0px;
+            }
+          }
+        }
+        label {
+        }
+        input {
+          margin: 0.8rem 0;
+          width: 100%;
+          padding: 1rem 0.8rem;
+          border-radius: 0.125rem;
+          border: 1px solid #d1c9c9;
+          color: #000000;
+          font-family: Poppins;
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          &::placeholder {
+            color: #8f8585;
+          }
+          &:focus {
+            outline: 0px;
+          }
+        }
+        select {
+          margin: 0.8rem 0;
+          width: 100%;
+          padding: 1rem 0.8rem;
+          border-radius: 0.125rem;
+          border: 1px solid #d1c9c9;
+          color: #000000;
+          font-family: Poppins;
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          &::placeholder {
+            color: #8f8585;
+          }
+          &:focus {
+            outline: 0px;
+          }
+        }
+        option {
+          margin: 0.8rem 0;
+          width: 100%;
+          padding: 1rem 0.8rem;
+          border-radius: 0.125rem;
+          border: 1px solid #d1c9c9;
+          color: #000000;
+          font-family: Poppins;
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          &:hover {
+            color: black;
+          }
+        }
+        button {
+          outline: 0px;
+          border: 0px;
+          width: 100%;
+          background-color: #6200d2;
+          color: #ffffff;
+          font-family: Poppins;
+          margin: 1rem 0;
+          padding: 1rem 0;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  .profile-inside-setup {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 0.625rem 0.625rem 0.625rem 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .profile-setup-inside {
+      width: 50%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      h1 {
+        color: #333;
+        text-align: center;
+        font-family: Poppins;
+        font-size: 2rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        margin-bottom: 2rem;
+      }
+      p {
+        color: #333;
+        font-family: Poppins;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-align: center;
+
+        margin-bottom: 2rem;
+      }
+      form {
+        width: 80%;
+        margin: 0 auto;
+        input {
+          margin: 0.8rem 0;
+          width: 100%;
+          padding: 1rem 0.8rem;
+          border-radius: 0.125rem;
+          border: 1px solid #d1c9c9;
+          color: #000000;
+          font-family: Poppins;
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          &::placeholder {
+            color: #8f8585;
+          }
+          &:focus {
+            outline: 0px;
+          }
+        }
+
+        button {
+          outline: 0px;
+          border: 0px;
+          width: 100%;
+          background-color: #1500d2;
+          color: #ffffff;
+          font-family: Poppins;
+          margin: 1rem 0;
+          padding: 1rem 0;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

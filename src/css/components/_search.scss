@@ -1,0 +1,63 @@
+.search-modal {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.432);
+  z-index: 998;
+
+  .search-modal-inside {
+    width: 60%;
+    min-height: 50%;
+    height: fit-content;
+    max-height: 90%;
+    overflow-y: auto;
+    background-color: transparent;
+    border-radius: 0.65rem;
+    padding-bottom: 5rem;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    .top-modal {
+      width: 80%;
+      padding: 1rem 0;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      transition: 0.2s all;
+      button {
+        background-color: transparent;
+        border: 0px;
+      }
+      svg {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    p {
+      color: white;
+    }
+  }
+}

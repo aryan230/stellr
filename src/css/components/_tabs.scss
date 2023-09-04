@@ -1,0 +1,346 @@
+@mixin findFontSize($size) {
+  fontsize: calc(($size/62.5) * 100);
+}
+
+.tabs-header {
+  width: 90%;
+  height: 7%;
+  margin: 0 auto;
+  padding-top: 2%;
+  display: flex;
+  .tab-header-element {
+    min-width: 15%;
+    width: fit-content;
+    height: 100%;
+    border-radius: 0.3125rem 0.3125rem 0rem 0rem;
+    background: #e2dddd;
+    border: 0px;
+    padding: 0 2rem;
+    display: flex;
+    margin: 0 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.2s ease-in-out;
+    &.active {
+      background: #fff;
+      &:hover {
+        cursor: default;
+        transform: scale(1);
+
+        background: #ffffff;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: #f7f5f5;
+    }
+    h3 {
+      color: #514747;
+      font-family: Inter;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+}
+
+.tab-list-react {
+  width: 90%;
+  height: 7%;
+  margin: 0 auto;
+  padding-top: 2%;
+  display: flex;
+  .tab-name-prop {
+    min-width: 15%;
+    width: fit-content;
+    height: 100%;
+    border-radius: 0.3125rem 0.3125rem 0rem 0rem;
+    background: #e2dddd;
+    border: 0px;
+    padding: 0 2rem;
+    display: flex;
+    margin: 0 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+  }
+}
+
+.tabs-content {
+  width: 100%;
+  height: 88%;
+  border-radius: 0.625rem 0.625rem 0.625rem 0.625rem;
+  background: #fff;
+  // overflow-y: scroll;
+
+  /* width */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .undisclosed {
+    width: 80%;
+    margin: 0 auto;
+
+    .undisclosed-top-level-button {
+      button {
+        color: black;
+        padding: 1rem 2rem;
+        border-radius: 0.625rem;
+        background: #5d00d2;
+        color: white;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          margin-right: 1rem;
+        }
+      }
+    }
+  }
+  .editor-holder-reactjs {
+    position: relative;
+    display: none;
+    padding: 1rem 0;
+
+    .blur-for-entry {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999999;
+
+      h2 {
+        color: #000000;
+        font-family: Poppins;
+        font-size: 1.25rem;
+        margin: 2rem 0;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+    .top-div-editor-holder {
+      width: 100%;
+      min-height: 15%;
+      padding-bottom: 2rem;
+      padding-top: 2rem;
+      position: sticky;
+      top: 0;
+      left: 0;
+      background-color: white;
+      z-index: 99;
+
+      .top-div-holder-editor-inside {
+        width: 50%;
+        height: 100%;
+        margin: 0 auto;
+        border-radius: 0.625rem;
+        padding-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        ul {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+          li {
+            list-style: none;
+            margin: 0 1rem;
+            img {
+              width: 3rem;
+              border-radius: 15.625rem;
+              border: 3px solid #188038;
+            }
+            a.top-div-move-to-current-version {
+              background-color: #5d00d2;
+              border: 0px;
+              color: white;
+            }
+            a {
+              border: 1px solid black;
+              text-decoration: none;
+              color: #000000;
+              font-family: Poppins;
+              font-size: 1rem;
+              font-style: normal;
+              font-weight: 400;
+              border-radius: 0.2rem;
+              line-height: normal;
+              display: flex;
+              align-items: center;
+              // justify-content: flex-start;
+              padding: 0.5rem 1rem;
+              position: relative;
+              svg {
+                margin-left: 0.5rem;
+              }
+            }
+            transition: 0.2s all;
+            &:hover {
+              .drop-down-content {
+                display: flex;
+                align-content: center;
+                justify-content: center;
+              }
+            }
+            .drop-down-content {
+              display: none;
+              position: absolute;
+              top: 4.8rem;
+              right: 30%;
+              margin: 0;
+
+              min-width: 22%;
+
+              z-index: 1;
+              .middle-navbar-container {
+                width: 90%;
+                height: 100%;
+                margin: 0 auto;
+                background: #ffffff;
+                box-shadow: 2px 6px 34px 0px rgba(0, 0, 0, 0.09);
+
+                h3 {
+                  color: #fff;
+                  font-family: Poppins;
+                  font-size: 1rem;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: normal;
+                  padding: 1.5rem;
+                }
+                .mnc-element {
+                  width: 100%;
+                  background: rgb(255, 255, 255);
+                  transition: 0.2s ease-in-out;
+                  border: 0px;
+                  &:hover {
+                    cursor: pointer;
+                    background: rgba(0, 0, 0, 0.123);
+                    padding: 0.5rem 0;
+                  }
+                  .mnc-element-inside {
+                    width: 80%;
+                    margin: 0 auto;
+                    display: flex;
+                    padding: 1rem 0;
+                    align-items: center;
+                    justify-content: space-between;
+                    .mnc-element-left {
+                      display: flex;
+                      align-items: center;
+
+                      justify-content: center;
+                      p {
+                        color: #000;
+                        font-family: Poppins;
+                        font-size: 1rem;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                        padding: 0 1rem;
+                      }
+                    }
+                    span {
+                      color: #777;
+                      font-family: Poppins;
+                      font-size: 0.825rem;
+                      font-style: normal;
+                      font-weight: 400;
+                      line-height: normal;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        button {
+          outline: 0px;
+          border: 0px;
+          color: #ffffff;
+          font-family: Poppins;
+
+          font-size: 1rem;
+          &:hover {
+            cursor: pointer;
+          }
+          &.btn {
+            background-color: #ffffff;
+
+            color: black;
+          }
+        }
+      }
+    }
+
+    &.active {
+      display: block;
+    }
+    #editorHolder {
+      padding: 5rem 0;
+    }
+  }
+}
+
+.editor-checker {
+  .editor-holder-reactjs {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.ql-container.ql-snow {
+  border: 0px !important;
+}
+
+.container-editor-quill {
+  width: 100%;
+  height: 60vh;
+  .ql-editor {
+    width: 100%;
+    height: 100%;
+    height: 100%;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  }
+}

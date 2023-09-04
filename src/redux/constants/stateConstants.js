@@ -1,0 +1,3 @@
+export const STATE_ADD_ITEM = "STATE_ADD_ITEM";
+export const STATE_REMOVE_ITEM = "STATE_REMOVE_ITEM";
+export const STATE_RESET = "STATE_RESET";

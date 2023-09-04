@@ -1,0 +1,68 @@
+.forms-inside-div {
+  width: 100%;
+  form {
+    width: 100%;
+    padding: 0;
+  }
+  textarea {
+    margin: 0;
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 1rem 0.8rem;
+    border-radius: 0.125rem;
+    border: 1px solid #d1c9c9;
+    color: #000000;
+    font-family: Poppins;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    &::placeholder {
+      color: #8f8585;
+    }
+    &:focus {
+      outline: 0px;
+    }
+  }
+  .form-inside-divider {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.1rem 0;
+    input {
+      width: 49%;
+    }
+    select {
+      margin: 0;
+      padding: 0;
+      width: 49%;
+    }
+    textarea {
+      margin: 0;
+      margin-bottom: 1rem;
+      width: 49%;
+      padding: 1rem 0.8rem;
+      border-radius: 0.125rem;
+      border: 1px solid #d1c9c9;
+      color: #000000;
+      font-family: Poppins;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      &::placeholder {
+        color: #8f8585;
+      }
+      &:focus {
+        outline: 0px;
+      }
+    }
+  }
+}
+
+.form-element {
+  width: 60%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}

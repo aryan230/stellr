@@ -1,0 +1,116 @@
+.calender-main {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 0.625rem 0.625rem 0.625rem 0.625rem;
+  display: flex;
+  .calender-holder {
+    width: 70%;
+    height: 100%;
+  }
+
+  .calender-tasks {
+    width: 30%;
+    height: 100%;
+
+    .calender-task-top {
+      width: 80%;
+      margin: 2rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      h1 {
+        margin-left: 1rem;
+        color: #530094;
+        font-family: Poppins;
+        font-size: 1.75rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+      }
+    }
+    .calender-task-bottom {
+      width: 80%;
+      margin: 2rem auto;
+      padding: 1rem 0;
+      .no-task-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 2rem 0;
+        img {
+          width: 10rem;
+        }
+        h1 {
+          color: #000;
+          font-family: Poppins;
+          font-size: 1.25rem;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          margin-top: 2rem;
+        }
+
+        a {
+          color: #530094;
+        }
+      }
+
+      .sl-element {
+        width: 100%;
+        border-top: 0px;
+        border-left: 0px;
+        border-right: 0px;
+        border-bottom: 1px solid #ddd0d0;
+        transition: 0.2s ease-in-out;
+        background-color: transparent;
+        &:hover {
+          cursor: pointer;
+          background: rgba(0, 0, 0, 0.082);
+        }
+        .mnc-element-inside {
+          width: 90%;
+          margin: 0 auto;
+          display: flex;
+          padding: 1rem 0;
+          align-items: center;
+          justify-content: space-between;
+          .mnc-element-left {
+            display: flex;
+            align-items: center;
+
+            justify-content: center;
+            p {
+              color: #000000;
+              font-family: Poppins;
+              font-size: 1rem;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              padding: 0 1rem;
+              text-align: left;
+            }
+          }
+          span {
+            color: #777;
+            font-family: Poppins;
+            font-size: 0.825rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
+
+.calender-main-proper {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 0.625rem 0.625rem 0.625rem 0.625rem;
+}

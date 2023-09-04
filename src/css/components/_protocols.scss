@@ -1,0 +1,402 @@
+.stepper-content {
+  width: 100%;
+  .quill > .ql-container > .ql-editor.ql-blank::before {
+    font-size: 1rem;
+    font-family: Poppins;
+    font-style: normal;
+    color: #8f8585;
+    padding: 0.5rem 0;
+    margin: 0;
+  }
+
+  .label-input {
+    label {
+      color: #818181;
+      font-size: 1rem;
+    }
+    input {
+      margin: 0;
+      margin-bottom: 1rem;
+      width: 100%;
+      padding: 1rem 0.8rem;
+      border-radius: 0.125rem;
+      border: 1px solid #d1c9c9;
+      color: #000000;
+      font-family: Poppins;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      &::placeholder {
+        color: #8f8585;
+      }
+      &:focus {
+        outline: 0px;
+      }
+    }
+  }
+  .quill {
+    border: 1px solid #d1c9c9;
+    text-align: left;
+    margin: 0.25rem 0;
+    border-radius: 0.125rem;
+    .ql-toolbar.ql-snow {
+      border: 0px !important;
+      // border-bottom: 1px solid #d1c9c9 !important;
+      padding: 0px;
+      background: #eaecec;
+    }
+    .ql-editor {
+      padding: 0.5rem;
+      height: 100px;
+    }
+  }
+
+  input {
+    margin: 0;
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.125rem;
+    border: 1px solid #d1c9c9;
+    color: #000000;
+    font-family: Poppins;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    &::placeholder {
+      color: #8f8585;
+    }
+    &:focus {
+      outline: 0px;
+    }
+  }
+}
+
+.modal-inside-protocol {
+  width: 60%;
+  min-height: 80%;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.65rem;
+  padding-bottom: 5rem;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .top-modal {
+    width: 80%;
+    padding: 1rem 0;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transition: 0.2s all;
+    button {
+      background-color: transparent;
+      border: 0px;
+    }
+    svg {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  h1 {
+    color: #333;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-top: 2rem;
+  }
+  .top-modal-in-in {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgb(209, 209, 209);
+    .top-modal-protocol-in {
+      h1 {
+        color: #333;
+        text-align: center;
+        font-family: Poppins;
+        font-size: 2rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        margin-top: 2rem;
+        width: fit-content;
+      }
+    }
+
+    button {
+      outline: 0px;
+      border: 0px;
+      width: 20%;
+      background-color: #6200d2;
+      color: #ffffff;
+      font-family: Poppins;
+      margin: 1rem 0;
+      padding: 1rem 0;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  // p {
+  //   color: #7a7a7a;
+  //   text-align: center;
+  //   font-family: Karla;
+  //   font-size: 0.8rem;
+  //   font-style: normal;
+  //   font-weight: 500;
+  //   line-height: normal;
+  //   margin-top: 0.2rem;
+  // }
+
+  .protocol-stepper {
+    width: 80%;
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .protocol-shower {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      .protocol-shower-inside {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .protocol-shower-left {
+        width: 10%;
+        h2 {
+          margin: 1rem 2rem;
+        }
+        text-align: right;
+      }
+      .protocol-shower-right {
+        width: 80%;
+        .quill > .ql-container > .ql-editor.ql-blank::before {
+          font-size: 1rem;
+          font-family: Poppins;
+          font-style: normal;
+          color: #8f8585;
+          padding: 0.5rem 0;
+          margin: 0;
+        }
+
+        .quill {
+          border: 1px solid #d1c9c9;
+          text-align: left;
+          margin: 1rem 0;
+          border-radius: 0.125rem;
+          .ql-toolbar.ql-snow {
+            border: 0px !important;
+            // border-bottom: 1px solid #d1c9c9 !important;
+            padding: 0px;
+            display: none;
+            background: #eaecec;
+          }
+          .ql-editor {
+            padding: 0.5rem;
+            height: 100px;
+          }
+        }
+      }
+    }
+  }
+
+  form {
+    width: 60%;
+    margin: 0 auto;
+    padding: 2rem 0;
+    .quill > .ql-container > .ql-editor.ql-blank::before {
+      font-size: 1rem;
+      font-family: Poppins;
+      font-style: normal;
+      color: #8f8585;
+      padding: 0.5rem 0;
+      margin: 0;
+    }
+
+    .quill {
+      border: 1px solid #d1c9c9;
+      text-align: left;
+      margin: 1rem 0;
+      border-radius: 0.125rem;
+      .ql-toolbar.ql-snow {
+        border: 0px !important;
+        // border-bottom: 1px solid #d1c9c9 !important;
+        padding: 0px;
+        background: #eaecec;
+      }
+      .ql-editor {
+        padding: 0.5rem;
+        height: 100px;
+      }
+    }
+    .label-input {
+      label {
+        color: #818181;
+        font-size: 1rem;
+      }
+      input {
+        margin: 0;
+        margin-bottom: 1rem;
+        width: 100%;
+        padding: 1rem 0.8rem;
+        border-radius: 0.125rem;
+        border: 1px solid #d1c9c9;
+        color: #000000;
+        font-family: Poppins;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        &::placeholder {
+          color: #8f8585;
+        }
+        &:focus {
+          outline: 0px;
+        }
+      }
+    }
+    label {
+    }
+    input {
+      margin: 0.8rem 0;
+      width: 100%;
+      padding: 1rem 0.8rem;
+      border-radius: 0.125rem;
+      border: 1px solid #d1c9c9;
+      color: #000000;
+      font-family: Poppins;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      &::placeholder {
+        color: #8f8585;
+      }
+      &:focus {
+        outline: 0px;
+      }
+    }
+    textarea {
+      margin: 0.8rem 0;
+      width: 100%;
+      padding: 1rem 0.8rem;
+      border-radius: 0.125rem;
+      border: 1px solid #d1c9c9;
+      color: #000000;
+      font-family: Poppins;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      &::placeholder {
+        color: #8f8585;
+      }
+      &:focus {
+        outline: 0px;
+      }
+    }
+    select {
+      margin: 0.8rem 0;
+      width: 100%;
+      padding: 1rem 0.8rem;
+      border-radius: 0.125rem;
+      border: 1px solid #d1c9c9;
+      color: #000000;
+      font-family: Poppins;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      &::placeholder {
+        color: #8f8585;
+      }
+      &:focus {
+        outline: 0px;
+      }
+    }
+    option {
+      margin: 0.8rem 0;
+      width: 100%;
+      padding: 1rem 0.8rem;
+      border-radius: 0.125rem;
+      border: 1px solid #d1c9c9;
+      color: #000000;
+      font-family: Poppins;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      &:hover {
+        color: black;
+      }
+    }
+    button {
+      outline: 0px;
+      border: 0px;
+      width: 100%;
+      background-color: #6200d2;
+      color: #ffffff;
+      font-family: Poppins;
+      margin: 1rem 0;
+      padding: 1rem 0;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  h4 {
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid rgb(224, 224, 224);
+    margin-top: 2rem;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    span {
+      background: #fff;
+      padding: 0 10px;
+    }
+  }
+}
