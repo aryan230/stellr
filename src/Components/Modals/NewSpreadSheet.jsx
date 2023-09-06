@@ -58,7 +58,7 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
   }, []);
 
   useEffect(() => {
-    console.log(data && JSON.parse(data.data));
+    console.log(data && data.data && JSON.parse(data.data));
   }, [data]);
 
   const onCellSave = (args) => {
@@ -80,7 +80,6 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           name: "Sheet1",
           rowCount: 100,
           colCount: 100,
-          topLeftCell: "A1",
           activeCell: spreadsheetRef.current.sheets[0].activeCell,
           rows: spreadsheetRef.current.sheets[0].rows,
           columns: spreadsheetRef.current.sheets[0].columns,
