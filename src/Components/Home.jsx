@@ -89,6 +89,11 @@ function Home({
   console.log(tasks && tasks);
 
   const handleSelected = (event) => {
+    const docTwo =
+      tasksList &&
+      tasks &&
+      tasksList.concat(tasks).find((e) => e._id == event._id);
+
     const doc = {
       subject: event.title,
       due_date: event.end.toISOString().split("T")[0],
@@ -100,7 +105,7 @@ function Home({
       user: event.user,
       _id: event._id,
     };
-    setTaskContent(doc);
+    setTaskContent(docTwo);
     setTaskModal(true);
   };
 
@@ -221,7 +226,7 @@ function Home({
               <MenuItem value={10}>Today's Task</MenuItem>
               <MenuItem value={20}>Upcoming Tasks</MenuItem>
               <MenuItem value={30}>My Tasks</MenuItem>
-              <MenuItem value={40}>All Overdue</MenuItem>
+              <MenuItem value={40}> Overdue Tasks</MenuItem>
             </Select>
           </FormControl>
           {age && age === 10 && (

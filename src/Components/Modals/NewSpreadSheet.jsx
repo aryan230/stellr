@@ -3,7 +3,11 @@ import Spreadsheet from "react-spreadsheet";
 import SpreadSheetContainerMain from "../SpreadSheetContainers/SpreadSheetContainerMain";
 import { db } from "../../firebase";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
-import { SpreadsheetComponent } from "@syncfusion/ej2-react-spreadsheet";
+import {
+  SheetDirective,
+  SpreadsheetComponent,
+  getSheetIndex,
+} from "@syncfusion/ej2-react-spreadsheet";
 import { registerLicense } from "@syncfusion/ej2-base";
 
 // import Luckysheet from "../SpreadSheetContainers/Luckysheet";
@@ -54,8 +58,75 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
   }, []);
 
   useEffect(() => {
-    console.log(data);
+    console.log(data && JSON.parse(data.data));
   }, [data]);
+
+  const onCellSave = (args) => {
+    handleGetData();
+  };
+
+  const onDataChanged = (args) => {
+    console.log(spreadsheetRef.getSheet());
+  };
+
+  const [spreadsheetData, setSpreadsheetData] = useState([]);
+
+  function stringify(obj) {
+    let cache = [];
+    let str = JSON.stringify(obj, function(key, value) {
+      if (typeof value === "object" && value !== null) {
+        if (cache.indexOf(value) !== -1) {
+          // Circular reference found, discard key
+          return;
+        }
+        // Store value in our collection
+        cache.push(value);
+      }
+      return value;
+    });
+    cache = null; // reset the cache
+    return str;
+  }
+
+  // Event handler to capture data
+  const handleGetData = async () => {
+    if (spreadsheetRef.current) {
+      let newData = await stringify(spreadsheetRef.current.sheets[0]);
+      let newObject = [
+        {
+          id: 1,
+          name: "Sheet1",
+          rowCount: 100,
+          colCount: 100,
+          topLeftCell: "A1",
+          activeCell: spreadsheetRef.current.sheets[0].activeCell,
+          rows: spreadsheetRef.current.sheets[0].rows,
+          columns: spreadsheetRef.current.sheets[0].columns,
+          showHeaders: true,
+          showGridLines: true,
+          state: "Visible",
+          maxHgts: [],
+          isProtected: false,
+          frozenRows: 0,
+          frozenColumns: 0,
+          paneTopLeftCell: "A1",
+        },
+      ];
+      await setDoc(doc(db, "sheet", id), {
+        name: name,
+        data: JSON.stringify(newObject),
+        date: Date.now(),
+      });
+      console.log("Saved");
+    }
+  };
+
+  useEffect(() => {
+    if (document.querySelector(".e-add-sheet-tab")) {
+      console.log(document.querySelector(".e-add-sheet-tab"));
+      document.querySelector(".e-add-sheet-tab").remove();
+    }
+  }, [document.querySelector(".e-add-sheet-tab")]);
 
   return (
     <div className="modal">
@@ -67,7 +138,7 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           </div>
           <button
             onClick={async (e) => {
-              await handleCellSave();
+              await onCellSave();
               setIsSpreadSheetOpen(false);
             }}
           >
@@ -88,10 +159,11 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
         <div className="main-modal-spreadsheet">
           <SpreadsheetComponent
             ref={spreadsheetRef}
-            dataSource={data && data.data}
-            sheets={data && data.data}
+            cellSave={onCellSave}
+            sheets={data && JSON.parse(data.data)}
             openUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/open"
             saveUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/save"
+            enableSheetTabs={false}
           ></SpreadsheetComponent>
         </div>
       </div>

@@ -3016,7 +3016,11 @@ div.ql-tooltip {
   font-family: Poppins;
   color: rgba(0, 0, 0, 0.767);
 }
-.footer-main h1 a {
+.footer-main h1 span {
+  display: block;
+  padding-top: 5px;
+}
+.footer-main h1 span a {
   font-family: karla;
   color: #5d00d2;
 }

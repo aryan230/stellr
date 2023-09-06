@@ -39,14 +39,14 @@ function SpreadSheet({ name, id, setIsSpreadSheetOpen }) {
       var options = {
         container: "container", //luckysheet为容器id
         showinfobar: false,
-        plugins: ["chart"],
+        // plugins: ["chart"],
         showsheetbar: false,
         data: data && JSON.parse(data.data),
         // data: [sheetData],
         enableAddRow: true,
         showtoolbar: true,
         showtoolbarConfig: {
-          chart: true, //'chart' (the icon is hidden, but if the chart plugin is configured, you can still create a new chart by right click)
+          chart: false, //'chart' (the icon is hidden, but if the chart plugin is configured, you can still create a new chart by right click)
           postil: false, //'comment'
           pivotTable: false, //'PivotTable'
           function: false, //'formula'

@@ -3,8 +3,8 @@ import Spreadsheet from "react-spreadsheet";
 import SpreadSheetContainerMain from "../SpreadSheetContainers/SpreadSheetContainerMain";
 import { db } from "../../firebase";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
-import "handsontable/dist/handsontable.full.css"; // Import the Handsontable CSS
-import Handsontable from "handsontable";
+import { Workbook } from "@fortune-sheet/react";
+import "@fortune-sheet/react/dist/index.css";
 
 function NewTwoSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
   const container = useRef(null);
@@ -23,35 +23,6 @@ function NewTwoSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
     });
   };
 
-  useEffect(() => {
-    const data = [
-      ["A", 10, 20],
-      ["B", 30, 40],
-      ["C", 50, 60],
-    ];
-
-    const hot = new Handsontable(container.current, {
-      data: data,
-      colHeaders: true,
-      rowHeaders: true,
-      customBorders: true,
-      dropdownMenu: true,
-      multiColumnSorting: true,
-      filters: true,
-      manualRowMove: true,
-      // formulas: {
-      //   engine: hyperformulaInstance,
-      // }, // Enable formulas
-      contextMenu: true,
-      licenseKey: "non-commercial-and-evaluation",
-    });
-
-    // Add chart integration code here
-
-    return () => {
-      hot.destroy(); // Clean up Handsontable when the component unmounts
-    };
-  }, []);
 
   useEffect(() => {
     fetchFirestoreData();
@@ -89,7 +60,7 @@ function NewTwoSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           </button>
         </div>{" "}
         <div className="main-modal-spreadsheet">
-          <div ref={container}></div>
+          <Workbook data={[{ name: "Sheet1" }]} />,
         </div>
       </div>
     </div>

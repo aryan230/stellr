@@ -10,9 +10,13 @@
     font-size: 1rem;
     font-family: Poppins;
     color: rgba(0, 0, 0, 0.767);
-    a {
-      font-family: karla;
-      color: #5d00d2;
+    span {
+      display: block;
+      padding-top: 5px;
+      a {
+        font-family: karla;
+        color: #5d00d2;
+      }
     }
   }
 }
