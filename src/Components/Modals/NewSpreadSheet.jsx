@@ -71,27 +71,9 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
 
   const [spreadsheetData, setSpreadsheetData] = useState([]);
 
-  function stringify(obj) {
-    let cache = [];
-    let str = JSON.stringify(obj, function(key, value) {
-      if (typeof value === "object" && value !== null) {
-        if (cache.indexOf(value) !== -1) {
-          // Circular reference found, discard key
-          return;
-        }
-        // Store value in our collection
-        cache.push(value);
-      }
-      return value;
-    });
-    cache = null; // reset the cache
-    return str;
-  }
-
   // Event handler to capture data
   const handleGetData = async () => {
     if (spreadsheetRef.current) {
-      let newData = await stringify(spreadsheetRef.current.sheets[0]);
       let newObject = [
         {
           id: 1,
@@ -160,10 +142,9 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           <SpreadsheetComponent
             ref={spreadsheetRef}
             cellSave={onCellSave}
-            sheets={data && JSON.parse(data.data)}
+            sheets={data && data.data && JSON.parse(data.data)}
             openUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/open"
             saveUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/save"
-            enableSheetTabs={false}
           ></SpreadsheetComponent>
         </div>
       </div>

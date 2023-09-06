@@ -507,6 +507,78 @@ div.ql-tooltip {
   visibility: visible;
 }
 
+@font-face {
+  font-family: "Gotham-Black";
+  src: url("../fonts/Gotham-Black.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gotham-BookItalic";
+  src: url("../fonts/Gotham-BookItalic.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gotham-Thin";
+  src: url("../fonts/Gotham-Thin.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gotham-ThinItalic";
+  src: url("../fonts/Gotham-ThinItalic.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gotham-UltraItalic";
+  src: url("../fonts/Gotham-UltraItalic.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gotham-XLight";
+  src: url("../fonts/Gotham-XLight.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gotham-XLightItalic";
+  src: url("../fonts/Gotham-XLightItalic.otf") format("opentype");
+}
+@font-face {
+  font-family: "GothamBold";
+  src: url("../fonts/GothamBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "GothamBoldItalic";
+  src: url("../fonts/GothamBoldItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "GothamBook";
+  src: url("../fonts/GothamBook.ttf") format("truetype");
+}
+@font-face {
+  font-family: "GothamLight";
+  src: url("../fonts/GothamLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "GothamLightItalic";
+  src: url("../fonts/GothamLightItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "GothamMedium";
+  src: url("../fonts/GothamMedium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Nexa-Bold";
+  src: url("../fonts/Nexa Bold.otf") format("opentype");
+}
+@font-face {
+  font-family: "Nexa-Light";
+  src: url("../fonts/Nexa Light.otf") format("opentype");
+}
+@font-face {
+  font-family: "NexaBlack";
+  src: url("../fonts/NexaBlack.otf") format("opentype");
+}
+@font-face {
+  font-family: "NexaBlackItalic";
+  src: url("../fonts/NexaBlackItalic.otf") format("opentype");
+}
+@font-face {
+  font-family: "NexaBlackItalic";
+  src: url("../fonts/NexaBlackItalic.otf") format("opentype");
+}
 .org-content {
   width: 100vw;
   height: 100vh;
