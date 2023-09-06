@@ -80,7 +80,7 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           name: "Sheet1",
           rowCount: 100,
           colCount: 100,
-          activeCell: spreadsheetRef.current.sheets[0].activeCell,
+          // activeCell: spreadsheetRef.current.sheets[0].activeCell,
           rows: spreadsheetRef.current.sheets[0].rows,
           columns: spreadsheetRef.current.sheets[0].columns,
           showHeaders: true,
@@ -102,12 +102,14 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
     }
   };
 
-  useEffect(() => {
-    if (document.querySelector(".e-add-sheet-tab")) {
-      console.log(document.querySelector(".e-add-sheet-tab"));
-      document.querySelector(".e-add-sheet-tab").remove();
-    }
-  }, [document.querySelector(".e-add-sheet-tab")]);
+  // useEffect(() => {
+  //   if (spreadsheetRef) {
+  //     if (document.querySelector(".e-add-sheet-tab")) {
+  //       console.log(document.querySelector(".e-add-sheet-tab"));
+  //       document.querySelector(".e-add-sheet-tab").remove();
+  //     }
+  //   }
+  // }, [document.querySelector(".e-add-sheet-tab"), spreadsheetRef]);
 
   return (
     <div className="modal">
