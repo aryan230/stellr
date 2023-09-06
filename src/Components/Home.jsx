@@ -223,7 +223,7 @@ function Home({
               label="Select Tasks"
               value={age}
             >
-              <MenuItem value={10}>Today's Task</MenuItem>
+              <MenuItem value={10}>Today's Tasks</MenuItem>
               <MenuItem value={20}>Upcoming Tasks</MenuItem>
               <MenuItem value={30}>My Tasks</MenuItem>
               <MenuItem value={40}> Overdue Tasks</MenuItem>

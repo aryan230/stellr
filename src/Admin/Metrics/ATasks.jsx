@@ -2,8 +2,8 @@ import React from "react";
 
 function ATasks({ data }) {
   return (
-    <div className="relative overflow-x-auto overflow-y-auto">
-      <table className="w-full text-sm text-left text-gray-500 ">
+    <div className="relative overflow-x-auto px-10 h-[80%]">
+      <table className="w-full text-sm text-left text-gray-500 h-[100%]">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th scope="col" className="px-6 py-3">
@@ -20,7 +20,7 @@ function ATasks({ data }) {
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="overflow-y-auto">
           {data.tasks &&
             data.tasks.map((e) => (
               <tr className="bg-white border-b">

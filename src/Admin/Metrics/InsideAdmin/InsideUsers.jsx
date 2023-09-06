@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 function InsideUsers({ e, data }) {
   const [orgData, setOrg] = useState();
   let lastOnline =
-    e.activeStatus.length > 0
-      ? e.activeStatus.slice(-1)[0].date.toLocaleString("en-GB")
-      : "Not Active";
+    e.activeStatus.length > 0 ? e.activeStatus.slice(-1)[0].date : "Not Active";
   let org = data && data.organizations.find((b) => b.user == e._id);
 
   const findOrgCollab = async () => {
@@ -43,7 +41,13 @@ function InsideUsers({ e, data }) {
             e.preventDefault();
           }}
         >
-          {lastOnline}
+          {lastOnline == "Not Active"
+            ? "Not Active"
+            : `${
+                new Date(lastOnline).toLocaleString("en-GB").split(",")[0]
+              },${" "}
+          ${new Date(lastOnline).toLocaleString().split(",")[1]}`}
+
           {/* {e.activeStatus.length > 0 ? (
             e.activeStatus
               .slice(-1)

@@ -395,7 +395,7 @@ a#file-opener:hover {
 }
 
 button#spreadsheet-opener::after {
-  content: attr(dataName);
+  content: " " attr(dataName) ".xlsx";
 }
 button#spreadsheet-opener:hover {
   cursor: pointer;
@@ -1136,8 +1136,23 @@ div.ql-tooltip {
 .admin-modal {
   width: 90%;
   height: 90%;
-  overflow-y: auto;
   background-color: white;
+}
+.admin-modal .top-modal {
+  width: 80%;
+  padding: 1rem 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: 0.2s all;
+}
+.admin-modal .top-modal button {
+  background-color: transparent;
+  border: 0px;
+}
+.admin-modal .top-modal svg:hover {
+  cursor: pointer;
 }
 
 .inside-loader-div {
@@ -4771,26 +4786,14 @@ div.ql-tooltip {
   align-items: center;
   justify-content: center;
   border-radius: 0.625rem;
-  background: #188038;
-  color: #fff;
-  font-family: Poppins;
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  transition: 0.2s all;
-}
-#spreadsheet-opener p {
-  color: #000;
-  font-family: Inter;
+  color: #188038;
+  font-family: Gotham-Black;
   font-size: 1rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
+  text-decoration: underline;
   line-height: normal;
-}
-#spreadsheet-opener img {
-  width: 3rem;
-  margin-right: 0.25rem;
+  transition: 0.2s all;
 }
 #spreadsheet-opener:hover {
   cursor: pointer;

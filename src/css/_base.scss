@@ -387,7 +387,7 @@ a#file-opener {
 
 button#spreadsheet-opener {
   &::after {
-    content: attr(dataName);
+    content: " " attr(dataName) ".xlsx";
   }
 
   &:hover {
