@@ -28,7 +28,7 @@ function Banner({ setShowBanner }) {
                     className="text-white font-bold underline"
                   >
                     {" "}
-                    We value your feedback!{" "}
+                    We value your feedback{" "}
                     <span aria-hidden="true">&rarr;</span>
                   </a>
                 </span>
