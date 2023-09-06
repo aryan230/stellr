@@ -57,10 +57,6 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
     fetchFirestoreData();
   }, []);
 
-  useEffect(() => {
-    console.log(data && data.data && JSON.parse(data.data));
-  }, [data]);
-
   const onCellSave = (args) => {
     handleGetData();
   };
@@ -143,7 +139,7 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           <SpreadsheetComponent
             ref={spreadsheetRef}
             cellSave={onCellSave}
-            sheets={data && data.data && JSON.parse(data.data)}
+            sheets={data && data.data ? JSON.parse(data.data) : []}
             openUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/open"
             saveUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/save"
           ></SpreadsheetComponent>
