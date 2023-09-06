@@ -36,6 +36,7 @@ import { Toaster } from "react-hot-toast";
 import TemplateSettings from "./TemplateSettings";
 import TextEditorTwo from "./Editor/QuillEditorTwo";
 import Footer from "../Pages/Footer";
+import Banner from "./Banner";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -110,6 +111,10 @@ function EditorComponent() {
   );
   console.log(tabDetails);
 
+  //Banner
+
+  const [showBanner, setShowBanner] = useState(true);
+
   useEffect(() => {
     if (middleNav) {
       mainDiv.current.style.width = "80%";
@@ -129,6 +134,12 @@ function EditorComponent() {
       setTabId(tabsPannel[0].id);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("showBanner")) {
+      setShowBanner(false);
+    }
+  }, []);
 
   //State
 
@@ -273,6 +284,8 @@ function EditorComponent() {
         setNewSop={setNewSop}
       />
       <div className="main-content">
+        {showBanner && <Banner setShowBanner={setShowBanner} />}
+
         <div className="main-content-in-editor">
           {middleNav && (
             <MiddleNav

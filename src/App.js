@@ -16,6 +16,7 @@ import ProfilePage from "./Pages/ProfilePage";
 import AccountSetup from "./Pages/AccountSetup";
 import OrganizationSetup from "./Pages/OrganizationSetup";
 import Footer from "./Pages/Footer";
+import Banner from "./Components/Banner";
 
 function App() {
   return (

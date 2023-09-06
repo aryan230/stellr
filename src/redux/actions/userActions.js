@@ -138,6 +138,7 @@ export const loginMicrosoft = (someData) => async (dispatch) => {
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userStellr");
+  localStorage.removeItem("showBanner");
   dispatch({
     type: USER_LOGOUT,
   });
