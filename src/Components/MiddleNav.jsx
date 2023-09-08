@@ -260,6 +260,7 @@ function MiddleNav({
           setProjectInsideActive={setProjectInsideActive}
           setTaskModal={setTaskModal}
           setTaskContent={setTaskContent}
+          setNewCollab={setNewCollab}
         />
       ) : (
         <div className="sl-inside">

@@ -185,57 +185,6 @@ function ListSamples({
               </table>
             </div>
           )}
-
-          {/* {samples &&
-            samples.length > 0 &&
-            samples
-              .filter((entry) =>
-                JSON.parse(entry.data)
-                  .sampleName.toLowerCase()
-                  .includes(inputSearch.toLowerCase())
-              )
-              .map((doc) => (
-                <button
-                  className="sl-element"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    setSampleContent(doc);
-                    setSampleModal(true);
-                  }}
-                >
-                  <div className="mnc-element-inside">
-                    <div className="mnc-element-left">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M14.473 7.52668L11.1397 4.19334C11.0774 4.13156 11.0035 4.08267 10.9223 4.0495C10.8411 4.01632 10.7541 3.9995 10.6663 4.00001H3.33301C2.80257 4.00001 2.29387 4.21072 1.91879 4.5858C1.54372 4.96087 1.33301 5.46958 1.33301 6.00001V10C1.33301 10.5304 1.54372 11.0392 1.91879 11.4142C2.29387 11.7893 2.80257 12 3.33301 12H10.6663C10.7541 12.0005 10.8411 11.9837 10.9223 11.9505C11.0035 11.9173 11.0774 11.8685 11.1397 11.8067L14.473 8.47334C14.5355 8.41137 14.5851 8.33763 14.6189 8.2564C14.6528 8.17516 14.6702 8.08802 14.6702 8.00001C14.6702 7.912 14.6528 7.82487 14.6189 7.74363C14.5851 7.66239 14.5355 7.58865 14.473 7.52668ZM10.393 10.6667H3.33301C3.1562 10.6667 2.98663 10.5964 2.8616 10.4714C2.73658 10.3464 2.66634 10.1768 2.66634 10V6.00001C2.66634 5.8232 2.73658 5.65363 2.8616 5.52861C2.98663 5.40358 3.1562 5.33334 3.33301 5.33334H10.393L13.0597 8.00001L10.393 10.6667Z"
-                          fill="url(#paint0_linear_301_316)"
-                        />
-                        <defs>
-                          <linearGradient
-                            id="paint0_linear_301_316"
-                            x1="8.00161"
-                            y1="4"
-                            x2="8.00161"
-                            y2="12"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stop-color="#5D00D2" />
-                            <stop offset="1" stop-color="#C781FF" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                      <p>{JSON.parse(doc.data).sampleName}</p>
-                    </div>
-                    <span>now</span>
-                  </div>
-                </button>
-              ))} */}
         </div>
       </div>
     </div>

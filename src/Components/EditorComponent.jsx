@@ -37,6 +37,7 @@ import TemplateSettings from "./TemplateSettings";
 import TextEditorTwo from "./Editor/QuillEditorTwo";
 import Footer from "../Pages/Footer";
 import Banner from "./Banner";
+import ListSamplesNew from "./ListSamplesNew";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();

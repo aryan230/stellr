@@ -152,20 +152,18 @@ function Reagent({
             onChange={handleChange}
           />
         </div>
-        <div className="form-inside-divider">
-          <input
-            type="text"
-            placeholder="Risk and Safety Information"
-            name="riskAndSafetyInformation"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Preperation Instructions"
-            name="preparationInstructions"
-            onChange={handleChange}
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Risk and Safety Information"
+          name="riskAndSafetyInformation"
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          placeholder="Preperation Instructions"
+          name="preparationInstructions"
+          onChange={handleChange}
+        />
         <input
           type="text"
           placeholder="Comments"

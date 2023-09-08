@@ -381,6 +381,21 @@ function ProjectComponent({
                 <span>Updated </span>
               </div>
             </button> */}
+            <button
+              className="sl-element"
+              onClick={async (e) => {
+                e.preventDefault();
+              }}
+            >
+              <div className="mnc-element-inside">
+                <div className="mnc-element-left">
+                  <h3>Name of the Entity</h3>
+                </div>
+                <span> ID</span>
+                <span>Updated Date </span>
+                <span>Created/Due Date</span>
+              </div>
+            </button>
             {entries &&
               entries
                 .filter((entry) =>

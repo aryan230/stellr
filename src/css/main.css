@@ -2013,7 +2013,7 @@ div.ql-tooltip {
 
 .modal-inside {
   width: 40%;
-  min-height: 50%;
+  min-height: 70%;
   height: -moz-fit-content;
   height: fit-content;
   max-height: 90%;
@@ -3087,6 +3087,41 @@ div.ql-tooltip {
 }
 .profile-component .profile-inside-setup .profile-setup-inside form button:hover {
   cursor: pointer;
+}
+
+.project-component-samples-new {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.p-c-s-i-t {
+  width: 80%;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.p-c-s-i-t h1 {
+  font-family: Poppins;
+  font-size: 2rem;
+}
+.p-c-s-i-t button {
+  margin-right: 1rem;
+}
+
+.p-c-s-charts {
+  width: 80%;
+  margin: 0 auto;
+  height: 80%;
+}
+.p-c-s-charts .samples-below-chart-div {
+  padding: 1rem 0;
+  height: 90%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-main {

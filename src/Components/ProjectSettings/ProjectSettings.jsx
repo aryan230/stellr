@@ -91,6 +91,29 @@ function ProjectSettings({
       });
   };
 
+  const getUserData = async (id) => {
+    var config = {
+      method: "get",
+      url: `${URL}api/users/${id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(async function(response) {
+        if (response) {
+          return response.data;
+        } else {
+          toast.error("No user found for that email.");
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     if (!ownerUserData) {
       ownerUser();

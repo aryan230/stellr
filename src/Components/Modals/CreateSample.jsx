@@ -8,6 +8,7 @@ import { SAMPLE_CREATE_RESET } from "../../redux/constants/sampleConstants";
 import Subject from "./Sample/Subject";
 import Reagent from "./Sample/Reagent";
 import Primer from "./Sample/Primer";
+import AntiBody from "./Sample/AntiBody";
 
 function CreateSample({
   setSampleModal,
@@ -43,6 +44,10 @@ function CreateSample({
     {
       value: "Primer",
       label: "Primer",
+    },
+    {
+      value: "Antibody",
+      label: "Antibody",
     },
   ];
   const optionsValue = projects.map(({ _id: value, name: label }) => ({
@@ -155,6 +160,15 @@ function CreateSample({
             )}
             {sampleType && sampleType.value === "Primer" && (
               <Primer
+                projects={projects}
+                setSampleModal={setSampleModal}
+                sampleType={sampleType}
+                setNewSample={setNewSample}
+                setWhichTabisActive={setWhichTabisActive}
+              />
+            )}
+            {sampleType && sampleType.value === "Antibody" && (
+              <AntiBody
                 projects={projects}
                 setSampleModal={setSampleModal}
                 sampleType={sampleType}

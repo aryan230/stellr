@@ -9,6 +9,8 @@ import Reagent from "../../Modals/Sample/Reagent";
 import ReagentModal from "./Sample/ReagentModal";
 import DrawerLogsSample from "./Sample/DrawerLogsSample";
 import DrawerVersionControl from "./DrawerVersionControl";
+import AntiBody from "../../Modals/Sample/AntiBody";
+import AntibodyModal from "./Sample/AntibodyModal";
 
 function SampleModal({
   doc,
@@ -90,6 +92,17 @@ function SampleModal({
       )}
       {doc.type === "Primer" && (
         <ReagentModal
+          doc={doc}
+          insideData={insideData}
+          setSampleModal={setSampleModal}
+          setWhichTabisActive={setWhichTabisActive}
+          setSampleUpdate={setSampleUpdate}
+          setIsDrawerOpenLogs={setIsDrawerOpenLogs}
+          setIsDrawerVersion={setIsDrawerVersion}
+        />
+      )}
+      {doc.type === "Antibody" && (
+        <AntibodyModal
           doc={doc}
           insideData={insideData}
           setSampleModal={setSampleModal}

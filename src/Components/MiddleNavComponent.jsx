@@ -23,6 +23,7 @@ function MiddleNavComponent({
   setWhichTabisActive,
   setProjectInsideActive,
   setTaskModal,
+  setNewCollab,
   setTaskContent,
 }) {
   const dispatch = useDispatch();
@@ -70,15 +71,16 @@ function MiddleNavComponent({
 
   return (
     <div className="sl-inside">
-      {projectSettings && (
+      {/* {projectSettings && (
         <ProjectSettings
           //   setProjectSettings={setProjectSettings}
           project={project}
+          setNewCollab={setNewCollab}
           //   setNewCollab={setNewCollab}
           //   setProjectUpdatedProfilers={setProjectUpdatedProfilers}
           //   setUpdatedUserCollabRole={setUpdatedUserCollabRole}
         />
-      )}
+      )} */}
       <div className="sl-inside-top-back">
         <svg
           xmlns="http://www.w3.org/2000/svg"

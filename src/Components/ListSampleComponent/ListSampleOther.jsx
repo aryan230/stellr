@@ -13,7 +13,9 @@ function ListSampleOther({ index, doc, setSampleContent, setSampleModal }) {
       >
         {doc.sampleId ? `SAM-000${doc.sampleId}` : `SAM-000${index + 1}`}
       </th>
-      <td className="px-6 py-4">{JSON.parse(doc.data).sampleName}</td>
+      <td className="px-6 py-4">
+        {JSON.parse(doc.data).sampleName && JSON.parse(doc.data).sampleName}
+      </td>
       <td className="px-6 py-4">{doc.type}</td>
       <td className="px-6 py-4">{JSON.parse(doc.data).sampleTypeInside}</td>
       <td className="px-6 py-4">

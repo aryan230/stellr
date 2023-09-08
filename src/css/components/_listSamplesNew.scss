@@ -1,0 +1,35 @@
+.project-component-samples-new {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.p-c-s-i-t {
+  width: 80%;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h1 {
+    font-family: Poppins;
+    font-size: 2rem;
+  }
+  button {
+    margin-right: 1rem;
+  }
+}
+
+.p-c-s-charts {
+  width: 80%;
+  margin: 0 auto;
+  height: 80%;
+
+  .samples-below-chart-div {
+    padding: 1rem 0;
+    height: 90%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
