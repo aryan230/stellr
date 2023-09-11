@@ -100,14 +100,7 @@ function SubjectModal({
             </a>
           </div>
         </div>
-        {/* <div className="sample-modal-details-container">
-          <div className="top-level-sample-details">
-            <h4>Created By</h4>
-            <div className="top-level-sample-details-inside-bottom">
-              <span>Aryan Agarwal</span>
-            </div>
-          </div>
-        </div> */}
+
         <div className="sample-modal-main-container">
           <div className="view-logs-inside">
             {data &&
@@ -120,6 +113,85 @@ function SubjectModal({
               ))}
           </div>
         </div>
+        {/* <div className="xl:col-span-5 col-span-12 lg:col-span-7">
+          <div className="card h-full">
+            <div className="card-header">
+              <h4 className="card-title">About Sample</h4>
+            </div>
+            <div className="card-body p-6">
+              <div>
+                <div className="text-base font-medium text-slate-800">
+                  {insideData.sampleName}
+                </div>
+                <p className="text-sm text-slate-600 ">
+                  The Optimistic Website Company - Amet minim mollit non
+                  deserunt ullamco est sit aliqua dolor do amet sint.
+                </p>
+                <br />
+                <p className="text-sm text-slate-600">
+                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+                  amet sint.The Optimistic Website Company - Amet minim Amet
+                  minim mollit non deserunt ullamco est sit aliqua dolor do amet
+                  sint.The Optimistic Website Company - Amet minim mollit non
+                  deserunt ullamco est sit aliqua dolor do amet sint. Velit
+                  officia consequat duis enim velit mollit. Exercita -tion
+                  veniam consequat sunt nostrud amet.
+                </p>
+                <div className="flex flex-wrap mt-8">
+                  <div className="xl:mr-8 mr-4 mb-3 space-y-1">
+                    <div className="font-semibold text-slate-500 ">
+                      View Your Sample At
+                    </div>
+                    <div className="flex items-center  text-md font-normal text-indigo-600  rtl:space-x-reverse">
+                      <iconify-icon icon="heroicons:link" />
+                      <a href="#">View Link</a>
+                    </div>
+                  </div>
+                  <div className="xl:mr-8 mr-4 mb-3 space-y-1">
+                    <div className="font-semibold text-slate-500 ">
+                      Download
+                    </div>
+                    <div className="flex items-center  text-md font-normal text-indigo-600  rtl:space-x-reverse">
+                      <iconify-icon icon="heroicons:link" />
+                      <a href="#">Download Sample</a>
+                    </div>
+                  </div>
+                </div>
+              
+
+                <div class="relative overflow-x-auto">
+                  <table class="w-full text-sm text-left text-gray-500 ">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
+                      <tr>
+                        <th scope="col" class="px-6 py-3">
+                          Entity Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          Entity Value
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="h-64 overflow-y-auto">
+                      {data &&
+                        data.length > 0 &&
+                        data.map((d) => (
+                          <tr class="bg-white border-b">
+                            <th
+                              scope="row"
+                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              {_.startCase(d[0])}
+                            </th>
+                            <td class="px-6 py-4">{d[1]}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> */}
       </div>
     </div>
   );

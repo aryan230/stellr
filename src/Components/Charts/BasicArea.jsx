@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactApexChart from "react-apexcharts";
 import Chart from "react-apexcharts";
 
 const BasicArea = ({ height = 200, newSamples }) => {
@@ -26,75 +27,39 @@ const BasicArea = ({ height = 200, newSamples }) => {
       data: 0,
     },
   ]);
-
-  // useEffect(() => {
-  //   if (!calculated) {
-  //     if (newSamples) {
-  //       newSamples.forEach((element, index) => {
-  //         let month = new Date(element.createdAt).getMonth();
-  //         let index2 = samSeries.findIndex((e) => e.val === month);
-  //         samSeries[index2].data = samSeries[index2].data + 1;
-  //       });
-  //     }
-  //   }
-  // }, [newSamples, calculated]);
-
-  console.log(samSeries);
   const series = [
     {
+      name: "Samples",
       data: [
-        newSamples
-          ? newSamples.filter(
-              (e) => new Date(e.createdDate).getMonth() + 1 === 1
-            ).length
-          : 0,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() === 2)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "01").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() === 3)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "02").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() === 4)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "03").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() === 5)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "04").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() === 6)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "05").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() + 1 === 7)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "06").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() + 1 === 8)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "07").length,
         newSamples &&
-          newSamples.filter((e) => new Date(e.createdDate).getMonth() + 1 === 9)
-            .length,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "08").length,
         newSamples &&
-          newSamples.filter(
-            (e) => new Date(e.createdDate).getMonth() + 1 === 10
-          ).length,
-        newSamples
-          ? newSamples.filter(
-              (e) => new Date(e.createdAt).getMonth() + 1 === 11
-            ).length
-          : 0,
-        newSamples
-          ? newSamples.filter(
-              (e) => new Date(e.createdAt).getMonth() + 1 === 12
-            ).length
-          : 0,
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "09").length,
+        newSamples &&
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "10").length,
+        newSamples &&
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "11").length,
+        newSamples &&
+          newSamples.filter((e) => e.createdAt.split("/")[1] == "12").length,
       ],
     },
   ];
   const options = {
-    chart: {
-      toolbar: {
-        show: false,
-      },
-    },
+    chart: {},
     dataLabels: {
       enabled: false,
     },
@@ -102,25 +67,24 @@ const BasicArea = ({ height = 200, newSamples }) => {
       curve: "smooth",
       width: 4,
     },
-    colors: ["#4669FA"],
+
     tooltip: {
       theme: "dark",
+    },
+    zoom: {
+      enabled: false,
+    },
+    grid: {
+      row: {
+        colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+        opacity: 0.5,
+      },
     },
     grid: {
       show: true,
       borderColor: isDark ? "#334155" : "#e2e8f0",
       strokeDashArray: 10,
       position: "back",
-    },
-    fill: {
-      type: "gradient",
-      colors: "#4669FA",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.4,
-        opacityTo: 0.5,
-        stops: [50, 100, 0],
-      },
     },
     yaxis: {
       labels: {
@@ -152,10 +116,10 @@ const BasicArea = ({ height = 200, newSamples }) => {
         },
       },
       axisBorder: {
-        show: false,
+        show: true,
       },
       axisTicks: {
-        show: false,
+        show: true,
       },
     },
     padding: {
@@ -167,7 +131,12 @@ const BasicArea = ({ height = 200, newSamples }) => {
   };
   return (
     <div>
-      <Chart options={options} series={series} type="area" height={height} />
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="line"
+        height={220}
+      />
     </div>
   );
 };
