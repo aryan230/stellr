@@ -417,7 +417,7 @@ function EditorComponent() {
               />
             )}
             {whichTabisActive === "sampleList" && (
-              <ListSamplesNew
+              <ListSamples
                 setSampleContent={setSampleContent}
                 setSampleModal={setSampleModal}
                 newSample={newSample}
