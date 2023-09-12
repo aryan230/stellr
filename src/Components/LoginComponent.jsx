@@ -68,25 +68,28 @@ function LoginComponent() {
       .then((result) => {
         // User is signed in.
         // IdP data available in result.additionalUserInfo.profile.
-        console.log(result);
+        let string = result.user.email;
+        let name = result.user.displayName;
+        let email =
+          string.split("_")[0] + "@" + string.split("_")[1].split("#")[0];
         // Get the OAuth access token and ID Token
         const credential = OAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
         const idToken = credential.idToken;
-        console.log(accessToken);
+        console.log(accessToken, idToken);
+        setType("microsoft");
+        dispatch(
+          loginMicrosoft({
+            email: email,
+            name: name,
+            type,
+          })
+        );
       })
       .catch((error) => {
         console.log(error);
         // Handle error.
       });
-    // setType("microsoft");
-    // dispatch(
-    //   loginMicrosoft({
-    //     email: data.account.username,
-    //     name: data.account.name,
-    //     type,
-    //   })
-    // );
   };
   return (
     <div className="login-container">
