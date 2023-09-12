@@ -321,7 +321,7 @@ function ListSamplesNew({
                   </div>
                 </div>
               ) : (
-                <BasicArea newSamples={newSamples ? newSamples : []} />
+                <BasicArea newSamples={newSamples ? newSamples : null} />
               )}
             </div>
 

@@ -9,6 +9,7 @@ import Subject from "./Sample/Subject";
 import Reagent from "./Sample/Reagent";
 import Primer from "./Sample/Primer";
 import AntiBody from "./Sample/AntiBody";
+import CustomRecordSample from "./Sample/CustomRecordSample";
 
 function CreateSample({
   setSampleModal,
@@ -49,6 +50,10 @@ function CreateSample({
       value: "Antibody",
       label: "Antibody",
     },
+    // {
+    //   value: "Create custom Record",
+    //   label: "Create custom Record",
+    // },
   ];
   const optionsValue = projects.map(({ _id: value, name: label }) => ({
     value,
@@ -114,6 +119,11 @@ function CreateSample({
         <>
           {" "}
           <h1>Sample Management</h1>
+          {/* <div className=" bottom-0">
+            <a href="" className="pt-2 text-indigo-600">
+              Create custom template
+            </a>
+          </div> */}
           <div className="form-element">
             <Select
               options={options}
@@ -122,6 +132,15 @@ function CreateSample({
               required
             />
             <div className="margin-maker"></div>
+            {sampleType && sampleType.value === "Create custom Record" && (
+              <CustomRecordSample
+                projects={projects}
+                setSampleModal={setSampleModal}
+                sampleType={sampleType}
+                setNewSample={setNewSample}
+                setWhichTabisActive={setWhichTabisActive}
+              />
+            )}
             {sampleType && sampleType.value === "Subject/Patient" && (
               <Subject
                 projects={projects}

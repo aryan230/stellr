@@ -10,8 +10,8 @@ import {
 } from "../redux/actions/userActions";
 import { Toaster, toast } from "react-hot-toast";
 import Loader from "../css/utils/Loader";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../firebase";
+import { OAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, microProvider, provider } from "../firebase";
 import MicrosoftLogin from "react-microsoft-login";
 
 function LoginComponent() {
@@ -63,19 +63,30 @@ function LoginComponent() {
         console.error(error.message);
       });
   };
-  const authHandler = (err, data) => {
-    if (data) {
-      setType("microsoft");
-      dispatch(
-        loginMicrosoft({
-          email: data.account.username,
-          name: data.account.name,
-          type,
-        })
-      );
-    } else {
-      console.log(err);
-    }
+  const authHandler = () => {
+    signInWithPopup(auth, microProvider)
+      .then((result) => {
+        // User is signed in.
+        // IdP data available in result.additionalUserInfo.profile.
+        console.log(result);
+        // Get the OAuth access token and ID Token
+        const credential = OAuthProvider.credentialFromResult(result);
+        const accessToken = credential.accessToken;
+        const idToken = credential.idToken;
+        console.log(accessToken);
+      })
+      .catch((error) => {
+        console.log(error);
+        // Handle error.
+      });
+    // setType("microsoft");
+    // dispatch(
+    //   loginMicrosoft({
+    //     email: data.account.username,
+    //     name: data.account.name,
+    //     type,
+    //   })
+    // );
   };
   return (
     <div className="login-container">
@@ -123,19 +134,19 @@ function LoginComponent() {
                 />{" "}
                 Sign in with Google
               </button>
-              <MicrosoftLogin
-                className="some-micro-button"
-                clientId={`fda8e69f-f517-4387-90ed-0b1c2b97206f`}
-                authCallback={authHandler}
+
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  authHandler();
+                }}
               >
-                <button>
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/2048px-Microsoft_logo.svg.png"
-                    alt=""
-                  />{" "}
-                  Sign in with Microsoft
-                </button>
-              </MicrosoftLogin>
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/2048px-Microsoft_logo.svg.png"
+                  alt=""
+                />{" "}
+                Sign in with Microsoft
+              </button>
             </div>
           </>
         )}

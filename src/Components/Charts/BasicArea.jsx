@@ -1,3 +1,4 @@
+import { filter } from "lodash";
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import Chart from "react-apexcharts";
@@ -5,59 +6,64 @@ import Chart from "react-apexcharts";
 const BasicArea = ({ height = 200, newSamples }) => {
   const [isDark, setisDark] = useState(false);
   let [calculated, setCalculated] = useState(false);
-  const [samSeries, setisSeries] = useState([
-    {
-      month: "Jan",
-      val: 1,
-      data: 0,
-    },
-    {
-      month: "Feb",
-      val: 1,
-      data: 0,
-    },
-    {
-      month: "Aug",
-      val: 7,
-      data: 0,
-    },
-    {
-      month: "Sep",
-      val: 8,
-      data: 0,
-    },
-  ]);
-  const series = [
-    {
-      name: "Samples",
-      data: [
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "01").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "02").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "03").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "04").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "05").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "06").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "07").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "08").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "09").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "10").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "11").length,
-        newSamples &&
-          newSamples.filter((e) => e.createdAt.split("/")[1] == "12").length,
-      ],
-    },
-  ];
+  const [series, setSeries] = useState();
+  const [isFiltering, setIsFiltering] = useState(true);
+
+  const filterData = async () => {
+    setIsFiltering(true);
+
+    // Simulate an asynchronous filter operation (e.g., an API call)
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (newSamples) {
+      const filtered = await [
+        {
+          name: "Samples",
+          data: [
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "01")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "02")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "03")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "04")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "05")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "06")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "07")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "08")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "09")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "10")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "11")
+              .length,
+
+            await newSamples.filter((e) => e.createdAt.split("/")[1] == "12")
+              .length,
+          ],
+        },
+      ];
+
+      if (filtered[0].data.length === 12) {
+        setSeries(filtered);
+        setIsFiltering(false);
+      }
+    }
+  };
   const options = {
     chart: {},
     dataLabels: {
@@ -129,14 +135,32 @@ const BasicArea = ({ height = 200, newSamples }) => {
       left: 0,
     },
   };
+
+  useEffect(() => {
+    if (!series) {
+      if (newSamples) {
+        filterData();
+      }
+    }
+  }, [series, newSamples]);
+  useEffect(() => {
+    console.log(series && series[0].data.length);
+  }, [series]);
+
   return (
     <div>
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="line"
-        height={220}
-      />
+      {isFiltering ? (
+        <p>Filtering...</p>
+      ) : (
+        series && (
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="line"
+            height={220}
+          />
+        )
+      )}
     </div>
   );
 };
