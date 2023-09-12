@@ -27,6 +27,5 @@ const microProvider = new OAuthProvider("microsoft.com");
 const storage = getStorage(app);
 microProvider.setCustomParameters({
   prompt: "consent",
-  tenant: "10eac87c-c3cf-43b3-be85-f6569a01eca5",
 });
 export { db, auth, provider, microProvider, storage };

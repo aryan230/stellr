@@ -66,22 +66,16 @@ function LoginComponent() {
   const authHandler = () => {
     signInWithPopup(auth, microProvider)
       .then((result) => {
-        // User is signed in.
-        // IdP data available in result.additionalUserInfo.profile.
-        let string = result.user.email;
-        let name = result.user.displayName;
-        let email =
-          string.split("_")[0] + "@" + string.split("_")[1].split("#")[0];
-        // Get the OAuth access token and ID Token
         const credential = OAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
         const idToken = credential.idToken;
-        console.log(accessToken, idToken);
+
+        console.log(result);
         setType("microsoft");
         dispatch(
           loginMicrosoft({
-            email: email,
-            name: name,
+            email: result.user.email,
+            name: result.user.displayName,
             type,
           })
         );
