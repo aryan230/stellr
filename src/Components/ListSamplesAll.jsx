@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import StatsAndGraphs from "./Modals/StatsAndGraphs";
 
@@ -20,6 +20,31 @@ function ListSamplesAll({
   const [showStats, setShowStats] = useState(false);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    setTableData(
+      samples.map(
+        ({
+          sampleId: id,
+          data: name,
+          createdAt: createdAt,
+          type: recordType,
+          updatedAt: updatedAt,
+        }) => ({
+          id: `SAM-000${id}`,
+          name: JSON.parse(name).sampleName,
+          createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
+          recordType,
+          updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
+          createdDate: createdAt,
+          createdBy: userInfo.name,
+          view: "View",
+        })
+      )
+    );
+  }, []);
+
   const renderDetailsButton = (params) => {
     return (
       <button
@@ -186,32 +211,7 @@ function ListSamplesAll({
         <Box sx={{ height: "90%", width: "100%" }}>
           <DataGrid
             slots={{ toolbar: GridToolbar }}
-            rows={
-              samples
-                ? samples.map(
-                    ({
-                      sampleId: id,
-                      data: name,
-                      createdAt: createdAt,
-                      type: recordType,
-                      updatedAt: updatedAt,
-                    }) => ({
-                      id: `SAM-000${id}`,
-                      name: JSON.parse(name).sampleName,
-                      createdAt: new Date(createdAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      recordType,
-                      updatedAt: new Date(updatedAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      createdDate: createdAt,
-                      createdBy: userInfo.name,
-                      view: "View",
-                    })
-                  )
-                : []
-            }
+            rows={tableData}
             columns={columns}
             // initialState={{
             //   pagination: {
@@ -221,8 +221,6 @@ function ListSamplesAll({
             //   },
             // }}
             // pageSizeOptions={[3]}
-            checkboxSelection
-            disableRowSelectionOnClick
           />
         </Box>
       </div>
