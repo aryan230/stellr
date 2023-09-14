@@ -97,7 +97,7 @@ function ListSops({
           </div>
           <input
             type="text"
-            placeholder={`Search sops by name`}
+            placeholder={`Search SOPS by name`}
             onChange={(e) => setInputSearch(e.target.value)}
           />
         </div>

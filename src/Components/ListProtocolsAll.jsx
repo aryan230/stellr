@@ -3,31 +3,54 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import StatsAndGraphs from "./Modals/StatsAndGraphs";
-import { listMySamples } from "../redux/actions/sampleActions";
+import { listMyProtocols } from "../redux/actions/protocolActions";
+import { useNavigate } from "react-router-dom";
 
-function ListSamplesAll({
-  setSampleContent,
-  setSampleModal,
-  newSample,
-  setCreateNewSampleModal,
-  setNewSample,
-  sampleUpdate,
-  setSampleUpdate,
-  newSamples,
-  setViewAllSamples,
+function ListProtocolsAll({
+  setProtocolContent,
+  setProtocolModal,
+  setCreateNewProtocol,
+  newProtocol,
+  setProtocolsViewAll,
+  setNewProtocol,
 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [showStats, setShowStats] = useState(false);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [tableData, setTableData] = useState([]);
 
-  const sampleListMy = useSelector((state) => state.sampleListMy);
+  const protocolListMy = useSelector((state) => state.protocolListMy);
   const {
-    samples,
+    protocols,
     loading: loadingSamples,
     error: errorSamples,
-  } = sampleListMy;
+  } = protocolListMy;
+
+  useEffect(() => {
+    setTableData(
+      protocols.map(
+        ({
+          protocolId: id,
+          title: name,
+          createdAt: createdAt,
+          type: recordType,
+          updatedAt: updatedAt,
+        }) => ({
+          id: `PTCL-000${id}`,
+          name: name,
+          createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
+          recordType,
+          updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
+          createdDate: createdAt,
+          createdBy: userInfo.name,
+          view: "View",
+        })
+      )
+    );
+  }, []);
 
   const renderDetailsButton = (params) => {
     return (
@@ -35,13 +58,10 @@ function ListSamplesAll({
         type="button"
         onClick={() => {
           const docTwo =
-            samples &&
-            samples.find(
-              (e) => JSON.parse(e.data).sampleName == params.row.name
-            );
+            protocols && protocols.find((e) => e.title == params.row.name);
 
-          setSampleContent(docTwo);
-          setSampleModal(true);
+          setProtocolContent(docTwo);
+          setProtocolModal(true);
         }}
         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
       >
@@ -51,19 +71,14 @@ function ListSamplesAll({
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", width: 150 },
     {
       field: "name",
       headerName: "Name",
-      width: 150,
+      width: 200,
       editable: false,
     },
-    {
-      field: "recordType",
-      headerName: "Record Type",
-      width: 150,
-      editable: false,
-    },
+
     {
       field: "createdAt",
       headerName: "Created At",
@@ -102,20 +117,21 @@ function ListSamplesAll({
   ];
 
   useEffect(() => {
-    dispatch(listMySamples(userInfo._id));
+    dispatch(listMyProtocols(userInfo._id));
   }, [dispatch]);
   useEffect(() => {
-    if (newSample) {
-      dispatch(listMySamples(userInfo._id));
-      setNewSample(false);
+    if (newProtocol) {
+      dispatch(listMyProtocols(userInfo._id));
+      setNewProtocol(false);
     }
-  }, [newSample]);
+  }, [newProtocol]);
+  //sampleUpdate
 
   return (
     <div className="project-component">
       <div className="project-component-inside">
         {showStats && (
-          <StatsAndGraphs setShowStats={setShowStats} samples={samples} />
+          <StatsAndGraphs setShowStats={setShowStats} samples={protocols} />
         )}
         <div className="p-c-s-i-t">
           <div className="ps-c-it-inside">
@@ -144,7 +160,7 @@ function ListSamplesAll({
               </ol>
             </nav>
 
-            <h1>Sample Registries</h1>
+            <h1>Protocol Registries</h1>
           </div>
           <div className="p-c-s-i-t-left">
             <button
@@ -162,11 +178,11 @@ function ListSamplesAll({
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                setCreateNewSampleModal(true);
+                setCreateNewProtocol(true);
               }}
               className="text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Add New Sample
+              Add New Protocol
               <svg
                 className="w-3.5 h-3.5 ml-2"
                 aria-hidden="true"
@@ -209,20 +225,20 @@ function ListSamplesAll({
               </div>
             </div>
           ) : (
-            samples && (
+            protocols && (
               <Box sx={{ height: "90%", width: "100%" }}>
                 <DataGrid
                   slots={{ toolbar: GridToolbar }}
-                  rows={samples.map(
+                  rows={protocols.map(
                     ({
-                      sampleId: id,
-                      data: name,
+                      protocolId: id,
+                      title: name,
                       createdAt: createdAt,
                       type: recordType,
                       updatedAt: updatedAt,
                     }) => ({
-                      id: `SAM-000${id}`,
-                      name: JSON.parse(name).sampleName,
+                      id: `PTCL-000${id}`,
+                      name: name,
                       createdAt: new Date(createdAt)
                         .toLocaleString("en-GB")
                         .split(",")[0],
@@ -237,45 +253,6 @@ function ListSamplesAll({
                     })
                   )}
                   columns={columns}
-                  // initialState={{
-                  //   pagination: {
-                  //     paginationModel: {
-                  //       pageSize: 8,
-                  //     },
-                  //   },
-                  // }}
-                  // pageSizeOptions={[3]}
-                  checkboxSelection
-                  disableRowSelectionOnClick
-                  onSelectionModelChange={(ids) => {
-                    const selectedIDs = new Set(ids);
-                    const selectedRowData = samples
-                      .map(
-                        ({
-                          sampleId: id,
-                          data: name,
-                          createdAt: createdAt,
-                          type: recordType,
-                          updatedAt: updatedAt,
-                        }) => ({
-                          id: `SAM-000${id}`,
-                          name: JSON.parse(name).sampleName,
-                          createdAt: new Date(createdAt)
-                            .toLocaleString("en-GB")
-                            .split(",")[0],
-                          recordType,
-                          updatedAt: new Date(updatedAt)
-                            .toLocaleString("en-GB")
-                            .split(",")[0],
-                          createdDate: createdAt,
-                          createdBy: userInfo.name,
-                          updatedBy: userInfo.name,
-                          view: "View",
-                        })
-                      )
-                      .filter((row) => selectedIDs.has(row.id.toString()));
-                    console.log(selectedRowData);
-                  }}
                 />
               </Box>
             )
@@ -286,4 +263,4 @@ function ListSamplesAll({
   );
 }
 
-export default ListSamplesAll;
+export default ListProtocolsAll;

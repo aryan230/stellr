@@ -36,13 +36,6 @@ function Editor() {
       if (sucessLoadingDetails) {
         if (!user.name) {
           navigate("/account/setup");
-        } else {
-          if (sucess && sucessCollab) {
-            console.log(orgs);
-            if (orgs.length === 0 && orgsCollab.length === 0) {
-              navigate("/organization/setup");
-            }
-          }
         }
       }
     }

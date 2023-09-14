@@ -107,7 +107,7 @@ function SopStepperTwo({ setNewSop, setCreateNewSop, setWhichTabisActive }) {
     await dispatch(createSops(taskObject));
     await dispatch({ type: SOP_CREATE_RESET });
     setLoader(false);
-    toast.success("Sop created successfully");
+    toast.success("SOP created successfully");
   };
 
   useEffect(() => {
@@ -359,7 +359,7 @@ function SopStepperTwo({ setNewSop, setCreateNewSop, setWhichTabisActive }) {
             onClick={submitHandler}
             sx={{ mt: 1, mr: 1 }}
           >
-            Create New SOP
+            SAVE
           </Button>
           <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
             Back

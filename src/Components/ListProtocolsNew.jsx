@@ -1,70 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
-import Donut from "./Charts/Donut";
-import Card from "./ui/Card";
-import Button from "./ui/Button";
-import GroupChart4 from "./ui/group-chart-4";
-import BasicArea from "./Charts/BasicArea";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { listMySamples } from "../redux/actions/sampleActions";
-import InsideLoader from "./Loader/InsideLoader";
-import ListSampleSubject from "./ListSampleComponent/ListSampleSubject";
-import ListSampleOther from "./ListSampleComponent/ListSampleOther";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import Box from "@mui/material/Box";
+import { listMyProtocols } from "../redux/actions/protocolActions";
+import ListProtocolsAll from "./ListProtocolsAll";
 import { DataGrid } from "@mui/x-data-grid";
-//theme
-import "primereact/resources/themes/lara-light-indigo/theme.css";
+import { Box } from "@mui/material";
+import { Helmet } from "react-helmet";
+import PieChartProtocol from "./Charts/PieChartProtocol";
 
-//core
-import "primereact/resources/primereact.min.css";
-import Pie from "./Charts/Pie";
-import ListSamplesAll from "./ListSamplesAll";
-import Reports from "./ReportsAndDashboard/Reports/Reports";
-
-function ListSamplesNew({
-  setSampleContent,
-  setSampleModal,
-  newSample,
-  setCreateNewSampleModal,
-  setNewSample,
+function ListProtocolsNew({
+  setProtocolContent,
+  setProtocolModal,
+  newProtocol,
+  setCreateNewProtocol,
+  setNewProtocol,
   sampleUpdate,
   setSampleUpdate,
-  setWhichTabisActive,
-  setReportTab,
-  reportTab,
-  newReport,
-  setNewReport,
-  setActiveReport,
 }) {
-  let width = 15000;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [inputSearch, setInputSearch] = useState("");
+  const [id, setId] = useState();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const [viewAllSamples, setViewAllSamples] = useState(false);
-
-  const sampleListMy = useSelector((state) => state.sampleListMy);
+  const [viewProtocolsAll, setProtocolsViewAll] = useState(false);
+  const protocolListMy = useSelector((state) => state.protocolListMy);
   const {
-    samples,
+    protocols,
     loading: loadingSamples,
     error: errorSamples,
-  } = sampleListMy;
-  const [newSamples, setNewSamples] = useState(
-    samples &&
-      samples.map(
+  } = protocolListMy;
+
+  const [newProtocols, setNewProtocols] = useState(
+    protocols &&
+      protocols.map(
         ({
-          sampleId: id,
-          data: name,
+          protocolId: id,
+          title: name,
           createdAt: createdAt,
           type: recordType,
           updatedAt: updatedAt,
         }) => ({
-          id: `SAM-000${id}`,
-          name: JSON.parse(name).sampleName,
+          id: `PTCL-000${id}`,
+          name: name,
           createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
           recordType,
           updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
@@ -74,16 +52,15 @@ function ListSamplesNew({
         })
       )
   );
-
   useEffect(() => {
-    dispatch(listMySamples(userInfo._id));
+    dispatch(listMyProtocols(userInfo._id));
   }, [dispatch]);
   useEffect(() => {
-    if (newSample) {
-      dispatch(listMySamples(userInfo._id));
-      setNewSample(false);
+    if (newProtocol) {
+      dispatch(listMyProtocols(userInfo._id));
+      setNewProtocol(false);
     }
-  }, [newSample]);
+  }, [newProtocol]);
 
   const renderDetailsButton = (params) => {
     return (
@@ -91,15 +68,12 @@ function ListSamplesNew({
         type="button"
         onClick={() => {
           const docTwo =
-            samples &&
-            samples.find(
-              (e) => JSON.parse(e.data).sampleName == params.row.name
-            );
+            protocols && protocols.find((e) => e.title == params.row.name);
 
-          setSampleContent(docTwo);
-          setSampleModal(true);
+          setProtocolContent(docTwo);
+          setProtocolModal(true);
         }}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+        className="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
       >
         View
       </button>
@@ -107,19 +81,14 @@ function ListSamplesNew({
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", width: 150 },
     {
       field: "name",
       headerName: "Name",
-      width: 150,
+      width: 200,
       editable: false,
     },
-    {
-      field: "recordType",
-      headerName: "Record Type",
-      width: 150,
-      editable: false,
-    },
+
     {
       field: "createdAt",
       headerName: "Created At",
@@ -151,7 +120,7 @@ function ListSamplesNew({
   ];
 
   return (
-    <div className="project-component-inside-samples">
+    <div className="project-component-inside">
       <Helmet>
         <meta charSet="utf-8" />
         <title>Data Registries and Management | Bio-Pharma ELN Software</title>
@@ -160,16 +129,6 @@ function ListSamplesNew({
           content="Effectively manage and maintain data registries with our specialized Bio-Pharma ELN software. Simplify data organization and accessibility."
         />
       </Helmet>
-      {reportTab && (
-        <Reports
-          setReportTab={setReportTab}
-          dataValue={samples && samples}
-          newReport={newReport}
-          setNewReport={setNewReport}
-          setActiveReport={setActiveReport}
-        />
-      )}
-
       <div className="p-c-s-i-t">
         <div className="ps-c-it-inside">
           <nav className="flex" aria-label="Breadcrumb">
@@ -179,7 +138,7 @@ function ListSamplesNew({
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    setViewAllSamples(false);
+                    setProtocolsViewAll(false);
                   }}
                   className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600"
                 >
@@ -195,10 +154,57 @@ function ListSamplesNew({
                   Home
                 </a>
               </li>
+              {/* <li>
+              <div className="flex items-center">
+                <svg
+                  className="w-3 h-3 text-gray-400 mx-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 6 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m1 9 4-4-4-4"
+                  />
+                </svg>
+                <a
+                  href="#"
+                  className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2"
+                >
+                  Projects
+                </a>
+              </div>
+            </li>
+            <li aria-current="page">
+              <div className="flex items-center">
+                <svg
+                  className="w-3 h-3 text-gray-400 mx-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 6 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m1 9 4-4-4-4"
+                  />
+                </svg>
+                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                  Flowbite
+                </span>
+              </div>
+            </li> */}
             </ol>
           </nav>
 
-          <h1>Sample Registries</h1>
+          <h1>Protocol Registries</h1>
         </div>
 
         <div className="p-c-s-i-t-left">
@@ -206,22 +212,22 @@ function ListSamplesNew({
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setWhichTabisActive("sampleList");
+              setProtocolsViewAll(true);
             }}
             className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
           >
-            View All Samples
+            View All Protocols
           </button>
 
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setReportTab(true);
+              setCreateNewProtocol(true);
             }}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Create Report
+            Add New Protocol
             <svg
               className="w-3.5 h-3.5 ml-2"
               aria-hidden="true"
@@ -265,7 +271,7 @@ function ListSamplesNew({
               </div>
             </div>
           ) : (
-            <BasicArea newSamples={newSamples ? newSamples : null} />
+            <PieChartProtocol newSamples={protocols ? protocols : []} />
           )}
         </div>
 
@@ -294,7 +300,44 @@ function ListSamplesNew({
             </div>
           ) : (
             <Box sx={{ height: "90%", width: "100%" }}>
-              <Pie newSamples={samples ? samples : []} />
+              <DataGrid
+                rows={
+                  protocols &&
+                  protocols.map(
+                    ({
+                      protocolId: id,
+                      title: name,
+                      createdAt: createdAt,
+                      type: recordType,
+                      updatedAt: updatedAt,
+                    }) => ({
+                      id: `PTCL-000${id}`,
+                      name: name,
+                      createdAt: new Date(createdAt)
+                        .toLocaleString("en-GB")
+                        .split(",")[0],
+                      recordType,
+                      updatedAt: new Date(updatedAt)
+                        .toLocaleString("en-GB")
+                        .split(",")[0],
+                      createdDate: createdAt,
+                      createdBy: userInfo.name,
+                      view: "View",
+                    })
+                  )
+                }
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 4,
+                    },
+                  },
+                }}
+                pageSizeOptions={[3]}
+                checkboxSelection
+                disableRowSelectionOnClick
+              />
             </Box>
           )}
         </div>
@@ -303,4 +346,4 @@ function ListSamplesNew({
   );
 }
 
-export default ListSamplesNew;
+export default ListProtocolsNew;

@@ -81,10 +81,9 @@ function DataExport({ setDataExport }) {
   } = entriesListMy;
 
   let newArr =
-    projects &&
-    projectsCollab &&
-    projectsOrg &&
-    _.unionBy(projects, projectsCollab, projectsOrg, "_id");
+    projects && projectsCollab && projectsOrg
+      ? _.unionBy(projects, projectsCollab, projectsOrg, "_id")
+      : _.unionBy(projects, projectsCollab, "_id");
 
   const allOptionsValue =
     newArr &&

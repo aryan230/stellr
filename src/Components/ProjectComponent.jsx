@@ -435,7 +435,7 @@ function ProjectComponent({
                   />
                 ))}
             {entries && entries.length === 0 && tasks && tasks.length === 0 && (
-              <div className="middlenav-empty">
+              <div className="middlenav-empty py-10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="40"

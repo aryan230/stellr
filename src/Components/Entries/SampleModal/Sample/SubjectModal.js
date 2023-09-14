@@ -1,8 +1,18 @@
-import { Box, Chip, Drawer } from "@mui/material";
+import { Box, Chip, Drawer, makeStyles } from "@mui/material";
 import React, { useState } from "react";
 import _ from "lodash";
 import DrawerSample from "./DrawerSample";
 import UpdateSampleModal from "./UpdateSampleModal";
+import NewSampleHeader from "./NewSampleHeader";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+
 function SubjectModal({
   doc,
   setSampleModal,
@@ -11,8 +21,33 @@ function SubjectModal({
   setIsDrawerOpenLogs,
   setIsDrawerVersion,
 }) {
-  const [data, setData] = useState(Object.entries(insideData));
+  const [data, setData] = useState(
+    Object.entries(insideData).map((e) => ({
+      name: _.startCase(e[0]),
+      value: _.startCase(e[1]),
+    }))
+  );
+  const [activeTab, setActiveTab] = useState("data");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const columns = [
+    { id: "name", label: "Entity Name", minWidth: 170 },
+    { id: "value", label: "Entity Value", minWidth: 100 },
+  ];
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(6);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const tableStyle = {
+    fontFamily: "GothamBook", // Replace 'Your-Font-Family' with the desired font family
+  };
   return (
     <div className="sample-modal-container-main">
       <div className="top-modal">
@@ -60,7 +95,8 @@ function SubjectModal({
             />
           </Box>
         </Drawer> */}
-        <div className="sample-modal-container-top-div">
+        {/* sTART HERE */}
+        {/* <div className="sample-modal-container-top-div">
           <div className="sample-modal-top-left">
             <div className="sample-modal-top-left-top">
               <h1>Sample Name - {insideData.sampleName}</h1>
@@ -112,7 +148,185 @@ function SubjectModal({
                 </div>
               ))}
           </div>
-        </div>
+        </div> */}
+        {/* end here */}
+        {/* new sample starts here */}
+        <NewSampleHeader setActiveTab={setActiveTab} activeTab={activeTab} />
+        {activeTab === "settings" && (
+          <div className="main-content-inside-modals">
+            <div className="inside-modal-main-content-edit">
+              <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow m-2">
+                <a href="#">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                    Edit Content
+                  </h5>
+                </a>
+                <p className="mb-3 font-normal text-gray-700">
+                  Edit and customize your content easily. Make changes, updates,
+                  and improvements to your data with just a few clicks.
+                </p>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsDrawerOpen(true);
+                  }}
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                >
+                  Edit Sample
+                  <svg
+                    className="w-3.5 h-3.5 ml-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow m-2">
+                <a href="#">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                    View Logs
+                  </h5>
+                </a>
+                <p className="mb-3 font-normal text-gray-700">
+                  Click here to access detailed logs of activities and events.
+                  Keep track of important information with our comprehensive
+                  logging system.
+                </p>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsDrawerOpenLogs(true);
+                  }}
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                >
+                  View Logs
+                  <svg
+                    className="w-3.5 h-3.5 ml-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+        {activeTab === "data" && (
+          <div className="main-content-inside-modals">
+            <TableContainer sx={{ maxHeight: 400 }}>
+              <Table
+                stickyHeader
+                aria-label="sticky table"
+                className="custom-font-mui"
+              >
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        {column.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data &&
+                    data.length > 0 &&
+                    data
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row.code}
+                          >
+                            {columns.map((column) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {column.format && typeof value === "number"
+                                    ? column.format(value)
+                                    : value}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[6, 25, 100]}
+              component="div"
+              count={data && data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+
+            {/* <div class="relative overflow-x-auto h-[100%]">
+            <table class="w-[90%] mx-auto text-sm text-left text-gray-500">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+                <tr>
+                  <th scope="col" class="px-6 py-3">
+                    Entity Name
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Entity Value
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="h-[20%]">
+                {data &&
+                  data.length > 0 &&
+                  data.map((d) => (
+                    <tr class="bg-white border-b">
+                      <th
+                        scope="row"
+                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                      >
+                        {_.startCase(d[0])}
+                      </th>
+                      <td class="px-6 py-4">{d[1]}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div> */}
+          </div>
+        )}
+
+        {/* new sample ends here */}
         {/* <div className="xl:col-span-5 col-span-12 lg:col-span-7">
           <div className="card h-full">
             <div className="card-header">

@@ -507,6 +507,29 @@ div.ql-tooltip {
   visibility: visible;
 }
 
+.main-content-inside-modals {
+  width: 100%;
+  height: 70%;
+  padding: 1rem 0;
+}
+.main-content-inside-modals .inside-modal-main-content-edit {
+  display: flex;
+}
+
+.MuiTable-root {
+  font-family: "GothamBook", sans-serif !important;
+}
+
+/* Target table header cells */
+.MuiTableCell-head {
+  font-family: "GothamBold", sans-serif !important;
+}
+
+/* Target table body cells */
+.MuiTableCell-body {
+  font-family: "Poppins", sans-serif !important;
+}
+
 @font-face {
   font-family: "Gotham-Black";
   src: url("../fonts/Gotham-Black.otf") format("opentype");
@@ -1287,6 +1310,7 @@ div.ql-tooltip {
 .navbar .top-navbar ul li {
   width: 100%;
   height: 15%;
+  text-align: center;
   transition: 0.2s all;
 }
 .navbar .top-navbar ul li a {
@@ -1295,7 +1319,7 @@ div.ql-tooltip {
   text-decoration: none;
   color: #fff;
   font-family: Poppins;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -1303,6 +1327,7 @@ div.ql-tooltip {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 .navbar .top-navbar ul li a svg {
   margin-bottom: 0.5rem;
@@ -3090,7 +3115,7 @@ div.ql-tooltip {
 }
 
 .p-c-s-i-t {
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   padding: 2rem 0;
   display: flex;
@@ -3107,7 +3132,7 @@ div.ql-tooltip {
 }
 
 .p-c-s-charts {
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   height: 90%;
 }
@@ -5321,6 +5346,115 @@ div.ql-tooltip {
 .sample-modal-container-main .sample-modal-container-inside .sample-modal-main-container .view-logs-inside .main h2 {
   font-size: 1rem;
   border: 1px solid rgb(226, 226, 226);
+}
+
+.reports-and-dashboards {
+  width: 79vw;
+  height: 100%;
+  float: right;
+  background-color: white;
+}
+
+.view-report-modal {
+  width: 50%;
+  min-height: 90%;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.65rem;
+  padding-bottom: 5rem;
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+.view-report-modal::-webkit-scrollbar {
+  width: 5px;
+}
+.view-report-modal::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.view-report-modal::-webkit-scrollbar-thumb {
+  background: rgba(147, 175, 253, 0.3764705882);
+}
+.view-report-modal::-webkit-scrollbar-thumb:hover {
+  background: #861cff;
+}
+.view-report-modal .top-modal {
+  width: 80%;
+  padding: 1rem 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: 0.2s all;
+}
+.view-report-modal .top-modal button {
+  background-color: transparent;
+  border: 0px;
+  position: sticky;
+}
+.view-report-modal .top-modal svg:hover {
+  cursor: pointer;
+}
+.view-report-modal .view-report-charts {
+  width: 90%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+.view-report-modal .view-report-data-grid {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.report-modal-container {
+  width: 50%;
+  min-height: 90%;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.65rem;
+  padding-bottom: 5rem;
+}
+.report-modal-container .top-modal {
+  width: 80%;
+  padding: 1rem 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: 0.2s all;
+}
+.report-modal-container .top-modal button {
+  background-color: transparent;
+  border: 0px;
+}
+.report-modal-container .top-modal svg:hover {
+  cursor: pointer;
+}
+.report-modal-container .report-main-container {
+  width: 90%;
+  margin: 0 auto;
+}
+.report-modal-container .report-main-container .reports-main-container-inside {
+  width: 90%;
+  margin: 0 auto;
+}
+.report-modal-container .report-main-container .reports-main-container-preview {
+  width: 50%;
+  padding: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-content-inside-reports-main {
+  width: 80%;
+  margin: 0 auto;
 }
 
 .project-settings {

@@ -1,0 +1,117 @@
+.reports-and-dashboards {
+  width: 79vw;
+  height: 100%;
+  float: right;
+  background-color: white;
+}
+
+.view-report-modal {
+  width: 50%;
+  min-height: 90%;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.65rem;
+  padding-bottom: 5rem;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #93affd60;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #861cff;
+  }
+  .top-modal {
+    width: 80%;
+    padding: 1rem 0;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transition: 0.2s all;
+
+    button {
+      background-color: transparent;
+      border: 0px;
+      position: sticky;
+    }
+    svg {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .view-report-charts {
+    width: 90%;
+    margin: 0 auto;
+    padding: 2rem 0;
+  }
+
+  .view-report-data-grid {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+.report-modal-container {
+  width: 50%;
+  min-height: 90%;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.65rem;
+  padding-bottom: 5rem;
+  .top-modal {
+    width: 80%;
+    padding: 1rem 0;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transition: 0.2s all;
+    button {
+      background-color: transparent;
+      border: 0px;
+    }
+    svg {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .report-main-container {
+    width: 90%;
+    margin: 0 auto;
+
+    .reports-main-container-inside {
+      width: 90%;
+      margin: 0 auto;
+    }
+    .reports-main-container-preview {
+      width: 50%;
+      padding: 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.main-content-inside-reports-main {
+  width: 80%;
+  margin: 0 auto;
+}

@@ -241,10 +241,11 @@ function MiddleNav({
   // }, [taskUpdateController]);
 
   let newArr =
-    projects &&
-    projectsCollab &&
-    projectsOrg &&
-    _.unionBy(projects, projectsCollab, projectsOrg, "_id");
+    projects && projectsCollab && projectsOrg
+      ? _.unionBy(projects, projectsCollab, projectsOrg, "_id")
+      : _.unionBy(projects, projectsCollab, "_id");
+
+  console.log(projectsOrg);
 
   return (
     <div className="structure-left">

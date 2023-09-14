@@ -38,6 +38,10 @@ import TextEditorTwo from "./Editor/QuillEditorTwo";
 import Footer from "../Pages/Footer";
 import Banner from "./Banner";
 import ListSamplesNew from "./ListSamplesNew";
+import ListProtocolsNew from "./ListProtocolsNew";
+import ListSamplesAll from "./ListSamplesAll";
+import ReportsAndDashboard from "./ReportsAndDashboard/ReportsAndDashboard";
+import ListProtocolsAll from "./ListProtocolsAll";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -417,7 +421,7 @@ function EditorComponent() {
               />
             )}
             {whichTabisActive === "sampleList" && (
-              <ListSamples
+              <ListSamplesAll
                 setSampleContent={setSampleContent}
                 setSampleModal={setSampleModal}
                 newSample={newSample}
@@ -427,8 +431,11 @@ function EditorComponent() {
                 sampleUpdate={sampleUpdate}
               />
             )}
+            {whichTabisActive === "reportsAndDashboard" && (
+              <ReportsAndDashboard setWhichTabisActive={setWhichTabisActive} />
+            )}
             {whichTabisActive === "listProtocols" && (
-              <ListProtocols
+              <ListProtocolsAll
                 setProtocolContent={setProtocolContent}
                 setProtocolModal={setProtocolModal}
                 setCreateNewProtocol={setCreateNewProtocol}
