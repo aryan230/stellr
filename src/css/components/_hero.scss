@@ -281,8 +281,7 @@
           position: absolute;
           bottom: 2rem;
           left: 6rem;
-          min-width: 18vw;
-          width: fit-content;
+          width: 18vw;
           z-index: 888888;
           .middle-navbar-container {
             width: 90%;
@@ -330,6 +329,7 @@
                     font-weight: 400;
                     line-height: normal;
                     padding: 0 1rem;
+                    text-align: left;
                   }
                 }
                 span {
@@ -339,6 +339,7 @@
                   font-style: normal;
                   font-weight: 400;
                   line-height: normal;
+                  text-align: left;
                 }
               }
             }
@@ -492,17 +493,20 @@
             svg {
               width: 10%;
             }
-
-            p {
+            .entity-name-right {
               width: 90%;
-              color: #000000;
-              font-family: Poppins;
-              font-size: 1rem;
-              font-style: normal;
-              font-weight: 400;
-              line-height: normal;
-              padding: 0 1rem;
-              text-align: left;
+
+              p {
+                width: 100%;
+                color: #000000;
+                font-family: GothamBook;
+                font-size: 1rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                padding: 0 1rem;
+                text-align: left;
+              }
             }
           }
           span {

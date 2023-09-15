@@ -57,11 +57,23 @@ function Home({
   }, [todaysDate]);
   const getEventProp = (event, start, end, isSelected) => {
     if (event.typeEvent === "normal") {
+      var backgroundColor = "#" + event.hexColor;
+      var style = {
+        backgroundColor: "#6c63ff",
+        borderRadius: "0px",
+        opacity: 1,
+        color: "white",
+        border: "0px",
+        display: "block",
+      };
+      return {
+        style: style,
+      };
     } else {
       var backgroundColor = "#" + event.hexColor;
       var style = {
         backgroundColor: "#6200d2",
-        borderRadius: "5px",
+        borderRadius: "0px",
         opacity: 0.8,
         color: "white",
         border: "0px",

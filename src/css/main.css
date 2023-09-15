@@ -1555,9 +1555,7 @@ div.ql-tooltip {
   position: absolute;
   bottom: 2rem;
   left: 6rem;
-  min-width: 18vw;
-  width: -moz-fit-content;
-  width: fit-content;
+  width: 18vw;
   z-index: 888888;
 }
 .navbar .bottom-navbar ul li .drop-down-content .middle-navbar-container {
@@ -1608,6 +1606,7 @@ div.ql-tooltip {
   font-weight: 400;
   line-height: normal;
   padding: 0 1rem;
+  text-align: left;
 }
 .navbar .bottom-navbar ul li .drop-down-content .middle-navbar-container .mnc-element .mnc-element-inside span {
   color: #777;
@@ -1616,6 +1615,7 @@ div.ql-tooltip {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  text-align: left;
 }
 
 .main-content {
@@ -1758,10 +1758,13 @@ div.ql-tooltip {
 .main-content .structure-left .sl-inside .sl-element .mnc-element-inside .mnc-element-left svg {
   width: 10%;
 }
-.main-content .structure-left .sl-inside .sl-element .mnc-element-inside .mnc-element-left p {
+.main-content .structure-left .sl-inside .sl-element .mnc-element-inside .mnc-element-left .entity-name-right {
   width: 90%;
+}
+.main-content .structure-left .sl-inside .sl-element .mnc-element-inside .mnc-element-left .entity-name-right p {
+  width: 100%;
   color: #000000;
-  font-family: Poppins;
+  font-family: GothamBook;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -3799,12 +3802,12 @@ div.ql-tooltip {
 .task-modal-container-main .project-main .project-main-inside .project-s-header .project-s-left button {
   color: #5d00d2;
   padding: 1rem 2rem;
-  font-family: Karla;
+  font-family: GothamBook;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
   border: 1px solid #5d00d2;
   transition: 0.2s all;
 }
@@ -4195,6 +4198,24 @@ div.ql-tooltip {
 .task-modal-container-main .project-main .project-main-inside .invite-team .invte {
   height: -moz-fit-content;
   height: fit-content;
+}
+
+.custom-scrollbar-task {
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+.custom-scrollbar-task::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar-task::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar-task::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.custom-scrollbar-task::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .forms-inside-div {
@@ -5024,6 +5045,30 @@ div.ql-tooltip {
 }
 .drawer-info .drawer-info-inside .drawer-info-top {
   width: 100%;
+}
+.drawer-info .drawer-info-inside .drawer-info-top .react-quill-editor .quill > .ql-container > .ql-editor.ql-blank::before {
+  font-size: 1rem;
+  font-family: Poppins;
+  font-style: normal;
+  color: #8f8585;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+.drawer-info .drawer-info-inside .drawer-info-top .react-quill-editor .quill {
+  border: 1px solid #d1c9c9;
+  text-align: left;
+  margin: 0rem 0;
+  margin-bottom: 2rem;
+  border-radius: 0.125rem;
+}
+.drawer-info .drawer-info-inside .drawer-info-top .react-quill-editor .quill .ql-toolbar.ql-snow {
+  border: 0px !important;
+  padding: 0px;
+  background: #eaecec;
+}
+.drawer-info .drawer-info-inside .drawer-info-top .react-quill-editor .quill .ql-editor {
+  padding: 0.5rem;
+  height: 100px;
 }
 .drawer-info .drawer-info-inside .drawer-info-top .topper-drawer-info {
   width: 100%;

@@ -172,6 +172,7 @@ function StepperContainer({
                     <ReactQuill
                       theme="snow"
                       value={data.requiredReagentsAndMaterials}
+                      placeholder="Reagents & Equipments"
                       onChange={(e) => {
                         handleChange("requiredReagentsAndMaterials", e);
                       }}

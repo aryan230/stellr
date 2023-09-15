@@ -4,6 +4,7 @@ import Select from "react-select";
 import { updateTask } from "../../../redux/actions/taskActions";
 import { TASK_UPDATE_PROFILE_RESET } from "../../../redux/constants/taskConstants";
 import { addTasksLogs } from "../../Functions/addTaskLogs";
+import ReactQuill from "react-quill";
 
 function DrawerEditTask({
   task,
@@ -14,6 +15,9 @@ function DrawerEditTask({
   const dispatch = useDispatch();
   const [subject, setSubject] = useState(task.subject);
   const [dueDate, setDuedate] = useState(task.due_date);
+  const [description, setDescription] = useState(
+    task.description ? task.description : ""
+  );
   const [priority, setPriority] = useState({
     value: task.priority,
     label: task.priority,
@@ -75,6 +79,7 @@ function DrawerEditTask({
         due_date: dueDate,
         priority: priority.value,
         status: status.value,
+        description: description,
       })
     );
 
@@ -109,7 +114,7 @@ function DrawerEditTask({
             </svg>
             <h2>Edit Task</h2>
           </div>
-          <form onSubmit={submitHandler}>
+          <form>
             <label htmlFor="">Name</label>
             <input
               type="text"
@@ -141,23 +146,26 @@ function DrawerEditTask({
               placeholder="Select Status"
               required
             />
-
-            <button className="delete" type="submit">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-              >
-                <path
-                  d="M13.8067 6.19333L9.80667 2.19333C9.74523 2.13337 9.6728 2.08583 9.59333 2.05333C9.51068 2.01974 9.42254 2.00167 9.33333 2H4C3.46957 2 2.96086 2.21071 2.58579 2.58579C2.21071 2.96086 2 3.46957 2 4V12C2 12.5304 2.21071 13.0391 2.58579 13.4142C2.96086 13.7893 3.46957 14 4 14H12C12.5304 14 13.0391 13.7893 13.4142 13.4142C13.7893 13.0391 14 12.5304 14 12V6.66667C14.0005 6.57893 13.9837 6.49195 13.9505 6.41073C13.9173 6.3295 13.8685 6.25563 13.8067 6.19333ZM6 3.33333H8.66667V4.66667H6V3.33333ZM10 12.6667H6V10.6667C6 10.4899 6.07024 10.3203 6.19526 10.1953C6.32029 10.0702 6.48986 10 6.66667 10H9.33333C9.51014 10 9.67971 10.0702 9.80474 10.1953C9.92976 10.3203 10 10.4899 10 10.6667V12.6667ZM12.6667 12C12.6667 12.1768 12.5964 12.3464 12.4714 12.4714C12.3464 12.5964 12.1768 12.6667 12 12.6667H11.3333V10.6667C11.3333 10.1362 11.1226 9.62753 10.7475 9.25245C10.3725 8.87738 9.86377 8.66667 9.33333 8.66667H6.66667C6.13623 8.66667 5.62753 8.87738 5.25245 9.25245C4.87738 9.62753 4.66667 10.1362 4.66667 10.6667V12.6667H4C3.82319 12.6667 3.65362 12.5964 3.5286 12.4714C3.40357 12.3464 3.33333 12.1768 3.33333 12V4C3.33333 3.82319 3.40357 3.65362 3.5286 3.5286C3.65362 3.40357 3.82319 3.33333 4 3.33333H4.66667V5.33333C4.66667 5.51014 4.7369 5.67971 4.86193 5.80474C4.98695 5.92976 5.15652 6 5.33333 6H9.33333C9.51014 6 9.67971 5.92976 9.80474 5.80474C9.92976 5.67971 10 5.51014 10 5.33333V4.27333L12.6667 6.94V12Z"
-                  fill="white"
-                />
-              </svg>
-              Save
-            </button>
+            <div className="margin-maker"></div>
           </form>
+
+          <div className="react-quill-editor">
+            <div className="label-input">
+              <label htmlFor="">Enter Desciption</label>{" "}
+              <ReactQuill
+                theme="snow"
+                value={description}
+                onChange={(e) => setDescription(e)}
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={submitHandler}
+            className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-4 mr-2 mb-2 focus:outline-none"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

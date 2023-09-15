@@ -9,6 +9,7 @@ function CreateOrgModal({
   setCreateOrg,
   setWhichTabisActive,
   setUpdatedUserCollabRoleOrg,
+  setShowBannerOrg,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ function CreateOrgModal({
     if (sucess) {
       setCreateOrg(false);
       setNewOrg(true);
+      setShowBannerOrg(false);
       setWhichTabisActive("orgList");
     }
   }, [sucess]);

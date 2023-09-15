@@ -101,7 +101,10 @@ function Entries({
                 fill="black"
               />
             </svg>
-            <p>{doc.name}</p>
+            <div className="entity-name-right">
+              {" "}
+              <p>{doc.name}</p>
+            </div>
           </div>
         </div>
       ) : (

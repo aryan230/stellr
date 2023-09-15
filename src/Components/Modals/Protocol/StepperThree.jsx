@@ -146,6 +146,14 @@ function StepperThree({
       return { ...prev, [name]: value };
     });
   };
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      ["link"],
+    ],
+  };
   return (
     <Box sx={{ maxWidth: 400 }}>
       {loader && <Loader />}
@@ -204,6 +212,7 @@ function StepperThree({
                     <ReactQuill
                       theme="snow"
                       value={data.materialsChecklist}
+                      placeholder="Reagents & Equipments"
                       onChange={(e) => {
                         handleChange("materialsChecklist", e);
                       }}
@@ -281,6 +290,7 @@ function StepperThree({
                   <div className="label-input">
                     <ReactQuill
                       theme="snow"
+                      modules={modules}
                       value={data.referenceLinks}
                       onChange={(e) => {
                         handleChange("referenceLinks", e);

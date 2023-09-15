@@ -42,6 +42,12 @@ import ListProtocolsNew from "./ListProtocolsNew";
 import ListSamplesAll from "./ListSamplesAll";
 import ReportsAndDashboard from "./ReportsAndDashboard/ReportsAndDashboard";
 import ListProtocolsAll from "./ListProtocolsAll";
+import BannerOrg from "./BannerOrg";
+import {
+  listMyCollabOrgs,
+  listMyOrgs,
+} from "../redux/actions/organizationActions";
+import ListSopsAll from "./ListSopsAll";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -209,6 +215,32 @@ function EditorComponent() {
     }
   }, []);
 
+  //Org
+
+  const [showBannerOrg, setShowBannerOrg] = useState(false);
+  const orgListMy = useSelector((state) => state.orgListMy);
+  const { sucess: sucess, orgs } = orgListMy;
+
+  const orgListMyCollab = useSelector((state) => state.orgListMyCollab);
+  const { sucess: sucessCollab, orgs: orgsCollab } = orgListMyCollab;
+
+  useEffect(() => {
+    dispatch(listMyOrgs());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(listMyCollabOrgs());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (sucess && sucessCollab) {
+      console.log(orgs);
+      if (orgs.length === 0 && orgsCollab.length === 0) {
+        setShowBannerOrg(true);
+      }
+    }
+  }, [dispatch, sucess, sucessCollab]);
+
   return (
     <div className="main-container">
       <Toaster position="top-center" reverseOrder={true} />
@@ -249,6 +281,7 @@ function EditorComponent() {
           setNewOrg={setNewOrg}
           setWhichTabisActive={setWhichTabisActive}
           setUpdatedUserCollabRoleOrg={setUpdatedUserCollabRoleOrg}
+          setShowBannerOrg={setShowBannerOrg}
         />
       )}
       <SideNav
@@ -290,6 +323,14 @@ function EditorComponent() {
       />
       <div className="main-content">
         {showBanner && <Banner setShowBanner={setShowBanner} />}
+        {showBannerOrg && (
+          <BannerOrg
+            setCreateOrg={setCreateOrg}
+            setWhichTabisActive={setWhichTabisActive}
+            setNewOrg={setNewOrg}
+            setUpdatedUserCollabRoleOrg={setUpdatedUserCollabRoleOrg}
+          />
+        )}
 
         <div className="main-content-in-editor">
           {middleNav && (
@@ -444,7 +485,7 @@ function EditorComponent() {
               />
             )}
             {whichTabisActive === "listSops" && (
-              <ListSops
+              <ListSopsAll
                 setNewSop={setNewSop}
                 setSopModal={setSopModal}
                 setCreateNewSop={setCreateNewSop}

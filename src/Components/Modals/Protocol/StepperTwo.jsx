@@ -226,6 +226,7 @@ function StepperTwo({
                     <ReactQuill
                       theme="snow"
                       value={data.materialsAndMethods}
+                      placeholder="Reagents & Equipments"
                       onChange={(e) => {
                         handleChange("materialsAndMethods", e);
                       }}

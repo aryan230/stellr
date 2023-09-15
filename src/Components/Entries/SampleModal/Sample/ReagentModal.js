@@ -21,10 +21,17 @@ function ReagentModal({
 }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [data, setData] = useState(
-    Object.entries(insideData).map((e) => ({
-      name: _.startCase(e[0]),
-      value: _.startCase(e[1]),
-    }))
+    Object.entries(insideData).map((e) =>
+      e[0] === "manufacturer"
+        ? {
+            name: "Manufacturer/Supplier",
+            value: _.startCase(e[1]),
+          }
+        : {
+            name: _.startCase(e[0]),
+            value: _.startCase(e[1]),
+          }
+    )
   );
   const [activeTab, setActiveTab] = useState("data");
   const columns = [

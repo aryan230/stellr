@@ -60,12 +60,12 @@
           button {
             color: #5d00d2;
             padding: 1rem 2rem;
-            font-family: Karla;
+            font-family: GothamBook;
             font-size: 1rem;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            border-radius: 0.5rem;
+            border-radius: 0.2rem;
             border: 1px solid #5d00d2;
             // background: #5d00d2;
             transition: 0.2s all;
@@ -482,5 +482,26 @@
         }
       }
     }
+  }
+}
+
+.custom-scrollbar-task {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 }

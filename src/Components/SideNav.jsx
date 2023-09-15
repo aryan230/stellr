@@ -701,7 +701,6 @@ function SideNav({
               onClick={async (e) => {
                 e.preventDefault();
                 setMiddleNav(false);
-                await dispatch(addToState("profile"));
                 setWhichTabisActive("profile");
               }}
             >

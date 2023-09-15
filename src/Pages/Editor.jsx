@@ -9,6 +9,7 @@ import {
 } from "../redux/actions/organizationActions";
 import axios from "axios";
 import URL from "./../Data/data.json";
+import BannerOrg from "../Components/BannerOrg";
 
 function Editor() {
   const dispatch = useDispatch();

@@ -55,7 +55,9 @@ function TaskEntries({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
               />
             </svg>
           )}
-          <p>{doc.subject}</p>
+          <div className="entity-name-right">
+            <p>{doc.subject}</p>
+          </div>
         </div>
       </div>{" "}
     </button>

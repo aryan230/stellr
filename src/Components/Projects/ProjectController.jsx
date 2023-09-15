@@ -58,7 +58,9 @@ function ProjectController({
               </linearGradient>
             </defs>
           </svg>
-          <p>{order.name}</p>
+          <div className="entity-name-right">
+            <p>{order.name}</p>
+          </div>
         </div>
       </div>
     </button>

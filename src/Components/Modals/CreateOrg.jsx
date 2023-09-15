@@ -14,6 +14,7 @@ function CreateOrg({
   setWhichTabisActive,
   setNewOrg,
   setUpdatedUserCollabRoleOrg,
+  setShowBannerOrg,
 }) {
   const dispatch = useDispatch();
   const [sampleType, setSampleType] = useState();
@@ -57,12 +58,12 @@ function CreateOrg({
         </div>
         <>
           {" "}
-          <h1>Organization Management</h1>
+          <h1>Organization</h1>
           <div className="form-element">
             <Select
               options={options}
               onChange={(e) => setSampleType(e)}
-              placeholder="Select Record Type"
+              placeholder="Select"
               required
             />
             <div className="margin-maker"></div>
@@ -72,12 +73,15 @@ function CreateOrg({
                 setWhichTabisActive={setWhichTabisActive}
                 setNewOrg={setNewOrg}
                 setUpdatedUserCollabRoleOrg={setUpdatedUserCollabRoleOrg}
+                setShowBannerOrg={setShowBannerOrg}
               />
             )}
             {sampleType && sampleType.value === "Join an Organization" && (
               <JoinOrgModal
                 setCreateOrg={setCreateOrg}
+                setNewOrg={setNewOrg}
                 setWhichTabisActive={setWhichTabisActive}
+                setShowBannerOrg={setShowBannerOrg}
               />
             )}
           </div>
