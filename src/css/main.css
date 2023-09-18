@@ -2127,6 +2127,11 @@ div.ql-tooltip {
   padding: 0.5rem;
   height: 100px;
 }
+.modal-inside .quill .ql-editor p {
+  width: 100%;
+  text-align: left;
+  margin: 0rem;
+}
 .modal-inside form {
   width: 60%;
   margin: 0 auto;

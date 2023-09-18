@@ -89,6 +89,12 @@
     .ql-editor {
       padding: 0.5rem;
       height: 100px;
+
+      p {
+        width: 100%;
+        text-align: left;
+        margin: 0rem;
+      }
     }
   }
   form {

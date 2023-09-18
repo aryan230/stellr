@@ -236,7 +236,7 @@ function CreateTask({
               required
             />
             <div className="label-input">
-              <label htmlFor="">Enter Desciption</label>{" "}
+              <label htmlFor="">Enter Description</label>{" "}
               <ReactQuill
                 theme="snow"
                 value={description}
