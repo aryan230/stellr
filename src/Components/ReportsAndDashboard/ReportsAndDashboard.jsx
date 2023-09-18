@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ListSamplesNew from "../ListSamplesNew";
 import ListProtocolsNew from "../ListProtocolsNew";
 import ReportsList from "./ReportsList";
+import ListProjectsNew from "../ListProjectsNew";
+import ListEntriesAll from "../ListEntriesAll";
 
 function ReportsAndDashboard({ setWhichTabisActive }) {
   const [activeReport, setActiveReport] = useState("home");
@@ -19,6 +21,10 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
             <li>
               <a
                 href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveReport("home");
+                }}
                 className={`flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group ${activeReport ===
                   "home" && `bg-gray-200`}`}
               >
@@ -38,7 +44,12 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 "
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveReport("projects");
+                }}
+                className={`flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group ${activeReport ===
+                  "projects" && `bg-gray-200`}`}
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900"
@@ -62,7 +73,8 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
                   e.preventDefault();
                   setActiveReport("reports");
                 }}
-                className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 "
+                className={`flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group ${activeReport ===
+                  "reports" && `bg-gray-200`}`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +94,12 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 "
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveReport("entries");
+                }}
+                className={`flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group ${activeReport ===
+                  "entries" && `bg-gray-200`}`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -169,6 +186,26 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
       </aside>
 
       <div className="main-content-reports">
+        {activeReport === "entries" && (
+          <ListEntriesAll
+            reportTab={reportTab}
+            setWhichTabisActive={setWhichTabisActive}
+            setReportTab={setReportTab}
+            newReport={newReport}
+            setNewReport={setNewReport}
+            setActiveReport={setActiveReport}
+          />
+        )}
+        {activeReport === "projects" && (
+          <ListProjectsNew
+            reportTab={reportTab}
+            setWhichTabisActive={setWhichTabisActive}
+            setReportTab={setReportTab}
+            newReport={newReport}
+            setNewReport={setNewReport}
+            setActiveReport={setActiveReport}
+          />
+        )}
         {activeReport === "samples" && (
           <ListSamplesNew
             reportTab={reportTab}

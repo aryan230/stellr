@@ -53,11 +53,11 @@ function ReportsList({ newReport, setNewReport }) {
       label: "View",
       minWidth: 100,
     },
-    {
-      id: "download",
-      label: "Download",
-      minWidth: 100,
-    },
+    // {
+    //   id: "download",
+    //   label: "Download",
+    //   minWidth: 100,
+    // },
   ];
 
   useEffect(() => {

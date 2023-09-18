@@ -76,7 +76,6 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           name: "Sheet1",
           rowCount: 100,
           colCount: 100,
-          // activeCell: spreadsheetRef.current.sheets[0].activeCell,
           rows: spreadsheetRef.current.sheets[0].rows,
           columns: spreadsheetRef.current.sheets[0].columns,
           showHeaders: true,
@@ -86,7 +85,6 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           isProtected: false,
           frozenRows: 0,
           frozenColumns: 0,
-          paneTopLeftCell: "A1",
         },
       ];
       await setDoc(doc(db, "sheet", id), {
@@ -138,7 +136,6 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
         <div className="main-modal-spreadsheet">
           <SpreadsheetComponent
             ref={spreadsheetRef}
-            cellSave={onCellSave}
             sheets={data && data.data ? JSON.parse(data.data) : []}
             openUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/open"
             saveUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/save"

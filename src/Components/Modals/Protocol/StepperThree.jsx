@@ -7,7 +7,7 @@ import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import { useDispatch, useSelector } from "react-redux";
 import { createProtocol } from "../../../redux/actions/protocolActions";
 import { PROTOCOL_CREATE_RESET } from "../../../redux/constants/protocolConstants";
@@ -16,6 +16,10 @@ import { Chip, Stack } from "@mui/material";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
+import MagicUrl from "quill-magic-url";
+
+Quill.register("modules/magicUrl", MagicUrl);
+
 const steps = [
   {
     label: "Protocol Setup",
@@ -148,6 +152,7 @@ function StepperThree({
   };
 
   const modules = {
+    magicUrl: true,
     toolbar: [
       [{ header: [1, 2, false] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
