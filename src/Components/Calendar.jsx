@@ -18,11 +18,23 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
 
   const getEventProp = (event, start, end, isSelected) => {
     if (event.typeEvent === "normal") {
+      var backgroundColor = "#" + event.hexColor;
+      var style = {
+        backgroundColor: "#6c63ff",
+        borderRadius: "0px",
+        opacity: 1,
+        color: "white",
+        border: "0px",
+        display: "block",
+      };
+      return {
+        style: style,
+      };
     } else {
       var backgroundColor = "#" + event.hexColor;
       var style = {
         backgroundColor: "#6200d2",
-        borderRadius: "5px",
+        borderRadius: "0px",
         opacity: 0.8,
         color: "white",
         border: "0px",
@@ -71,6 +83,11 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
 
   const handleSelected = (event) => {
     if (event.typeEvent === "project") return;
+    const docTwo =
+      tasksList &&
+      tasks &&
+      tasksList.concat(tasks).find((e) => e._id == event._id);
+
     const doc = {
       subject: event.title,
       due_date: event.end.toISOString().split("T")[0],
@@ -82,7 +99,7 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
       user: event.user,
       _id: event._id,
     };
-    setTaskContent(doc);
+    setTaskContent(docTwo);
     setTaskModal(true);
   };
 
@@ -111,12 +128,11 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
         events={
           tasksList &&
           tasks &&
-          projects &&
           tasksList
             .map(
               ({
                 subject: title,
-                createdAt: start,
+                due_date: start,
                 due_date: end,
                 ...rest
               }) => ({
@@ -132,7 +148,7 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
               tasks.map(
                 ({
                   subject: title,
-                  createdAt: start,
+                  due_date: start,
                   due_date: end,
                   ...rest
                 }) => ({

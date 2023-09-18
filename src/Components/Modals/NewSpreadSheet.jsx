@@ -97,14 +97,13 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
     }
   };
 
-  // useEffect(() => {
-  //   if (spreadsheetRef) {
-  //     if (document.querySelector(".e-add-sheet-tab")) {
-  //       console.log(document.querySelector(".e-add-sheet-tab"));
-  //       document.querySelector(".e-add-sheet-tab").remove();
-  //     }
-  //   }
-  // }, [document.querySelector(".e-add-sheet-tab"), spreadsheetRef]);
+  useEffect(() => {
+    if (spreadsheetRef) {
+      if (document.querySelector(".e-toolbar-item")) {
+        console.log(document.querySelector(".e-toolbar-item"));
+      }
+    }
+  }, [document.querySelector(".e-toolbar-item"), spreadsheetRef]);
 
   return (
     <div className="modal">
