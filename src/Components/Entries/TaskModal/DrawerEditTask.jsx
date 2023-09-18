@@ -151,7 +151,7 @@ function DrawerEditTask({
 
           <div className="react-quill-editor">
             <div className="label-input">
-              <label htmlFor="">Enter Desciption</label>{" "}
+              <label htmlFor="">Enter Description</label>{" "}
               <ReactQuill
                 theme="snow"
                 value={description}

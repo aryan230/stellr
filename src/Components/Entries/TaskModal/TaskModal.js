@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import URL from "./../../../Data/data.json";
+import ReactQuill from "react-quill";
 function TaskModal({
   setTaskModal,
   doc,
@@ -292,20 +293,35 @@ function TaskModal({
                       <dl className="sm:divide-y sm:divide-gray-200">
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm font-medium text-gray-500">
-                            Task Subject
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {doc.subject}
-                          </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
                             Task Unique ID
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             {doc._id}
                           </dd>
                         </div>
+
+                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Task Subject
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {doc.subject}
+                          </dd>
+                        </div>
+                        {doc.description && (
+                          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                              Task Description
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                              <ReactQuill
+                                theme="snow"
+                                readOnly
+                                value={doc.description}
+                              />
+                            </dd>
+                          </div>
+                        )}
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm font-medium text-gray-500">
                             Priority

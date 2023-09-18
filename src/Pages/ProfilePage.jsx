@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet";
 import NewProfilePage from "./NewProfile";
 import ChangePassword from "./Modals/ChangePassword";
 import toast, { Toaster } from "react-hot-toast";
+import ContactAdmin from "./Modals/ContactAdmin";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ function ProfilePage() {
   const [company, setCompany] = useState(user && user.company);
   const [loader, setLoader] = useState(false);
   const [changePasswordModal, setChangePasswordModal] = useState(false);
+  const [contactAdmin, setContactAdmin] = useState(false);
   useEffect(() => {
     if (!userInfo) {
       navigate(`/login`);
@@ -124,7 +126,7 @@ function ProfilePage() {
             {changePasswordModal && (
               <ChangePassword setChangePasswordModal={setChangePasswordModal} />
             )}
-
+            {contactAdmin && <ContactAdmin setContactAdmin={setContactAdmin} />}
             <Toaster position="top-center" reverseOrder={true} />
             <div className="flex-1 xl:overflow-y-auto h-[100%] w-full">
               <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6 lg:py-12 lg:px-8">
@@ -318,6 +320,10 @@ function ProfilePage() {
                     <div className="sm:col-span-6">
                       <a
                         href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setContactAdmin(true);
+                        }}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
                         Change Email
@@ -326,6 +332,10 @@ function ProfilePage() {
                     <div className="sm:col-span-6">
                       <a
                         href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setContactAdmin(true);
+                        }}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
                         Set Recovery Email

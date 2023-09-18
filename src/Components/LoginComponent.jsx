@@ -13,6 +13,7 @@ import Loader from "../css/utils/Loader";
 import { OAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, microProvider, provider } from "../firebase";
 import MicrosoftLogin from "react-microsoft-login";
+import { Helmet } from "react-helmet";
 
 function LoginComponent() {
   const [email, setEmail] = useState();
@@ -87,6 +88,10 @@ function LoginComponent() {
   };
   return (
     <div className="login-container">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Login | Stellr Projects</title>
+      </Helmet>
       <Toaster position="top-center" reverseOrder={true} />
       <div className="login-main">
         {loading ? (

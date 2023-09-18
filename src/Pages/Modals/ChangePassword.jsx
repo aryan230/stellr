@@ -68,7 +68,7 @@ function ChangePassword({ setChangePasswordModal }) {
       axios(config)
         .then(function(response) {
           setLoader(false);
-          toast.success("Passwords Changes Sucessfully");
+          toast.success("Password Changed Successfully");
           setChangePasswordModal(false);
         })
         .catch(function(error) {

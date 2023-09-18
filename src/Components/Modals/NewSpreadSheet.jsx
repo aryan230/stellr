@@ -22,6 +22,7 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
   const spreadsheetRef = useRef(null);
   const [data, setData] = useState();
   const [loader, setLoader] = useState(false);
+
   const fetchFirestoreData = async () => {
     setLoader(true);
     const unsub = await onSnapshot(doc(db, "sheet", id), (doc) => {

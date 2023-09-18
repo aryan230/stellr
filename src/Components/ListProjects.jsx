@@ -133,9 +133,7 @@ function ListProjects({
     <div className="project-component">
       <Helmet>
         <meta charSet="utf-8" />
-        <title>
-          Bio-Pharma Research Projects Management | Electronic Lab Notebook
-        </title>
+        <title>Projects Management | Electronic Lab Notebook</title>
         <meta
           name="description"
           content="Efficiently manage and track bio-pharma research projects with ourElectronic Lab Notebook software. Simplify collaboration and enhance data organization."

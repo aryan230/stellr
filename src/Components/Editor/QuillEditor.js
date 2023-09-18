@@ -89,16 +89,16 @@ const QuillToolbar = () => (
       </select>
     </span>
     <span className="ql-formats">
-      <Tooltip title="bold">
+      <Tooltip title="Bold">
         <button className="ql-bold" />
       </Tooltip>
-      <Tooltip title="italic">
+      <Tooltip title="Italic">
         <button className="ql-italic" />
       </Tooltip>
-      <Tooltip title="underline">
+      <Tooltip title="Underline">
         <button className="ql-underline" />
       </Tooltip>
-      <Tooltip title="strike">
+      <Tooltip title="Strike">
         <button className="ql-strike" />
       </Tooltip>
     </span>
@@ -120,10 +120,10 @@ const QuillToolbar = () => (
       <Tooltip title="Super Script">
         <button className="ql-script" value="super" />
       </Tooltip>
-      <Tooltip title="sub script">
+      <Tooltip title="Sub script">
         <button className="ql-script" value="sub" />
       </Tooltip>
-      <Tooltip title="blockquote">
+      <Tooltip title="Blockquote">
         <button className="ql-blockquote" />
       </Tooltip>
       <Tooltip title="Direction">
@@ -131,10 +131,10 @@ const QuillToolbar = () => (
       </Tooltip>
     </span>
     <span className="ql-formats">
-      <Tooltip title="align">
+      <Tooltip title="Align">
         <select className="ql-align" />
       </Tooltip>
-      <Tooltip title="color">
+      <Tooltip title="Color">
         <select className="ql-color" />
       </Tooltip>
       <Tooltip title="Background color">
