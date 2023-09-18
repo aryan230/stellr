@@ -118,7 +118,7 @@ function Primer({
           {" "}
           <input
             type="text"
-            placeholder="Manufacturer Name"
+            placeholder="Manufacturer/Supplier"
             name="manufacturer"
             onChange={handleChange}
           />
