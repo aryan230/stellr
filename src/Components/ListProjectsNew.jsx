@@ -23,6 +23,7 @@ import CustomFunnel from "./CustomCharts/CustomFunnel";
 import axios from "axios";
 import CustomColumnChartDist from "./CustomCharts/CustomColumnChartDist";
 import CustomScatterChart from "./CustomCharts/CustomScatterChart";
+import URL from "./../Data/data.json";
 function ListProjectsNew({
   setWhichTabisActive,
   setReportTab,
@@ -133,7 +134,7 @@ function ListProjectsNew({
 
     var config = {
       method: "post",
-      url: "http://localhost:3002/api/projects/stats",
+      url: `${URL}api/projects/stats`,
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
         "Content-Type": "application/json",

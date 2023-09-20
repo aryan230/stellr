@@ -21,6 +21,7 @@ import axios from "axios";
 import CustomPieChart from "./CustomCharts/CustomPieChart";
 import { listMyTasks } from "../redux/actions/taskActions";
 import CustomAreaChart from "./CustomCharts/CustomAreaChart";
+import URL from "./../Data/data.json";
 function ListTasksAll({
   setWhichTabisActive,
   setReportTab,
@@ -98,7 +99,7 @@ function ListTasksAll({
 
     var config = {
       method: "post",
-      url: "http://localhost:3002/api/projects/stats",
+      url: `${URL}api/projects/stats`,
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
         "Content-Type": "application/json",

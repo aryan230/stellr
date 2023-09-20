@@ -20,6 +20,7 @@ import CustomLine from "./CustomCharts/CustomLine";
 import axios from "axios";
 import CustomPieChart from "./CustomCharts/CustomPieChart";
 import CustomAreaChart from "./CustomCharts/CustomAreaChart";
+import URL from "./../Data/data.json";
 function ListEntriesAll({
   setWhichTabisActive,
   setReportTab,
@@ -104,7 +105,7 @@ function ListEntriesAll({
 
     var config = {
       method: "post",
-      url: "http://localhost:3002/api/projects/stats",
+      url: `${URL}api/projects/stats`,
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
         "Content-Type": "application/json",
