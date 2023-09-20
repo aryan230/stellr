@@ -163,7 +163,7 @@ function ListProtocolsAll({
             <h1>Protocol Registries</h1>
           </div>
           <div className="p-c-s-i-t-left">
-            <button
+            {/* <button
               onClick={(e) => {
                 e.preventDefault();
                 setShowStats(true);
@@ -172,7 +172,7 @@ function ListProtocolsAll({
               className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br  focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               View Stats & Graphs
-            </button>
+            </button> */}
 
             <button
               type="button"

@@ -23,6 +23,10 @@ import "primereact/resources/primereact.min.css";
 import Pie from "./Charts/Pie";
 import ListSamplesAll from "./ListSamplesAll";
 import Reports from "./ReportsAndDashboard/Reports/Reports";
+import CustomColumnChart from "./Charts/CustomColumnChart";
+import CustomPieChart from "./CustomCharts/CustomPieChart";
+import CustomLine from "./CustomCharts/CustomLine";
+import CustomAreaChart from "./CustomCharts/CustomAreaChart";
 
 function ListSamplesNew({
   setSampleContent,
@@ -46,7 +50,7 @@ function ListSamplesNew({
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [viewAllSamples, setViewAllSamples] = useState(false);
-
+  const [filterData, setFilterData] = useState();
   const sampleListMy = useSelector((state) => state.sampleListMy);
   const {
     samples,
@@ -149,7 +153,70 @@ function ListSamplesNew({
       renderCell: renderDetailsButton,
     },
   ];
+  const labels = [
+    "Subject/Patient",
+    "Clinical",
+    "Molecular Biology",
+    "Reagent",
+    "Primer",
+    "Antibody",
+  ];
 
+  const subjectPatient =
+    newSamples &&
+    newSamples.filter((e) => e.recordType === "Subject/Patient").length;
+
+  const Clinical =
+    newSamples && newSamples.filter((e) => e.recordType === "Clinical").length;
+  const MolecularBiology =
+    newSamples &&
+    newSamples.filter((e) => e.recordType === "Molecular Biology").length;
+
+  const Reagent =
+    newSamples && newSamples.filter((e) => e.recordType === "Reagent").length;
+
+  const Primer =
+    newSamples && newSamples.filter((e) => e.recordType === "Primer").length;
+
+  const Antibody =
+    newSamples && newSamples.filter((e) => e.recordType === "Antibody").length;
+  const series = [
+    subjectPatient ? subjectPatient : 0,
+    Clinical ? Clinical : 0,
+    MolecularBiology ? MolecularBiology : 0,
+    Reagent ? Reagent : 0,
+    Primer ? Primer : 0,
+    Antibody ? Antibody : 0,
+  ];
+
+  const dataInsideLine = {
+    name: "Samples",
+    data: [
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "01").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "02").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "03").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "04").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "05").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "06").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "07").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "08").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "09").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "10").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "11").length,
+
+      newSamples.filter((e) => e.createdAt.split("/")[1] == "12").length,
+    ],
+  };
   return (
     <div className="project-component-inside-samples">
       <Helmet>
@@ -165,6 +232,7 @@ function ListSamplesNew({
           setReportTab={setReportTab}
           dataValue={samples && samples}
           newReport={newReport}
+          typeFrom="Samples"
           setNewReport={setNewReport}
           setActiveReport={setActiveReport}
         />
@@ -265,7 +333,11 @@ function ListSamplesNew({
               </div>
             </div>
           ) : (
-            <BasicArea newSamples={newSamples ? newSamples : null} />
+            dataInsideLine && (
+              <CustomAreaChart
+                dataInside={dataInsideLine ? dataInsideLine : []}
+              />
+            )
           )}
         </div>
 
@@ -294,7 +366,10 @@ function ListSamplesNew({
             </div>
           ) : (
             <Box sx={{ height: "90%", width: "100%" }}>
-              <Pie newSamples={samples ? samples : []} />
+              <CustomPieChart
+                labels={labels}
+                seriesData={series ? series : []}
+              />
             </Box>
           )}
         </div>

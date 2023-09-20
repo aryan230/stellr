@@ -186,6 +186,7 @@ function ProjectComponent({
       setTaskUpdateController(false);
     }
   }, [setEntryUpdate]);
+
   const findOrg =
     orgs && orgs.length > 0
       ? orgs[0].collaborators.find((e) => e.user == userInfo._id)

@@ -123,11 +123,9 @@ function ListProjects({
   }, [dispatch, navigate, userInfo]);
 
   let newArr =
-    projects &&
-    projectsCollab &&
-    projectsOrg &&
-    _.unionBy(projects, projectsCollab, projectsOrg, "_id");
-  let mergedArr = [...new Set(newArr)];
+    projects && projectsCollab && projectsOrg
+      ? _.unionBy(projects, projectsCollab, projectsOrg, "_id")
+      : projects && projectsCollab && projects.concat(projectsCollab);
 
   return (
     <div className="project-component">
@@ -306,7 +304,7 @@ function ListProjects({
                       </button>
                     ))
                 ) : (
-                  <div className="middlenav-empty">
+                  <div className="middlenav-empty py-10">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="40"

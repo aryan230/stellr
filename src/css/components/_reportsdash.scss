@@ -53,6 +53,30 @@
     }
   }
 
+  .view-report-details-tp {
+    width: 85%;
+    margin: 0 auto;
+    border-bottom: 1px solid #b6b6b669;
+    padding-bottom: 0.25rem;
+    h1 {
+      color: #000;
+      font-family: GothamBook;
+      font-size: 2.25rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      padding: 1rem 0;
+    }
+    p {
+      color: #867979;
+      font-family: Karla;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+
   .view-report-charts {
     width: 90%;
     margin: 0 auto;

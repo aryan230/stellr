@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Chart from "react-apexcharts";
-function CustomPie({ labels, seriesData }) {
+function CustomPieChart({ labels, seriesData }) {
   const [isDark, setIsDark] = useState(false);
 
   const series = seriesData;
@@ -46,9 +46,9 @@ function CustomPie({ labels, seriesData }) {
   };
   return (
     <div>
-      <Chart options={options} series={series} type="pie" height="200" />
+      <Chart options={options} series={series} type="pie" height="300" />
     </div>
   );
 }
 
-export default CustomPie;
+export default CustomPieChart;

@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { listMyProtocols } from "../redux/actions/protocolActions";
+import ListProtocolsAll from "./ListProtocolsAll";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router-dom";
-import {
-  listMyCollabProjects,
-  listMyProjects,
-} from "../redux/actions/projectActions";
-import { listMyCollabOrgs } from "../redux/actions/organizationActions";
-import _, { forEach } from "lodash";
-import Reports from "./ReportsAndDashboard/Reports/Reports";
-import BasicArea from "./Charts/BasicArea";
-import { Pie } from "react-chartjs-2";
-import BasicBar from "./Charts/Basicbar";
-import { listMyEntries } from "../redux/actions/entryActions";
-import CustomArea from "./Charts/CustomArea";
-import CustomLine from "./CustomCharts/CustomLine";
-import axios from "axios";
+import PieChartProtocol from "./Charts/PieChartProtocol";
 import CustomPieChart from "./CustomCharts/CustomPieChart";
 import CustomAreaChart from "./CustomCharts/CustomAreaChart";
-function ListEntriesAll({
+import CustomLine from "./CustomCharts/CustomLine";
+import Reports from "./ReportsAndDashboard/Reports/Reports";
+
+function ListSopsNew({
   setWhichTabisActive,
   setReportTab,
   reportTab,
@@ -30,105 +22,124 @@ function ListEntriesAll({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [projectStats, setProjectStats] = useState();
-  const [projectEntryData, setProjectEntryData] = useState([]);
-
+  const [inputSearch, setInputSearch] = useState("");
+  const [id, setId] = useState();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const [viewProtocolsAll, setProtocolsViewAll] = useState(false);
 
-  const projectListMy = useSelector((state) => state.projectListMy);
-  const {
-    projects,
-    loading: loadingOrders,
-    error: errorOrders,
-  } = projectListMy;
+  const sopListMy = useSelector((state) => state.sopListMy);
+  const { sops, loading: loadingSamples, error: errorSamples } = sopListMy;
 
-  const projecListMyCollab = useSelector((state) => state.projecListMyCollab);
-  const {
-    projects: projectsCollab,
-    loading: projectCollabLoading,
-    error: errorCollabLoading,
-  } = projecListMyCollab;
-
-  const projectListMyOrg = useSelector((state) => state.projectListMyOrg);
-  const {
-    projects: projectsOrg,
-    loading: projectOrgLoading,
-    error: errorOrgLoading,
-  } = projectListMyOrg;
-
-  const entriesListMy = useSelector((state) => state.entriesListMy);
-  const {
-    entries,
-    loading: loadingEntries,
-    error: errorEntries,
-  } = entriesListMy;
-
-  const taskListMy = useSelector((state) => state.taskListMy);
-  const { tasks, loading: loadingTasks, error: errorTasks } = taskListMy;
-
-  let newArr =
-    projects && projectsCollab && projectsOrg
-      ? _.unionBy(projects, projectsCollab, projectsOrg, "_id")
-      : _.unionBy(projects, projectsCollab, "_id");
-
-  const [selectedProject, setSelectedProject] = useState();
+  const [newSamples, setNewProtocols] = useState(sops && sops);
+  useEffect(() => {
+    dispatch(listMyProtocols(userInfo._id));
+  }, [dispatch]);
 
   const renderDetailsButton = (params) => {
     return (
       <button
         type="button"
-        onClick={() => {}}
+        onClick={() => {
+          const docTwo = sops && sops.find((e) => e.title == params.row.name);
+        }}
         className="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
       >
         View
       </button>
     );
   };
-  useEffect(() => {
-    dispatch(listMyProjects());
-    dispatch(listMyCollabProjects());
-    dispatch(listMyCollabOrgs());
-  }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(listMyEntries(selectedProject));
-  }, [dispatch, selectedProject]);
+  const columns = [
+    { field: "id", headerName: "ID", width: 150 },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 200,
+      editable: false,
+    },
 
-  const labels = ["My Projects", "Collaborated Projects"];
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      width: 150,
+      editable: false,
+    },
+    {
+      field: "createdBy",
+      headerName: "Created By",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 150,
+    },
+    {
+      field: "updatedAt",
+      headerName: "Last Modified At",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 150,
+    },
+    {
+      field: "view",
+      headerName: "View",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 150,
+      renderCell: renderDetailsButton,
+    },
+  ];
 
-  const getProjectStats = async () => {
-    var data = JSON.stringify({
-      projectId: newArr.map(({ _id, name }) => ({ _id, name })),
-    });
+  let detailed =
+    newSamples &&
+    newSamples.filter((e) => e.data && e.hasOwnProperty("image")).length;
 
-    var config = {
-      method: "post",
-      url: "http://localhost:3002/api/projects/stats",
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+  let modular =
+    newSamples &&
+    newSamples &&
+    newSamples.filter((e) => e.data && e.hasOwnProperty("file")).length -
+      detailed;
 
-    axios(config)
-      .then(function(response) {
-        setProjectStats(response.data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+  let classic = newSamples && newSamples.length - detailed - modular;
+
+  const series = [
+    classic ? classic : 0,
+    detailed ? detailed : 0,
+    modular ? modular : 0,
+  ];
+
+  const labels = ["Classic SOP", "Detailed SOP", "Modular  SOP"];
+
+  const dataInsideLine = {
+    name: "SOPs",
+    data: [
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "01").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "02").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "03").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "04").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "05").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "06").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "07").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "08").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "09").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "10").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "11").length,
+
+      newSamples.filter((e) => e.createdAt.split("-")[1] == "12").length,
+    ],
   };
-  useEffect(() => {
-    if (newArr) {
-      if (!projectStats) {
-        getProjectStats();
-      }
-    }
-  }, [newArr, projectStats]);
+
   return (
-    <div className="project-component-inside-samples">
+    <div className="project-component-inside">
       <Helmet>
         <meta charSet="utf-8" />
         <title>Data Registries and Management | Bio-Pharma ELN Software</title>
@@ -140,23 +151,13 @@ function ListEntriesAll({
       {reportTab && (
         <Reports
           setReportTab={setReportTab}
-          dataValue={{
-            selectedProject: selectedProject,
-            newArr: newArr,
-            entries: entries.map(({ _id, name, createdAt, updatedAt }) => ({
-              _id,
-              name,
-              createdAt,
-              updatedAt,
-            })),
-          }}
+          dataValue={sops && sops}
           newReport={newReport}
-          typeFrom="Entries"
+          typeFrom="SOPS"
           setNewReport={setNewReport}
           setActiveReport={setActiveReport}
         />
       )}
-
       <div className="p-c-s-i-t">
         <div className="ps-c-it-inside">
           <nav className="flex" aria-label="Breadcrumb">
@@ -166,6 +167,7 @@ function ListEntriesAll({
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
+                    setProtocolsViewAll(false);
                   }}
                   className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600"
                 >
@@ -184,7 +186,7 @@ function ListEntriesAll({
             </ol>
           </nav>
 
-          <h1>Entry Registries</h1>
+          <h1>SOPs Registries</h1>
         </div>
 
         <div className="p-c-s-i-t-left">
@@ -192,11 +194,11 @@ function ListEntriesAll({
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setWhichTabisActive("projectList");
+              setProtocolsViewAll(true);
             }}
             className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
           >
-            View All Projects
+            View All Protocols
           </button>
 
           <button
@@ -228,29 +230,7 @@ function ListEntriesAll({
       </div>
       <div className="p-c-s-charts">
         <div className="area-chart">
-          <div className="pb-10">
-            <label
-              htmlFor="countries"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Select an Project
-            </label>
-            <select
-              id="countries"
-              value={selectedProject}
-              onChange={(e) => {
-                setSelectedProject(e.target.value);
-              }}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            >
-              <option></option>
-              {newArr &&
-                newArr.length > 0 &&
-                newArr.map((p) => <option value={p._id}>{p.name}</option>)}
-            </select>
-          </div>
-
-          {loadingOrders || loadingEntries ? (
+          {loadingSamples ? (
             <div className="loader-div-main-stellr">
               <div role="status">
                 <svg
@@ -272,78 +252,13 @@ function ListEntriesAll({
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
-          ) : selectedProject ? (
-            entries && (
-              <CustomAreaChart
-                dataInside={{
-                  name: "Entries",
-                  data: [
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "01")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "02")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "03")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "04")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "05")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "06")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "07")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "08")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "09")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "10")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "11")
-                        .length,
-
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "12")
-                        .length,
-                  ],
-                }}
-              />
-            )
           ) : (
-            <div className="w-[100%] h-64 flex justify-center items-center">
-              <div
-                className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
-                role="alert"
-              >
-                <span className="font-medium">No Project Selected</span> Please
-                select a project.
-              </div>
-            </div>
+            <CustomLine dataInside={dataInsideLine ? dataInsideLine : []} />
           )}
         </div>
 
         <div className="samples-below-chart-div">
-          {loadingOrders ? (
+          {loadingSamples ? (
             <div className="loader-div-main-stellr">
               <div role="status">
                 <svg
@@ -367,14 +282,10 @@ function ListEntriesAll({
             </div>
           ) : (
             <Box sx={{ height: "90%", width: "100%" }}>
-              {projectStats && (
-                <CustomPieChart
-                  labels={projectStats && projectStats.stats.map((s) => s.name)}
-                  seriesData={
-                    projectStats && projectStats.stats.map((s) => s.entries)
-                  }
-                />
-              )}
+              <CustomPieChart
+                labels={labels}
+                seriesData={series ? series : []}
+              />
             </Box>
           )}
         </div>
@@ -383,4 +294,4 @@ function ListEntriesAll({
   );
 }
 
-export default ListEntriesAll;
+export default ListSopsNew;

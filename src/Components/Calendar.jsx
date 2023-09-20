@@ -10,6 +10,7 @@ import {
 import TaskEntries from "./Entries/TaskEntries";
 import { listMySamples } from "../redux/actions/sampleActions";
 import { Helmet } from "react-helmet";
+import _ from "lodash";
 const localizer = momentLocalizer(moment);
 
 function CalendarTemp({ setTaskModal, setTaskContent }) {
@@ -108,6 +109,9 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
     dispatch(listMyCollabTasks());
     dispatch(listMySamples(userInfo._id));
   }, [dispatch]);
+
+  let newArr = tasks && tasksList && _.unionBy(tasks, tasksList, "_id");
+
   return (
     <div className="calender-main-proper">
       <Helmet>
@@ -126,41 +130,17 @@ function CalendarTemp({ setTaskModal, setTaskContent }) {
         defaultDate={new Date()}
         defaultView="month"
         events={
-          tasksList &&
-          tasks &&
-          tasksList
-            .map(
-              ({
-                subject: title,
-                due_date: start,
-                due_date: end,
-                ...rest
-              }) => ({
-                title,
-                start: new Date(start),
-                end: new Date(end),
-                allDay: true,
-                typeEvent: "normal",
-                ...rest,
-              })
-            )
-            .concat(
-              tasks.map(
-                ({
-                  subject: title,
-                  due_date: start,
-                  due_date: end,
-                  ...rest
-                }) => ({
-                  title,
-                  start: new Date(start),
-                  end: new Date(end),
-                  allDay: true,
-                  typeEvent: "collab",
-                  ...rest,
-                })
-              )
-            )
+          newArr &&
+          newArr.map(
+            ({ subject: title, due_date: start, due_date: end, ...rest }) => ({
+              title,
+              start: new Date(start),
+              end: new Date(end),
+              allDay: true,
+              typeEvent: "normal",
+              ...rest,
+            })
+          )
         }
         eventPropGetter={getEventProp}
         style={{ height: "100%" }}

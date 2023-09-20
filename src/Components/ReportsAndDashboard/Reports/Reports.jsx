@@ -6,12 +6,13 @@ function Reports({
   setReportTab,
   dataValue,
   newReport,
+  typeFrom,
   setNewReport,
   setActiveReport,
 }) {
   const [name, setName] = useState();
   const [description, setDescription] = useState();
-  const [type, setType] = useState("samples");
+  const [type, setType] = useState(typeFrom && typeFrom);
   const [charts, setCharts] = useState([]);
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -29,7 +30,6 @@ function Reports({
         insideData,
       }),
     });
-
     var config = {
       method: "post",
       url: `${URL[0]}api/reports`,
@@ -51,6 +51,165 @@ function Reports({
       });
     console.log(data);
   };
+
+  const dataSets = [
+    {
+      name: "Entries",
+      charts: [
+        {
+          id: "area",
+          chartName: "Area Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg",
+        },
+        {
+          id: "line",
+          chartName: "Line Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/01/basic-line-chart.svg",
+        },
+      ],
+    },
+    {
+      name: "Tasks",
+      charts: [
+        {
+          id: "area",
+          chartName: "Area Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg",
+        },
+        {
+          id: "line",
+          chartName: "Line Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/01/basic-line-chart.svg",
+        },
+      ],
+    },
+    {
+      name: "Protocols",
+      charts: [
+        {
+          id: "area",
+          chartName: "Area Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg",
+        },
+        {
+          id: "pie",
+          chartName: "Pie Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2020/01/pie-chart-2.png",
+        },
+        {
+          id: "line",
+          chartName: "Line Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/01/basic-line-chart.svg",
+        },
+      ],
+    },
+    {
+      name: "SOPS",
+      charts: [
+        {
+          id: "area",
+          chartName: "Area Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg",
+        },
+        {
+          id: "pie",
+          chartName: "Pie Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2020/01/pie-chart-2.png",
+        },
+        {
+          id: "line",
+          chartName: "Line Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/01/basic-line-chart.svg",
+        },
+      ],
+    },
+    {
+      name: "Samples",
+      charts: [
+        {
+          id: "area",
+          chartName: "Area Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg",
+        },
+        {
+          id: "pie",
+          chartName: "Pie Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2020/01/pie-chart-2.png",
+        },
+        {
+          id: "line",
+          chartName: "Line Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/01/basic-line-chart.svg",
+        },
+      ],
+    },
+    {
+      name: "Projects",
+      charts: [
+        {
+          id: "line",
+          chartName: "Line Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/01/basic-line-chart.svg",
+        },
+        {
+          id: "column",
+          chartName: "Column Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/barcharts-distributed-column-chart.svg",
+        },
+        {
+          id: "area",
+          chartName: "Area Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg",
+        },
+        {
+          id: "pie",
+          chartName: "Pie Chart",
+          des: "",
+          url:
+            "https://apexcharts.com/wp-content/uploads/2020/01/combine-other-slice-in-pie-chart.png",
+        },
+        {
+          id: "funnel",
+          chartName: "Funnel Chart",
+          des: "",
+          url:
+            "https://www.automateexcel.com/excel/wp-content/uploads/2020/10/sales-funnel-chart.png",
+        },
+      ],
+    },
+  ];
   return (
     <div className="modal">
       <div className="report-modal-container">
@@ -115,11 +274,19 @@ function Reports({
                 Select Entity
               </label>
               <select
-                disabled="true"
+                disabled={typeFrom ? "true" : "false"}
                 id="countries_disabled"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
-                <option selected="">Samples</option>
+                <option value="">Select an option</option>
+                <option value="Samples">Samples</option>
+                <option value="Projects">Projects</option>
+                <option value="Entries">Entries</option>
+                <option value="Tasks">Tasks</option>
+                <option value="Protocols">Protocols</option>
+                <option value="SOPS">SOPS</option>
               </select>
             </div>
 
@@ -128,74 +295,43 @@ function Reports({
                 Choose Charts:
               </h3>
               <ul className="grid w-full gap-6 md:grid-cols-3">
-                <li>
-                  <input
-                    type="checkbox"
-                    id="react-option"
-                    defaultValue=""
-                    className="hidden peer"
-                    required=""
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setCharts((prev) => [...prev, "area"]);
-                      } else {
-                        setCharts((prev) => prev.filter((e) => e != "area"));
-                      }
-                    }}
-                  />
-                  <label
-                    htmlFor="react-option"
-                    className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50"
-                  >
-                    <div className="block">
-                      <img
-                        src="https://apexcharts.com/wp-content/uploads/2018/05/area-chart-spline.svg"
-                        alt=""
-                        className="w-15 h-15"
-                      />
-                      <div className="w-full text-lg font-semibold">
-                        Area Chart
-                      </div>
-                      <div className="w-full text-sm">
-                        Visualization of samples throughput over time.
-                      </div>
-                    </div>
-                  </label>
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    id="pie"
-                    defaultValue=""
-                    className="hidden peer"
-                    required=""
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setCharts((prev) => [...prev, "pie"]);
-                      } else {
-                        setCharts((prev) => prev.filter((e) => e != "pie"));
-                      }
-                    }}
-                  />
-                  <label
-                    htmlFor="pie"
-                    className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50"
-                  >
-                    <div className="block">
-                      <img
-                        src="https://apexcharts.com/wp-content/uploads/2020/01/combine-other-slice-in-pie-chart.png"
-                        alt=""
-                        className="h-15"
-                      />
-                      <div className="w-full text-lg font-semibold">
-                        Pie Chart
-                      </div>
-                      <div className="w-full text-sm">
-                        Status distribution of samples.
-                      </div>
-                    </div>
-                  </label>
-                </li>
+                {type &&
+                  dataSets
+                    .find((e) => e.name === type)
+                    .charts.map((c) => (
+                      <li>
+                        <input
+                          type="checkbox"
+                          id={c.id}
+                          defaultValue=""
+                          className="hidden peer"
+                          required=""
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setCharts((prev) => [...prev, c.id]);
+                            } else {
+                              setCharts((prev) =>
+                                prev.filter((e) => e != c.id)
+                              );
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor={c.id}
+                          className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50"
+                        >
+                          <div className="block">
+                            <img src={c.url} alt="" className="w-15 h-15" />
+                            <div className="w-full text-lg font-semibold">
+                              {c.chartName}
+                            </div>
+                            <div className="w-full text-sm">
+                              Visualization of data throughput over time.
+                            </div>
+                          </div>
+                        </label>
+                      </li>
+                    ))}
               </ul>
             </div>
             {/* <>

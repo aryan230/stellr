@@ -16,7 +16,13 @@ import { Pie } from "react-chartjs-2";
 import BasicBar from "./Charts/Basicbar";
 import { listMyEntries } from "../redux/actions/entryActions";
 import CustomArea from "./Charts/CustomArea";
-import CustomPie from "./Charts/CustomPie";
+import CustomPieChart from "./CustomCharts/CustomPieChart";
+import CustomLine from "./CustomCharts/CustomLine";
+import CustomAreaChart from "./CustomCharts/CustomAreaChart";
+import CustomFunnel from "./CustomCharts/CustomFunnel";
+import axios from "axios";
+import CustomColumnChartDist from "./CustomCharts/CustomColumnChartDist";
+import CustomScatterChart from "./CustomCharts/CustomScatterChart";
 function ListProjectsNew({
   setWhichTabisActive,
   setReportTab,
@@ -30,7 +36,7 @@ function ListProjectsNew({
   const [projectEntryData, setProjectEntryData] = useState([]);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+  const [projectStats, setProjectStats] = useState();
   const projectListMy = useSelector((state) => state.projectListMy);
   const {
     projects,
@@ -89,6 +95,68 @@ function ListProjectsNew({
   };
 
   const labels = ["My Projects", "Collaborated Projects"];
+
+  let projectList = newArr && newArr.map((e) => e.name);
+  let dataInsideLine = newArr && {
+    name: "Projects",
+    data: [
+      newArr.filter((e) => e.createdAt.split("-")[1] == "01").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "02").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "03").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "04").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "05").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "06").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "07").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "08").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "09").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "10").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "11").length,
+
+      newArr.filter((e) => e.createdAt.split("-")[1] == "12").length,
+    ],
+  };
+
+  const getProjectStats = async () => {
+    var data = JSON.stringify({
+      projectId: newArr.map(({ _id, name }) => ({ _id, name })),
+    });
+
+    var config = {
+      method: "post",
+      url: "http://localhost:3002/api/projects/stats",
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function(response) {
+        setProjectStats(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    if (newArr) {
+      if (!projectStats) {
+        getProjectStats();
+      }
+    }
+  }, [newArr, projectStats]);
   return (
     <div className="project-component-inside-samples">
       <Helmet>
@@ -99,10 +167,14 @@ function ListProjectsNew({
           content="Effectively manage and maintain data registries with our specialized Bio-Pharma ELN software. Simplify data organization and accessibility."
         />
       </Helmet>
-      {reportTab && (
+      {projectStats && reportTab && (
         <Reports
           setReportTab={setReportTab}
-          dataValue={newArr && newArr}
+          dataValue={
+            newArr &&
+            projectStats && { projects: newArr, projectStats: projectStats }
+          }
+          typeFrom="Projects"
           newReport={newReport}
           setNewReport={setNewReport}
           setActiveReport={setActiveReport}
@@ -203,7 +275,19 @@ function ListProjectsNew({
               </div>
             </div>
           ) : (
-            <BasicBar dataInside={newArr ? newArr : []} />
+            <CustomColumnChartDist
+              dataInside={
+                projectStats
+                  ? {
+                      name: "Record Count",
+                      data: projectStats.stats.map((e) => e.entries),
+                    }
+                  : []
+              }
+              dataLabel={
+                projectStats ? projectStats.stats.map((e) => e.name) : []
+              }
+            />
           )}
         </div>
 
@@ -232,7 +316,7 @@ function ListProjectsNew({
             </div>
           ) : (
             <Box sx={{ height: "90%", width: "100%" }}>
-              <CustomPie
+              <CustomPieChart
                 labels={labels}
                 seriesData={[projects.length, newArr.length - projects.length]}
               />

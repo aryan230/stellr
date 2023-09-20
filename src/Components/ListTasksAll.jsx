@@ -19,8 +19,9 @@ import CustomArea from "./Charts/CustomArea";
 import CustomLine from "./CustomCharts/CustomLine";
 import axios from "axios";
 import CustomPieChart from "./CustomCharts/CustomPieChart";
+import { listMyTasks } from "../redux/actions/taskActions";
 import CustomAreaChart from "./CustomCharts/CustomAreaChart";
-function ListEntriesAll({
+function ListTasksAll({
   setWhichTabisActive,
   setReportTab,
   reportTab,
@@ -57,13 +58,6 @@ function ListEntriesAll({
     error: errorOrgLoading,
   } = projectListMyOrg;
 
-  const entriesListMy = useSelector((state) => state.entriesListMy);
-  const {
-    entries,
-    loading: loadingEntries,
-    error: errorEntries,
-  } = entriesListMy;
-
   const taskListMy = useSelector((state) => state.taskListMy);
   const { tasks, loading: loadingTasks, error: errorTasks } = taskListMy;
 
@@ -92,7 +86,7 @@ function ListEntriesAll({
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(listMyEntries(selectedProject));
+    dispatch(listMyTasks(selectedProject));
   }, [dispatch, selectedProject]);
 
   const labels = ["My Projects", "Collaborated Projects"];
@@ -143,15 +137,15 @@ function ListEntriesAll({
           dataValue={{
             selectedProject: selectedProject,
             newArr: newArr,
-            entries: entries.map(({ _id, name, createdAt, updatedAt }) => ({
+            tasks: tasks.map(({ _id, subject, createdAt, updatedAt }) => ({
               _id,
-              name,
+              subject,
               createdAt,
               updatedAt,
             })),
           }}
           newReport={newReport}
-          typeFrom="Entries"
+          typeFrom="Tasks"
           setNewReport={setNewReport}
           setActiveReport={setActiveReport}
         />
@@ -184,7 +178,7 @@ function ListEntriesAll({
             </ol>
           </nav>
 
-          <h1>Entry Registries</h1>
+          <h1>Tasks Registries</h1>
         </div>
 
         <div className="p-c-s-i-t-left">
@@ -243,14 +237,13 @@ function ListEntriesAll({
               }}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-              <option></option>
               {newArr &&
                 newArr.length > 0 &&
                 newArr.map((p) => <option value={p._id}>{p.name}</option>)}
             </select>
           </div>
 
-          {loadingOrders || loadingEntries ? (
+          {loadingOrders || loadingTasks ? (
             <div className="loader-div-main-stellr">
               <div role="status">
                 <svg
@@ -272,73 +265,63 @@ function ListEntriesAll({
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
-          ) : selectedProject ? (
-            entries && (
+          ) : (
+            tasks && (
               <CustomAreaChart
                 dataInside={{
-                  name: "Entries",
+                  name: "Tasks",
                   data: [
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "01")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "01")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "02")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "02")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "03")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "03")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "04")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "04")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "05")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "05")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "06")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "06")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "07")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "07")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "08")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "08")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "09")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "09")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "10")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "10")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "11")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "11")
                         .length,
 
-                    entries &&
-                      entries.filter((e) => e.createdAt.split("-")[1] == "12")
+                    tasks &&
+                      tasks.filter((e) => e.createdAt.split("-")[1] == "12")
                         .length,
                   ],
                 }}
               />
             )
-          ) : (
-            <div className="w-[100%] h-64 flex justify-center items-center">
-              <div
-                className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
-                role="alert"
-              >
-                <span className="font-medium">No Project Selected</span> Please
-                select a project.
-              </div>
-            </div>
           )}
         </div>
 
@@ -383,4 +366,4 @@ function ListEntriesAll({
   );
 }
 
-export default ListEntriesAll;
+export default ListTasksAll;

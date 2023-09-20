@@ -13,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Helmet } from "react-helmet";
+import _ from "lodash";
 
 const localizer = momentLocalizer(moment);
 
@@ -134,6 +135,8 @@ function Home({
     }
   }, [taskUpdateController]);
 
+  let newArr = tasks && tasksList && _.unionBy(tasks, tasksList, "_id");
+
   return (
     <div className="calender-main">
       {" "}
@@ -152,41 +155,22 @@ function Home({
           defaultDate={new Date()}
           defaultView="month"
           events={
-            tasksList &&
-            tasks &&
-            tasksList
-              .map(
-                ({
-                  subject: title,
-                  due_date: start,
-                  due_date: end,
-                  ...rest
-                }) => ({
-                  title,
-                  start: new Date(start),
-                  end: new Date(end),
-                  allDay: true,
-                  typeEvent: "normal",
-                  ...rest,
-                })
-              )
-              .concat(
-                tasks.map(
-                  ({
-                    subject: title,
-                    due_date: start,
-                    due_date: end,
-                    ...rest
-                  }) => ({
-                    title,
-                    start: new Date(start),
-                    end: new Date(end),
-                    allDay: true,
-                    typeEvent: "collab",
-                    ...rest,
-                  })
-                )
-              )
+            newArr &&
+            newArr.map(
+              ({
+                subject: title,
+                due_date: start,
+                due_date: end,
+                ...rest
+              }) => ({
+                title,
+                start: new Date(start),
+                end: new Date(end),
+                allDay: true,
+                typeEvent: "normal",
+                ...rest,
+              })
+            )
           }
           eventPropGetter={getEventProp}
           style={{ height: "100%" }}
@@ -243,8 +227,8 @@ function Home({
           </FormControl>
           {age && age === 10 && (
             <div className="calender-todays-task">
-              {tasks &&
-                tasks.map(
+              {newArr &&
+                newArr.map(
                   (doc) =>
                     doc.due_date === todaysDate && (
                       <TaskEntries
@@ -255,22 +239,8 @@ function Home({
                       />
                     )
                 )}
-              {tasksList &&
-                tasksList.map(
-                  (doc) =>
-                    doc.due_date === todaysDate && (
-                      <TaskEntries
-                        doc={doc}
-                        setTaskModal={setTaskModal}
-                        setTaskContent={setTaskContent}
-                        taskFrom={true}
-                      />
-                    )
-                )}
-              {tasks &&
-                tasks.findIndex((o) => o.due_date === todaysDate) == -1 &&
-                tasksList &&
-                tasksList.findIndex((o) => o.due_date === todaysDate) == -1 && (
+              {newArr &&
+                newArr.findIndex((o) => o.due_date === todaysDate) == -1 && (
                   <div className="no-task-container">
                     <img src="./assets/task.svg" alt="" />
                     <h1>No tasks pending for today.</h1>
@@ -289,20 +259,8 @@ function Home({
           )}
           {age && age === 20 && (
             <div className="calender-todays-task">
-              {tasks &&
-                tasks.map(
-                  (doc) =>
-                    doc.due_date > todaysDate && (
-                      <TaskEntries
-                        doc={doc}
-                        setTaskModal={setTaskModal}
-                        setTaskContent={setTaskContent}
-                        taskFrom={true}
-                      />
-                    )
-                )}
-              {tasksList &&
-                tasksList.map(
+              {newArr &&
+                newArr.map(
                   (doc) =>
                     doc.due_date > todaysDate && (
                       <TaskEntries
@@ -331,20 +289,8 @@ function Home({
           )}
           {age && age === 40 && (
             <div className="calender-todays-task">
-              {tasks &&
-                tasks.map(
-                  (doc) =>
-                    doc.due_date < todaysDate && (
-                      <TaskEntries
-                        doc={doc}
-                        setTaskModal={setTaskModal}
-                        setTaskContent={setTaskContent}
-                        taskFrom={true}
-                      />
-                    )
-                )}
-              {tasksList &&
-                tasksList.map(
+              {newArr &&
+                newArr.map(
                   (doc) =>
                     doc.due_date < todaysDate && (
                       <TaskEntries

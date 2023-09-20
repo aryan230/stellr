@@ -49,6 +49,7 @@ import DrawerVesionControl from "./Drawer/DrawerVesionControl";
 import ReactQuill from "react-quill";
 import NewTwoSpreadSheet from "../Modals/NewTwoSpreadsheet";
 import { useLocation, useNavigate } from "react-router-dom";
+import WarningModal from "../Modals/WarningModal";
 
 // import ImageResize from "quill-image-resize-module-react";
 // Quill.register("modules/imageResize", ImageResize);
@@ -207,6 +208,7 @@ function TextEditor({
   const [spreadSheetName, setSpreadsheeName] = useState(false);
   const [spreadsheetNameInside, setSpreadsheetNameInside] = useState();
   const [originalContent, setOriginalContent] = useState();
+  const [warningModal, setWarningModal] = useState(false);
   const fileRef = useRef();
   const fileRefImage = useRef();
   const location = useLocation();
@@ -236,20 +238,20 @@ function TextEditor({
       ? orgsCollab[0]
       : null;
 
-  console.log(tab);
-
   useEffect(() => {
     dispatch(listMySamples(userInfo._id));
     dispatch(getProjectDetails(project._id));
     dispatch(listMyEntries(project._id));
-  }, [dispatch]);
+  }, [dispatch, tab]);
 
-  const sampleOptions = samples
-    ? samples.map(({ _id: id, data: value }) => ({
-        id,
-        value: JSON.parse(value).sampleName,
-      }))
-    : [];
+  const [sampleOptions, setSampleOptions] = useState(
+    samples
+      ? samples.map(({ _id: id, data: value }) => ({
+          id,
+          value: JSON.parse(value).sampleName,
+        }))
+      : []
+  );
   const [userCollabs, setUserCollabs] = useState(
     mainProjectList &&
       mainProjectList.collaborators &&
@@ -646,6 +648,12 @@ function TextEditor({
 
   return (
     <div className={`editor-holder-reactjs ${active && "active"}`}>
+      {warningModal && (
+        <WarningModal
+          setWarningModal={setWarningModal}
+          versionControlValue={versionControlValue}
+        />
+      )}
       {spreadSheetName && (
         <SpreadSheetName
           setSpreadsheetNameInside={setSpreadsheetNameInside}
@@ -745,12 +753,6 @@ function TextEditor({
               <>
                 {" "}
                 <li>
-                  <a href="#">
-                    {tab.name}--
-                    {versionControlValue.date} (ReadOnly Mode)
-                  </a>
-                </li>
-                <li>
                   <a
                     href="#"
                     onClick={(e) => {
@@ -760,6 +762,31 @@ function TextEditor({
                     className="top-div-move-to-current-version"
                   >
                     Move to current version
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                    >
+                      <path
+                        d="M11.3333 6.33329H4.93993L5.8066 5.47329C5.93213 5.34776 6.00266 5.1775 6.00266 4.99996C6.00266 4.82243 5.93213 4.65216 5.8066 4.52663C5.68106 4.40109 5.5108 4.33057 5.33326 4.33057C5.15573 4.33057 4.98547 4.40109 4.85993 4.52663L2.85993 6.52663C2.79924 6.59003 2.75166 6.66479 2.71993 6.74663C2.65325 6.90894 2.65325 7.09099 2.71993 7.25329C2.75166 7.33513 2.79924 7.40989 2.85993 7.47329L4.85993 9.47329C4.92191 9.53578 4.99564 9.58538 5.07688 9.61922C5.15812 9.65307 5.24526 9.67049 5.33326 9.67049C5.42127 9.67049 5.50841 9.65307 5.58965 9.61922C5.67089 9.58538 5.74462 9.53578 5.8066 9.47329C5.86908 9.41132 5.91868 9.33759 5.95253 9.25635C5.98637 9.17511 6.0038 9.08797 6.0038 8.99996C6.0038 8.91195 5.98637 8.82482 5.95253 8.74358C5.91868 8.66234 5.86908 8.5886 5.8066 8.52663L4.93993 7.66663H11.3333C11.5101 7.66663 11.6796 7.73687 11.8047 7.86189C11.9297 7.98691 11.9999 8.15648 11.9999 8.33329V11C11.9999 11.1768 12.0702 11.3463 12.1952 11.4714C12.3202 11.5964 12.4898 11.6666 12.6666 11.6666C12.8434 11.6666 13.013 11.5964 13.138 11.4714C13.263 11.3463 13.3333 11.1768 13.3333 11V8.33329C13.3333 7.80286 13.1226 7.29415 12.7475 6.91908C12.3724 6.54401 11.8637 6.33329 11.3333 6.33329V6.33329Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setWarningModal(true);
+                      // setVersionControlTab(false);
+                    }}
+                    className="top-div-roll-to-current-version"
+                  >
+                    Roll back to current version
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"

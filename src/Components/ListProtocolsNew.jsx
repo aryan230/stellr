@@ -7,6 +7,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import { Helmet } from "react-helmet";
 import PieChartProtocol from "./Charts/PieChartProtocol";
+import CustomPieChart from "./CustomCharts/CustomPieChart";
+import CustomAreaChart from "./CustomCharts/CustomAreaChart";
+import CustomLine from "./CustomCharts/CustomLine";
+import Reports from "./ReportsAndDashboard/Reports/Reports";
 
 function ListProtocolsNew({
   setProtocolContent,
@@ -14,8 +18,12 @@ function ListProtocolsNew({
   newProtocol,
   setCreateNewProtocol,
   setNewProtocol,
-  sampleUpdate,
-  setSampleUpdate,
+  setWhichTabisActive,
+  setReportTab,
+  reportTab,
+  newReport,
+  setNewReport,
+  setActiveReport,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,27 +39,7 @@ function ListProtocolsNew({
     error: errorSamples,
   } = protocolListMy;
 
-  const [newProtocols, setNewProtocols] = useState(
-    protocols &&
-      protocols.map(
-        ({
-          protocolId: id,
-          title: name,
-          createdAt: createdAt,
-          type: recordType,
-          updatedAt: updatedAt,
-        }) => ({
-          id: `PTCL-000${id}`,
-          name: name,
-          createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
-          recordType,
-          updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
-          createdDate: createdAt,
-          createdBy: userInfo.name,
-          view: "View",
-        })
-      )
-  );
+  const [newSamples, setNewProtocols] = useState(protocols && protocols);
   useEffect(() => {
     dispatch(listMyProtocols(userInfo._id));
   }, [dispatch]);
@@ -118,6 +106,66 @@ function ListProtocolsNew({
       renderCell: renderDetailsButton,
     },
   ];
+  let basic =
+    newSamples &&
+    newSamples.filter(
+      (e) => e.data && Object.entries(JSON.parse(e.data)).length === 6
+    ).length;
+
+  let inter =
+    newSamples &&
+    newSamples.filter((e) => e.data && e.hasOwnProperty("file")).length;
+
+  let comp = newSamples && newSamples.length - basic - inter;
+
+  const series = [basic, inter ? inter : 0, comp ? comp : 0];
+
+  const labels = [
+    "Basic Protocols",
+    "Comprehensive Protocols",
+    "Interactive  Protocols",
+  ];
+
+  const dataInsideLine = {
+    name: "Protocols",
+    data: [
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "01").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "02").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "03").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "04").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "05").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "06").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "07").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "08").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "09").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "10").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "11").length,
+
+      newSamples &&
+        newSamples.filter((e) => e.createdAt.split("-")[1] == "12").length,
+    ],
+  };
 
   return (
     <div className="project-component-inside">
@@ -129,6 +177,16 @@ function ListProtocolsNew({
           content="Effectively manage and maintain data registries with our specialized Bio-Pharma ELN software. Simplify data organization and accessibility."
         />
       </Helmet>
+      {reportTab && (
+        <Reports
+          setReportTab={setReportTab}
+          dataValue={protocols && protocols}
+          newReport={newReport}
+          typeFrom="Protocols"
+          setNewReport={setNewReport}
+          setActiveReport={setActiveReport}
+        />
+      )}
       <div className="p-c-s-i-t">
         <div className="ps-c-it-inside">
           <nav className="flex" aria-label="Breadcrumb">
@@ -154,53 +212,6 @@ function ListProtocolsNew({
                   Home
                 </a>
               </li>
-              {/* <li>
-              <div className="flex items-center">
-                <svg
-                  className="w-3 h-3 text-gray-400 mx-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 6 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="m1 9 4-4-4-4"
-                  />
-                </svg>
-                <a
-                  href="#"
-                  className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2"
-                >
-                  Projects
-                </a>
-              </div>
-            </li>
-            <li aria-current="page">
-              <div className="flex items-center">
-                <svg
-                  className="w-3 h-3 text-gray-400 mx-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 6 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="m1 9 4-4-4-4"
-                  />
-                </svg>
-                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                  Flowbite
-                </span>
-              </div>
-            </li> */}
             </ol>
           </nav>
 
@@ -223,11 +234,11 @@ function ListProtocolsNew({
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setCreateNewProtocol(true);
+              setReportTab(true);
             }}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Add New Protocol
+            Create Report
             <svg
               className="w-3.5 h-3.5 ml-2"
               aria-hidden="true"
@@ -271,7 +282,7 @@ function ListProtocolsNew({
               </div>
             </div>
           ) : (
-            <PieChartProtocol newSamples={protocols ? protocols : []} />
+            <CustomLine dataInside={dataInsideLine ? dataInsideLine : []} />
           )}
         </div>
 
@@ -300,43 +311,9 @@ function ListProtocolsNew({
             </div>
           ) : (
             <Box sx={{ height: "90%", width: "100%" }}>
-              <DataGrid
-                rows={
-                  protocols &&
-                  protocols.map(
-                    ({
-                      protocolId: id,
-                      title: name,
-                      createdAt: createdAt,
-                      type: recordType,
-                      updatedAt: updatedAt,
-                    }) => ({
-                      id: `PTCL-000${id}`,
-                      name: name,
-                      createdAt: new Date(createdAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      recordType,
-                      updatedAt: new Date(updatedAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      createdDate: createdAt,
-                      createdBy: userInfo.name,
-                      view: "View",
-                    })
-                  )
-                }
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 4,
-                    },
-                  },
-                }}
-                pageSizeOptions={[3]}
-                checkboxSelection
-                disableRowSelectionOnClick
+              <CustomPieChart
+                labels={labels}
+                seriesData={series ? series : []}
               />
             </Box>
           )}

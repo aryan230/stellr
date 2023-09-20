@@ -7,10 +7,18 @@ function NewSampleHeader({ setActiveTab, activeTab }) {
         <li className="mr-2">
           <a
             href="#"
-            className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
+            onClick={() => {
+              setActiveTab("home");
+            }}
+            className={`inline-flex items-center justify-center p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab ===
+              "home" && `text-blue-600 border-b-2 border-blue-600`}`}
           >
             <svg
-              className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-500 "
+              className={`w-4 h-4 mr-2 ${
+                activeTab === "home"
+                  ? "text-blue-600 dark:text-blue-500"
+                  : "text-gray-400 group-hover:text-gray-500"
+              }`}
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -53,7 +61,7 @@ function NewSampleHeader({ setActiveTab, activeTab }) {
             onClick={() => {
               setActiveTab("settings");
             }}
-            className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab ===
+            className={`inline-flex items-center justify-center p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab ===
               "settings" && `text-blue-600 border-b-2 border-blue-600`}`}
           >
             <svg
@@ -75,10 +83,18 @@ function NewSampleHeader({ setActiveTab, activeTab }) {
         <li className="mr-2">
           <a
             href="#"
-            className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300`}
+            onClick={() => {
+              setActiveTab("timeline");
+            }}
+            className={`inline-flex items-center justify-center p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 ${activeTab ===
+              "timeline" && `text-blue-600 border-b-2 border-blue-600`}`}
           >
             <svg
-              className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-500"
+              className={`w-4 h-4 mr-2 ${
+                activeTab === "timeline"
+                  ? "text-blue-600 dark:text-blue-500"
+                  : "text-gray-400 group-hover:text-gray-500"
+              }`}
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"

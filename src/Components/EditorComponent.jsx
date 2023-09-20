@@ -372,6 +372,8 @@ function EditorComponent() {
               updateUserCollabRole={updateUserCollabRole}
               projectInsideActive={projectInsideActive}
               projectInsideActiveId={projectInsideActiveId}
+              newEntry={newEntry}
+              setNewEntry={setNewEntry}
             />
           )}
           <div className="main-structure" ref={mainDiv}>
@@ -546,7 +548,7 @@ function EditorComponent() {
             )}
           </div>
         </div>
-        <Footer />
+        {whichTabisActive != "reportsAndDashboard" && <Footer />}
       </div>
     </div>
   );

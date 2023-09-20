@@ -15,21 +15,10 @@ function PieChartProtocol({ newSamples }) {
 
   let comp = newSamples.length - basic - inter;
 
-  //   newSamples &&
-  //     newSamples.forEach((e) => {
-  //       let comp = 0;
-  //       let inter = 0;
-  //       if (e.data) {
-  //         if (JSON.parse(e.data).hasOwnProperty("Scope")) {
-  //           setBasic((prev) => prev + 1);
-  //         }
-  //       }
-  //     });
-
-  //   const subjectPatient =
-  //     newSamples &&
-  //     newSamples.filter((e) => Object.entries(JSON.parse(e.data)).length === 6)
-  //       .length;
+  const subjectPatient =
+    newSamples &&
+    newSamples.filter((e) => Object.entries(JSON.parse(e.data)).length === 6)
+      .length;
   const series = [basic, inter ? inter : 0, comp ? comp : 0];
 
   const options = {

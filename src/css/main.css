@@ -1622,6 +1622,21 @@ div.ql-tooltip {
   width: 94%;
   height: 100%;
   overflow-y: auto;
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+.main-content::-webkit-scrollbar {
+  width: 5px;
+}
+.main-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.main-content::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 .main-content .main-content-in-editor {
   width: 100%;
@@ -2441,6 +2456,11 @@ div.ql-tooltip {
   border-radius: 15.625rem;
   border: 3px solid #188038;
 }
+.tabs-content .editor-holder-reactjs .top-div-editor-holder .top-div-holder-editor-inside ul li a.top-div-roll-to-current-version {
+  background-color: #d2003f;
+  border: 0px;
+  color: white;
+}
 .tabs-content .editor-holder-reactjs .top-div-editor-holder .top-div-holder-editor-inside ul li a.top-div-move-to-current-version {
   background-color: #5d00d2;
   border: 0px;
@@ -3147,10 +3167,15 @@ div.ql-tooltip {
   width: 90%;
   margin: 0 auto;
   height: 90%;
+  padding-bottom: 5rem;
+}
+.p-c-s-charts .area-chart {
+  width: 100%;
+  height: 50%;
 }
 .p-c-s-charts .samples-below-chart-div {
   margin-top: 2rem;
-  height: 55%;
+  height: 40%;
   width: 100%;
   display: flex;
   align-items: center;
@@ -5467,6 +5492,29 @@ div.ql-tooltip {
 }
 .view-report-modal .top-modal svg:hover {
   cursor: pointer;
+}
+.view-report-modal .view-report-details-tp {
+  width: 85%;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(182, 182, 182, 0.4117647059);
+  padding-bottom: 0.25rem;
+}
+.view-report-modal .view-report-details-tp h1 {
+  color: #000;
+  font-family: GothamBook;
+  font-size: 2.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 1rem 0;
+}
+.view-report-modal .view-report-details-tp p {
+  color: #867979;
+  font-family: Karla;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 .view-report-modal .view-report-charts {
   width: 90%;

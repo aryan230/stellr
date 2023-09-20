@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListSamplesNew from "../ListSamplesNew";
 import ListProtocolsNew from "../ListProtocolsNew";
 import ReportsList from "./ReportsList";
 import ListProjectsNew from "../ListProjectsNew";
 import ListEntriesAll from "../ListEntriesAll";
+import ListTasksAll from "../ListTasksAll";
+import ListSopsNew from "../ListSopsNew";
+import { useDispatch, useSelector } from "react-redux";
+import { listMySops } from "../../redux/actions/sopActions";
 
 function ReportsAndDashboard({ setWhichTabisActive }) {
+  const dispatch = useDispatch();
   const [activeReport, setActiveReport] = useState("home");
   const [reportTab, setReportTab] = useState(false);
   const [newReport, setNewReport] = useState(false);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const sopListMy = useSelector((state) => state.sopListMy);
+  const { sops, loading: loadingSamples, error: errorSamples } = sopListMy;
+
+  useEffect(() => {
+    dispatch(listMySops(userInfo._id));
+  }, [dispatch]);
+
   return (
     <div className="reports-and-dashboards">
       <aside
@@ -61,9 +77,9 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
                   <path d="M15.99 3.78751L11.49 2.28751H11.4375C11.4026 2.284 11.3674 2.284 11.3325 2.28751H11.16H11.0625H11.01L6.75 3.75001L2.49 2.28751C2.37721 2.25032 2.25721 2.24044 2.13985 2.2587C2.0225 2.27695 1.91116 2.32282 1.815 2.39251C1.71807 2.46152 1.63895 2.55261 1.58418 2.65824C1.52941 2.76387 1.50055 2.88102 1.5 3.00001V13.5C1.4996 13.6572 1.54862 13.8106 1.64013 13.9385C1.73165 14.0663 1.86104 14.1622 2.01 14.2125L6.51 15.7125C6.66109 15.7618 6.82392 15.7618 6.975 15.7125V15.7125L11.25 14.2875L15.51 15.75C15.5896 15.7608 15.6704 15.7608 15.75 15.75C15.9068 15.7522 16.0599 15.7021 16.185 15.6075C16.2819 15.5385 16.3611 15.4474 16.4158 15.3418C16.4706 15.2361 16.4995 15.119 16.5 15V4.50001C16.5004 4.34278 16.4514 4.18939 16.3599 4.06154C16.2684 3.93368 16.139 3.83782 15.99 3.78751V3.78751ZM6 13.9575L3 12.96V4.04251L6 5.04001V13.9575ZM10.5 12.96L7.5 13.9575V5.04001L10.5 4.04251V12.96ZM15 13.9575L12 12.96V4.04251L15 5.04001V13.9575Z" />
                 </svg>
                 <span className="flex-1 ml-3 whitespace-nowrap">Projects</span>
-                <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                {/* <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
                   0
-                </span>
+                </span> */}
               </a>
             </li>
             <li>
@@ -86,9 +102,9 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
 
                 {/*  */}
                 <span className="flex-1 ml-3 whitespace-nowrap">Reports</span>
-                <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                {/* <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
                   0
-                </span>
+                </span> */}
               </a>
             </li>
             <li>
@@ -110,9 +126,9 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
                 </svg>
 
                 <span className="flex-1 ml-3 whitespace-nowrap">Entries</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
                   0
-                </span>
+                </span> */}
               </a>
             </li>
             <li>
@@ -134,9 +150,9 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
                 </svg>
 
                 <span className="flex-1 ml-3 whitespace-nowrap">Samples</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
                   0
-                </span>
+                </span> */}
               </a>
             </li>
             <li>
@@ -158,15 +174,44 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
                 </svg>
 
                 <span className="flex-1 ml-3 whitespace-nowrap">Protocols</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
                   0
-                </span>
+                </span> */}
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 "
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveReport("sops");
+                }}
+                className={`flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 ${activeReport ===
+                  "sops" && `bg-gray-200`}`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
+                >
+                  <path d="M10.0003 0.333344H3.33366C2.62641 0.333344 1.94814 0.614295 1.44804 1.11439C0.947944 1.61449 0.666992 2.29277 0.666992 3.00001V11C0.666992 11.7073 0.947944 12.3855 1.44804 12.8856C1.94814 13.3857 2.62641 13.6667 3.33366 13.6667H10.0003C10.3539 13.6667 10.6931 13.5262 10.9431 13.2762C11.1932 13.0261 11.3337 12.687 11.3337 12.3333V1.66668C11.3337 1.31305 11.1932 0.973916 10.9431 0.723868C10.6931 0.473819 10.3539 0.333344 10.0003 0.333344ZM2.00033 3.00001C2.00033 2.64639 2.1408 2.30725 2.39085 2.0572C2.6409 1.80715 2.98004 1.66668 3.33366 1.66668H10.0003V8.33334H3.33366C2.86369 8.33531 2.40299 8.46431 2.00033 8.70668V3.00001ZM3.33366 12.3333C2.98004 12.3333 2.6409 12.1929 2.39085 11.9428C2.1408 11.6928 2.00033 11.3536 2.00033 11C2.00033 10.6464 2.1408 10.3072 2.39085 10.0572C2.6409 9.80715 2.98004 9.66668 3.33366 9.66668H10.0003V12.3333H3.33366ZM4.66699 4.33334H7.33366C7.51047 4.33334 7.68004 4.26311 7.80506 4.13808C7.93009 4.01306 8.00033 3.84349 8.00033 3.66668C8.00033 3.48987 7.93009 3.3203 7.80506 3.19527C7.68004 3.07025 7.51047 3.00001 7.33366 3.00001H4.66699C4.49018 3.00001 4.32061 3.07025 4.19559 3.19527C4.07056 3.3203 4.00033 3.48987 4.00033 3.66668C4.00033 3.84349 4.07056 4.01306 4.19559 4.13808C4.32061 4.26311 4.49018 4.33334 4.66699 4.33334Z" />
+                </svg>
+
+                <span className="flex-1 ml-3 whitespace-nowrap">SOPS</span>
+                {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                  0
+                </span> */}
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveReport("tasks");
+                }}
+                className={`flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group ${activeReport ===
+                  "tasks" && `bg-gray-200`}`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -176,9 +221,9 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
                   <path d="M6.80634 9.83333C6.86832 9.89581 6.94205 9.94541 7.02329 9.97926C7.10453 10.0131 7.19167 10.0305 7.27967 10.0305C7.36768 10.0305 7.45482 10.0131 7.53606 9.97926C7.6173 9.94541 7.69103 9.89581 7.75301 9.83333L10.473 7.11333C10.5985 6.98779 10.6691 6.81753 10.6691 6.63999C10.6691 6.46246 10.5985 6.2922 10.473 6.16666C10.3475 6.04113 10.1772 5.9706 9.99967 5.9706C9.82214 5.9706 9.65188 6.04113 9.52634 6.16666L7.27967 8.41999L6.47301 7.60666C6.34747 7.48113 6.17721 7.4106 5.99967 7.4106C5.82214 7.4106 5.65188 7.48113 5.52634 7.60666C5.40081 7.7322 5.33028 7.90246 5.33028 8.07999C5.33028 8.25753 5.40081 8.42779 5.52634 8.55333L6.80634 9.83333ZM13.9997 1.33333H1.99967C1.82286 1.33333 1.65329 1.40357 1.52827 1.52859C1.40325 1.65361 1.33301 1.82318 1.33301 1.99999V14C1.33301 14.1768 1.40325 14.3464 1.52827 14.4714C1.65329 14.5964 1.82286 14.6667 1.99967 14.6667H13.9997C14.1765 14.6667 14.3461 14.5964 14.4711 14.4714C14.5961 14.3464 14.6663 14.1768 14.6663 14V1.99999C14.6663 1.82318 14.5961 1.65361 14.4711 1.52859C14.3461 1.40357 14.1765 1.33333 13.9997 1.33333V1.33333ZM13.333 13.3333H2.66634V2.66666H13.333V13.3333Z" />
                 </svg>
                 <span className="flex-1 ml-3 whitespace-nowrap">Tasks</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
                   0
-                </span>
+                </span> */}
               </a>
             </li>
           </ul>
@@ -188,6 +233,16 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
       <div className="main-content-reports">
         {activeReport === "entries" && (
           <ListEntriesAll
+            reportTab={reportTab}
+            setWhichTabisActive={setWhichTabisActive}
+            setReportTab={setReportTab}
+            newReport={newReport}
+            setNewReport={setNewReport}
+            setActiveReport={setActiveReport}
+          />
+        )}
+        {activeReport === "tasks" && (
+          <ListTasksAll
             reportTab={reportTab}
             setWhichTabisActive={setWhichTabisActive}
             setReportTab={setReportTab}
@@ -223,12 +278,27 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
             setReportTab={setReportTab}
             newReport={newReport}
             setNewReport={setNewReport}
+            setActiveReport={setActiveReport}
           />
         )}
         {activeReport === "protocols" && (
           <ListProtocolsNew
+            reportTab={reportTab}
             setWhichTabisActive={setWhichTabisActive}
             setReportTab={setReportTab}
+            newReport={newReport}
+            setNewReport={setNewReport}
+            setActiveReport={setActiveReport}
+          />
+        )}
+        {activeReport === "sops" && (
+          <ListSopsNew
+            reportTab={reportTab}
+            setWhichTabisActive={setWhichTabisActive}
+            setReportTab={setReportTab}
+            newReport={newReport}
+            setNewReport={setNewReport}
+            setActiveReport={setActiveReport}
           />
         )}
       </div>

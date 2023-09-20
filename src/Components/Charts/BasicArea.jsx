@@ -109,26 +109,8 @@ const BasicArea = ({ height = 200 }) => {
     zoom: {
       enabled: false,
     },
-    grid: {
-      row: {
-        colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-        opacity: 0.5,
-      },
-    },
-    grid: {
-      show: true,
-      borderColor: isDark ? "#334155" : "#e2e8f0",
-      strokeDashArray: 10,
-      position: "back",
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: isDark ? "#CBD5E1" : "#475569",
-          fontFamily: "Inter",
-        },
-      },
-    },
+
+    yaxis: {},
     xaxis: {
       categories: [
         "Jan",
@@ -144,12 +126,7 @@ const BasicArea = ({ height = 200 }) => {
         "Nov",
         "Dec",
       ],
-      labels: {
-        style: {
-          colors: isDark ? "#CBD5E1" : "#475569",
-          fontFamily: "Inter",
-        },
-      },
+
       axisBorder: {
         show: true,
       },
@@ -205,7 +182,7 @@ const BasicArea = ({ height = 200 }) => {
           <ReactApexChart
             options={options}
             series={series}
-            type="line"
+            type="area"
             height={220}
           />
         )

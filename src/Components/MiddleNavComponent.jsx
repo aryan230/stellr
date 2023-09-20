@@ -25,6 +25,8 @@ function MiddleNavComponent({
   setTaskModal,
   setNewCollab,
   setTaskContent,
+  newEntry,
+  setNewEntry,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,6 +59,14 @@ function MiddleNavComponent({
     dispatch(listMyCollabOrgs());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (newEntry) {
+      dispatch(getProjectDetails(id));
+      dispatch(listMyTasks(id));
+      dispatch(listMyEntries(id));
+    }
+  }, [newEntry]);
+
   const findOrg =
     orgs && orgs.length > 0
       ? orgs[0].collaborators.find((e) => e.user == userInfo._id)
@@ -71,16 +81,6 @@ function MiddleNavComponent({
 
   return (
     <div className="sl-inside">
-      {/* {projectSettings && (
-        <ProjectSettings
-          //   setProjectSettings={setProjectSettings}
-          project={project}
-          setNewCollab={setNewCollab}
-          //   setNewCollab={setNewCollab}
-          //   setProjectUpdatedProfilers={setProjectUpdatedProfilers}
-          //   setUpdatedUserCollabRole={setUpdatedUserCollabRole}
-        />
-      )} */}
       <div className="sl-inside-top-back">
         <svg
           xmlns="http://www.w3.org/2000/svg"

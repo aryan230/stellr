@@ -123,7 +123,7 @@ function DrawerEditTask({
               onChange={(e) => setSubject(e.target.value)}
             />
             <div className="margin-maker"></div>
-            <label htmlFor="">Name</label>
+            <label htmlFor="">Due Date</label>
             <input
               type="date"
               value={dueDate}

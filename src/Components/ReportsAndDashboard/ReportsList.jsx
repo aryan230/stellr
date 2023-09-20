@@ -11,8 +11,9 @@ import { useSelector } from "react-redux";
 import Button from "../ui/Button";
 import ViewReport from "./ViewReport";
 import URL from "./../../Data/data.json";
+import Reports from "./Reports/Reports";
 
-function ReportsList({ newReport, setNewReport }) {
+function ReportsList({ newReport, setNewReport, setActiveReport }) {
   const [data, setData] = useState([]);
   const [viewReport, setViewReport] = useState(false);
   const [viewReportContent, setViewReportContent] = useState();
@@ -20,7 +21,7 @@ function ReportsList({ newReport, setNewReport }) {
   const { userInfo } = userLogin;
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(6);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -147,7 +148,7 @@ function ReportsList({ newReport, setNewReport }) {
             Download Reports
           </button>
 
-          <button
+          {/* <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
@@ -170,11 +171,11 @@ function ReportsList({ newReport, setNewReport }) {
                 d="M1 5h12m0 0L9 1m4 4L9 9"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="main-content-inside-reports-main">
-        <TableContainer sx={{ maxHeight: 400 }}>
+        <TableContainer sx={{ maxHeight: "100%" }}>
           <Table
             stickyHeader
             aria-label="sticky table"
@@ -271,7 +272,7 @@ function ReportsList({ newReport, setNewReport }) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[6, 25, 100]}
+          rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={data && data.length}
           rowsPerPage={rowsPerPage}

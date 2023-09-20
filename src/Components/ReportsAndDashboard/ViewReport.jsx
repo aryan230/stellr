@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import BasicArea from "../Charts/BasicArea";
 import Table from "@mui/material/Table";
@@ -9,6 +9,12 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Pie from "../Charts/Pie";
+import ProjectReport from "./Reports/ViewReports/ProjectReport";
+import SampleReport from "./Reports/ViewReports/SampleReport";
+import ProtocolReport from "./Reports/ViewReports/ProtocolReport";
+import EntryReport from "./Reports/ViewReports/EntryReport";
+import TaskReport from "./Reports/ViewReports/TaskReport";
+import SOPReport from "./Reports/ViewReports/SOPReport";
 
 function ViewReport({ viewReportContent, setViewReport }) {
   const userLogin = useSelector((state) => state.userLogin);
@@ -18,26 +24,27 @@ function ViewReport({ viewReportContent, setViewReport }) {
   const [chartsData, setChartsData] = useState(
     JSON.parse(viewReportContent.dataSet).charts
   );
-  const [insideDataIn, setInsideData] = useState(
-    JSON.parse(JSON.parse(viewReportContent.dataSet).insideData).map(
-      ({
-        sampleId: id,
-        data: name,
-        createdAt: createdAt,
-        type: recordType,
-        updatedAt: updatedAt,
-      }) => ({
-        id: `SAM-000${id}`,
-        name: JSON.parse(name).sampleName,
-        createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
-        recordType,
-        updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
-        createdDate: createdAt,
-        createdBy: userInfo.name,
-        view: "View",
-      })
-    )
-  );
+
+  // const [insideDataIn, setInsideData] = useState(
+  //   JSON.parse(JSON.parse(viewReportContent.dataSet).insideData).map(
+  //     ({
+  //       sampleId: id,
+  //       data: name,
+  //       createdAt: createdAt,
+  //       type: recordType,
+  //       updatedAt: updatedAt,
+  //     }) => ({
+  //       id: `SAM-000${id}`,
+  //       name: JSON.parse(name).sampleName,
+  //       createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
+  //       recordType,
+  //       updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
+  //       createdDate: createdAt,
+  //       createdBy: userInfo.name,
+  //       view: "View",
+  //     })
+  //   )
+  // );
   const columns = [
     { id: "id", label: "Sample Id", minWidth: 100 },
     { id: "name", label: "Sample Name", minWidth: 170 },
@@ -54,7 +61,7 @@ function ViewReport({ viewReportContent, setViewReport }) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  console.log(chartsData);
+
   return (
     <div className="modal">
       <div className="view-report-modal">
@@ -78,7 +85,24 @@ function ViewReport({ viewReportContent, setViewReport }) {
             </svg>
           </button>
         </div>
-        <div className="view-report-charts">
+
+        {mainData && mainData.type === "SOPS" && <SOPReport data={mainData} />}
+        {mainData && mainData.type === "Tasks" && (
+          <TaskReport data={mainData} />
+        )}
+        {mainData && mainData.type === "Entries" && (
+          <EntryReport data={mainData} />
+        )}
+        {mainData && mainData.type === "Projects" && (
+          <ProjectReport data={mainData} />
+        )}
+        {mainData && mainData.type === "Samples" && (
+          <SampleReport data={mainData} />
+        )}
+        {mainData && mainData.type === "Protocols" && (
+          <ProtocolReport data={mainData} />
+        )}
+        {/* <div className="view-report-charts">
           {chartsData.map(
             (e) =>
               e === "area" && (
@@ -105,8 +129,8 @@ function ViewReport({ viewReportContent, setViewReport }) {
                 </div>
               )
           )}
-        </div>
-        <div className="view-report-data-grid">
+        </div> */}
+        {/* <div className="view-report-data-grid">
           <TableContainer sx={{ maxHeight: 300 }}>
             <Table
               stickyHeader
@@ -164,7 +188,7 @@ function ViewReport({ viewReportContent, setViewReport }) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
