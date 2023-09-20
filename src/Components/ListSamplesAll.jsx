@@ -208,77 +208,80 @@ function ListSamplesAll({
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
+          ) : samples && samples.length > 0 ? (
+            <Box sx={{ height: "90%", width: "100%" }}>
+              <DataGrid
+                slots={{ toolbar: GridToolbar }}
+                rows={samples.map(
+                  ({
+                    sampleId: id,
+                    data: name,
+                    createdAt: createdAt,
+                    type: recordType,
+                    updatedAt: updatedAt,
+                  }) => ({
+                    id: `SAM-000${id}`,
+                    name: JSON.parse(name).sampleName,
+                    createdAt: new Date(createdAt)
+                      .toLocaleString("en-GB")
+                      .split(",")[0],
+                    recordType,
+                    updatedAt: new Date(updatedAt)
+                      .toLocaleString("en-GB")
+                      .split(",")[0],
+                    createdDate: createdAt,
+                    createdBy: userInfo.name,
+                    updatedBy: userInfo.name,
+                    view: "View",
+                  })
+                )}
+                columns={columns}
+                // initialState={{
+                //   pagination: {
+                //     paginationModel: {
+                //       pageSize: 8,
+                //     },
+                //   },
+                // }}
+                // pageSizeOptions={[3]}
+                checkboxSelection
+                disableRowSelectionOnClick
+                onSelectionModelChange={(ids) => {
+                  const selectedIDs = new Set(ids);
+                  const selectedRowData = samples
+                    .map(
+                      ({
+                        sampleId: id,
+                        data: name,
+                        createdAt: createdAt,
+                        type: recordType,
+                        updatedAt: updatedAt,
+                      }) => ({
+                        id: `SAM-000${id}`,
+                        name: JSON.parse(name).sampleName,
+                        createdAt: new Date(createdAt)
+                          .toLocaleString("en-GB")
+                          .split(",")[0],
+                        recordType,
+                        updatedAt: new Date(updatedAt)
+                          .toLocaleString("en-GB")
+                          .split(",")[0],
+                        createdDate: createdAt,
+                        createdBy: userInfo.name,
+                        updatedBy: userInfo.name,
+                        view: "View",
+                      })
+                    )
+                    .filter((row) => selectedIDs.has(row.id.toString()));
+                  console.log(selectedRowData);
+                }}
+              />
+            </Box>
           ) : (
-            samples && (
-              <Box sx={{ height: "90%", width: "100%" }}>
-                <DataGrid
-                  slots={{ toolbar: GridToolbar }}
-                  rows={samples.map(
-                    ({
-                      sampleId: id,
-                      data: name,
-                      createdAt: createdAt,
-                      type: recordType,
-                      updatedAt: updatedAt,
-                    }) => ({
-                      id: `SAM-000${id}`,
-                      name: JSON.parse(name).sampleName,
-                      createdAt: new Date(createdAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      recordType,
-                      updatedAt: new Date(updatedAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      createdDate: createdAt,
-                      createdBy: userInfo.name,
-                      updatedBy: userInfo.name,
-                      view: "View",
-                    })
-                  )}
-                  columns={columns}
-                  // initialState={{
-                  //   pagination: {
-                  //     paginationModel: {
-                  //       pageSize: 8,
-                  //     },
-                  //   },
-                  // }}
-                  // pageSizeOptions={[3]}
-                  checkboxSelection
-                  disableRowSelectionOnClick
-                  onSelectionModelChange={(ids) => {
-                    const selectedIDs = new Set(ids);
-                    const selectedRowData = samples
-                      .map(
-                        ({
-                          sampleId: id,
-                          data: name,
-                          createdAt: createdAt,
-                          type: recordType,
-                          updatedAt: updatedAt,
-                        }) => ({
-                          id: `SAM-000${id}`,
-                          name: JSON.parse(name).sampleName,
-                          createdAt: new Date(createdAt)
-                            .toLocaleString("en-GB")
-                            .split(",")[0],
-                          recordType,
-                          updatedAt: new Date(updatedAt)
-                            .toLocaleString("en-GB")
-                            .split(",")[0],
-                          createdDate: createdAt,
-                          createdBy: userInfo.name,
-                          updatedBy: userInfo.name,
-                          view: "View",
-                        })
-                      )
-                      .filter((row) => selectedIDs.has(row.id.toString()));
-                    console.log(selectedRowData);
-                  }}
-                />
-              </Box>
-            )
+            <div className="everything-alignment-center">
+              <img src="./assets/4.svg" />
+              <p>There is nothing here yet.</p>
+            </div>
           )}
         </div>
       </div>

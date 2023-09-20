@@ -8,6 +8,7 @@ import ListTasksAll from "../ListTasksAll";
 import ListSopsNew from "../ListSopsNew";
 import { useDispatch, useSelector } from "react-redux";
 import { listMySops } from "../../redux/actions/sopActions";
+import DashHome from "./DashHome";
 
 function ReportsAndDashboard({ setWhichTabisActive }) {
   const dispatch = useDispatch();
@@ -231,6 +232,7 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
       </aside>
 
       <div className="main-content-reports">
+        {activeReport === "home" && <DashHome/>}
         {activeReport === "entries" && (
           <ListEntriesAll
             reportTab={reportTab}

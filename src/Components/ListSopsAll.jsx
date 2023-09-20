@@ -226,12 +226,13 @@ function ListSopsAll({
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
-          ) : (
-            sops && (
-              <Box sx={{ height: "90%", width: "100%" }}>
-                <DataGrid
-                  slots={{ toolbar: GridToolbar }}
-                  rows={sops.map(
+          ) : sops && sops.length > 0 ? (
+            <Box sx={{ height: "90%", width: "100%" }}>
+              <DataGrid
+                slots={{ toolbar: GridToolbar }}
+                rows={
+                  sops &&
+                  sops.map(
                     ({
                       sopId: id,
                       title: name,
@@ -253,11 +254,16 @@ function ListSopsAll({
                       updatedBy: userInfo.name,
                       view: "View",
                     })
-                  )}
-                  columns={columns}
-                />
-              </Box>
-            )
+                  )
+                }
+                columns={columns}
+              />
+            </Box>
+          ) : (
+            <div className="everything-alignment-center">
+              <img src="./assets/4.svg" />
+              <p>There is nothing here yet.</p>
+            </div>
           )}
         </div>
       </div>

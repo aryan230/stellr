@@ -139,3 +139,17 @@
   width: 80%;
   margin: 0 auto;
 }
+
+.dash-home {
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 30%;
+    margin: 2rem 0;
+  }
+}

@@ -545,7 +545,7 @@ function TextEditor({
       quill.enable();
     });
     socket.emit("get-document", tab._id);
-  }, [socket, quill, tab.id]);
+  }, [socket, quill, tab]);
 
   //Update version control
 
@@ -592,6 +592,7 @@ function TextEditor({
       clearInterval(interval);
     };
   }, [socket, quill]);
+
   useEffect(() => {
     if (quill == null) return;
     const handler = async () => {

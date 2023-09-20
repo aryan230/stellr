@@ -355,7 +355,7 @@ function ListTasksAll({
                 <CustomPieChart
                   labels={projectStats && projectStats.stats.map((s) => s.name)}
                   seriesData={
-                    projectStats && projectStats.stats.map((s) => s.entries)
+                    projectStats && projectStats.stats.map((s) => s.tasks)
                   }
                 />
               )}

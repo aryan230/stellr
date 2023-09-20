@@ -224,38 +224,41 @@ function ListProtocolsAll({
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
+          ) : protocols && protocols.length > 0 ? (
+            <Box sx={{ height: "90%", width: "100%" }}>
+              <DataGrid
+                slots={{ toolbar: GridToolbar }}
+                rows={protocols.map(
+                  ({
+                    protocolId: id,
+                    title: name,
+                    createdAt: createdAt,
+                    type: recordType,
+                    updatedAt: updatedAt,
+                  }) => ({
+                    id: `PTCL-000${id}`,
+                    name: name,
+                    createdAt: new Date(createdAt)
+                      .toLocaleString("en-GB")
+                      .split(",")[0],
+                    recordType,
+                    updatedAt: new Date(updatedAt)
+                      .toLocaleString("en-GB")
+                      .split(",")[0],
+                    createdDate: createdAt,
+                    createdBy: userInfo.name,
+                    updatedBy: userInfo.name,
+                    view: "View",
+                  })
+                )}
+                columns={columns}
+              />
+            </Box>
           ) : (
-            protocols && (
-              <Box sx={{ height: "90%", width: "100%" }}>
-                <DataGrid
-                  slots={{ toolbar: GridToolbar }}
-                  rows={protocols.map(
-                    ({
-                      protocolId: id,
-                      title: name,
-                      createdAt: createdAt,
-                      type: recordType,
-                      updatedAt: updatedAt,
-                    }) => ({
-                      id: `PTCL-000${id}`,
-                      name: name,
-                      createdAt: new Date(createdAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      recordType,
-                      updatedAt: new Date(updatedAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0],
-                      createdDate: createdAt,
-                      createdBy: userInfo.name,
-                      updatedBy: userInfo.name,
-                      view: "View",
-                    })
-                  )}
-                  columns={columns}
-                />
-              </Box>
-            )
+            <div className="everything-alignment-center">
+              <img src="./assets/4.svg" />
+              <p>There is nothing here yet.</p>
+            </div>
           )}
         </div>
       </div>
