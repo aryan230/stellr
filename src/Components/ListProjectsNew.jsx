@@ -59,41 +59,16 @@ function ListProjectsNew({
     error: errorOrgLoading,
   } = projectListMyOrg;
 
-  const entriesListMy = useSelector((state) => state.entriesListMy);
-  const {
-    entries,
-    loading: loadingEntries,
-    error: errorEntries,
-  } = entriesListMy;
-
-  const taskListMy = useSelector((state) => state.taskListMy);
-  const { tasks, loading: loadingTasks, error: errorTasks } = taskListMy;
-
   useEffect(() => {
     dispatch(listMyProjects());
     dispatch(listMyCollabProjects());
     dispatch(listMyCollabOrgs());
   }, [dispatch]);
-  useEffect(() => {}, [dispatch]);
-
-  console.log(projectEntryData);
 
   let newArr =
     projects && projectsCollab && projectsOrg
       ? _.unionBy(projects, projectsCollab, projectsOrg, "_id")
       : _.unionBy(projects, projectsCollab, "_id");
-
-  const renderDetailsButton = (params) => {
-    return (
-      <button
-        type="button"
-        onClick={() => {}}
-        className="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-      >
-        View
-      </button>
-    );
-  };
 
   const labels = ["My Projects", "Collaborated Projects"];
 

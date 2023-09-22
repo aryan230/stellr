@@ -138,7 +138,7 @@ function ListEntriesAll({
           content="Effectively manage and maintain data registries with our specialized Bio-Pharma ELN software. Simplify data organization and accessibility."
         />
       </Helmet>
-      {reportTab && (
+      {newArr && entries && selectedProject && reportTab && (
         <Reports
           setReportTab={setReportTab}
           dataValue={{
@@ -244,7 +244,11 @@ function ListEntriesAll({
               }}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-              <option></option>
+              <option disabled selected value>
+                {" "}
+                -- select an option --{" "}
+              </option>
+
               {newArr &&
                 newArr.length > 0 &&
                 newArr.map((p) => <option value={p._id}>{p.name}</option>)}

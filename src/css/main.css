@@ -5593,18 +5593,75 @@ div.ql-tooltip {
   margin: 0 auto;
 }
 
+.dash-modal-container {
+  width: 50%;
+  min-height: 90%;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.65rem;
+  padding-bottom: 5rem;
+}
+.dash-modal-container .top-modal {
+  width: 80%;
+  padding: 1rem 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: 0.2s all;
+}
+.dash-modal-container .top-modal button {
+  background-color: transparent;
+  border: 0px;
+}
+.dash-modal-container .top-modal svg:hover {
+  cursor: pointer;
+}
+.dash-modal-container .dash-main-container {
+  width: 90%;
+  margin: 0 auto;
+}
+.dash-modal-container .dash-main-container .dash-main-container-inside {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.dash-modal-view {
+  width: 70%;
+}
+
 .dash-home {
   width: 100%;
   min-height: 100vh;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding: 1rem 0;
 }
-.dash-home img {
-  width: 30%;
-  margin: 2rem 0;
+.dash-home .dash-inside-home-header {
+  width: 80%;
+  height: 20%;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+.dash-home .dash-inside-home-header .dash-home-header-top h1 {
+  font-family: Poppins;
+  font-size: 2rem;
+}
+.dash-home .dash-inside-home-header .dash-home-header-top p {
+  font-family: karla;
+  font-size: 1rem;
+}
+.dash-home .dash-inside-home-header .dash-home-header-bottom {
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+.dash-home .dash-home-main-content {
+  width: 80%;
+  margin: 0 auto;
 }
 
 .project-settings {

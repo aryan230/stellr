@@ -284,6 +284,7 @@ function MiddleNav({
               viewBox="0 0 18 18"
               fill="none"
               onClick={() => {
+                setWhichTabisActive("home");
                 setMiddleNav(false);
               }}
             >
@@ -383,7 +384,9 @@ function MiddleNav({
             </div>
           ) : (
             <div className="sl-elements-content">
-              {selectedProjectType === "ALL" && newArr && newArr.length > 0 ? (
+              {selectedProjectType === "ALL" &&
+                newArr &&
+                newArr.length > 0 &&
                 newArr
                   .filter((entry) =>
                     entry.name.toLowerCase().includes(inputSearch.toLowerCase())
@@ -396,36 +399,7 @@ function MiddleNav({
                       setProjectInsideActiveId={setProjectInsideActiveId}
                       setWhichTabisActive={setWhichTabisActive}
                     />
-                  ))
-              ) : (
-                <div className="middlenav-empty py-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="40"
-                    height="40"
-                    viewBox="0 0 40 40"
-                    fill="none"
-                  >
-                    <path
-                      d="M31.6663 3.33333H8.33301C7.00693 3.33333 5.73516 3.86011 4.79747 4.79779C3.85979 5.73548 3.33301 7.00725 3.33301 8.33333V10.2833C3.33277 10.9716 3.47462 11.6524 3.74967 12.2833V12.3833C3.98514 12.9183 4.31866 13.4044 4.73301 13.8167L14.9997 24.0167V35C14.9991 35.2832 15.0707 35.5619 15.2078 35.8098C15.3449 36.0577 15.5428 36.2665 15.783 36.4167C16.0482 36.581 16.3543 36.6677 16.6663 36.6667C16.9272 36.6651 17.1841 36.6023 17.4163 36.4833L24.083 33.15C24.3579 33.0115 24.589 32.7996 24.7508 32.5378C24.9126 32.276 24.9987 31.9744 24.9997 31.6667V24.0167L35.1997 13.8167C35.614 13.4044 35.9475 12.9183 36.183 12.3833V12.2833C36.481 11.6574 36.6456 10.9763 36.6663 10.2833V8.33333C36.6663 7.00725 36.1396 5.73548 35.2019 4.79779C34.2642 3.86011 32.9924 3.33333 31.6663 3.33333ZM22.1497 22.15C21.9952 22.3057 21.873 22.4904 21.7901 22.6935C21.7071 22.8965 21.6651 23.114 21.6663 23.3333V30.6333L18.333 32.3V23.3333C18.3343 23.114 18.2922 22.8965 18.2093 22.6935C18.1264 22.4904 18.0041 22.3057 17.8497 22.15L9.01634 13.3333H30.983L22.1497 22.15ZM33.333 10H6.66634V8.33333C6.66634 7.8913 6.84194 7.46738 7.1545 7.15482C7.46706 6.84226 7.89098 6.66666 8.33301 6.66666H31.6663C32.1084 6.66666 32.5323 6.84226 32.8449 7.15482C33.1574 7.46738 33.333 7.8913 33.333 8.33333V10Z"
-                      fill="#686868"
-                    />
-                  </svg>
-                  <h1 className="text-center">
-                    No Projects Available. if you think this is a mistake click
-                    refresh.
-                  </h1>
-                  <a
-                    href="#"
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      setModal(true);
-                    }}
-                  >
-                    Create new project
-                  </a>
-                </div>
-              )}{" "}
+                  ))}{" "}
               {selectedProjectType === "MY" &&
                 projects &&
                 projects.length > 0 &&

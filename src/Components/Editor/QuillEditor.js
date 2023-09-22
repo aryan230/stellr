@@ -50,6 +50,8 @@ import ReactQuill from "react-quill";
 import NewTwoSpreadSheet from "../Modals/NewTwoSpreadsheet";
 import { useLocation, useNavigate } from "react-router-dom";
 import WarningModal from "../Modals/WarningModal";
+import { listMySops } from "../../redux/actions/sopActions";
+import { listMyProtocols } from "../../redux/actions/protocolActions";
 
 // import ImageResize from "quill-image-resize-module-react";
 // Quill.register("modules/imageResize", ImageResize);
@@ -222,6 +224,16 @@ function TextEditor({
     error: errorSamples,
   } = sampleListMy;
 
+  const protocolListMy = useSelector((state) => state.protocolListMy);
+  const {
+    protocols,
+    loading: loadingProtocols,
+    error: errorProtocols,
+  } = protocolListMy;
+
+  const sopListMy = useSelector((state) => state.sopListMy);
+  const { sops, loading: loadingSops, error: errorSops } = sopListMy;
+
   const orgListMy = useSelector((state) => state.orgListMy);
   const { orgs } = orgListMy;
 
@@ -242,6 +254,8 @@ function TextEditor({
     dispatch(listMySamples(userInfo._id));
     dispatch(getProjectDetails(project._id));
     dispatch(listMyEntries(project._id));
+    dispatch(listMyProtocols(userInfo._id));
+    dispatch(listMySops(userInfo._id));
   }, [dispatch, tab]);
 
   const [sampleOptions, setSampleOptions] = useState(
@@ -252,6 +266,18 @@ function TextEditor({
         }))
       : []
   );
+
+  const [protocolOptions, setProtocolOptions] = useState(
+    protocols
+      ? protocols.map(({ _id: id, title: value }) => ({
+          id,
+          value,
+        }))
+      : []
+  );
+
+  const [sopOptions, setSopOptions] = useState();
+
   const [userCollabs, setUserCollabs] = useState(
     mainProjectList &&
       mainProjectList.collaborators &&
@@ -281,7 +307,11 @@ function TextEditor({
 
   const commonUsers = _.unionBy(userCollabs, userOrgCollabs, "id");
   const atValues =
-    commonUsers && sampleOptions && commonUsers.concat(sampleOptions);
+    commonUsers &&
+    sampleOptions &&
+    commonUsers.concat(sampleOptions) &&
+    protocolOptions &&
+    commonUsers.concat(sampleOptions).concat(protocolOptions);
   const hashValues = [
     { id: 3, value: "Fredrik Sundqvist 2" },
     { id: 4, value: "Patrik Sjölin 2" },

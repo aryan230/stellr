@@ -184,7 +184,7 @@ function OrgnizationSettings({
                 >
                   View Members
                 </button>
-                {orgContent.user === userInfo._id && (
+                {/* {orgContent.user === userInfo._id && (
                   <button
                     className={activeTab === "viewLogs" && `active`}
                     onClick={() => {
@@ -193,7 +193,7 @@ function OrgnizationSettings({
                   >
                     View Logs
                   </button>
-                )}
+                )} */}
                 {orgContent.user === userInfo._id && (
                   <button
                     onClick={() => {

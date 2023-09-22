@@ -11,6 +11,7 @@ import CustomPieChart from "./CustomCharts/CustomPieChart";
 import CustomAreaChart from "./CustomCharts/CustomAreaChart";
 import CustomLine from "./CustomCharts/CustomLine";
 import Reports from "./ReportsAndDashboard/Reports/Reports";
+import { listMySops } from "../redux/actions/sopActions";
 
 function ListSopsNew({
   setWhichTabisActive,
@@ -33,7 +34,7 @@ function ListSopsNew({
 
   const [newSamples, setNewProtocols] = useState(sops && sops);
   useEffect(() => {
-    dispatch(listMyProtocols(userInfo._id));
+    dispatch(listMySops(userInfo._id));
   }, [dispatch]);
 
   const renderDetailsButton = (params) => {

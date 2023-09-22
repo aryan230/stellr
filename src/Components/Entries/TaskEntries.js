@@ -104,11 +104,13 @@ function TaskEntries({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
         </div>
         <span>TASK-000{index + 1}</span>
         <span>
-          Updated on{" "}
-          {new Date(doc.updatedAt).toLocaleString("en-GB").split(",")[0]},{" "}
-          {new Date(doc.updatedAt).toLocaleString().split(",")[1]}
+          {new Date(doc.createdAt).toLocaleString("en-GB").split(",")[0]},{" "}
+          {new Date(doc.updatedAt).toLocaleString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </span>
-        <span>Due at {doc.due_date}</span>
+        <span> {doc.due_date}</span>
       </div>
     </button>
   );

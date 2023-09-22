@@ -281,11 +281,10 @@ function ListProjects({
                                 .split(",")[0]
                             }
                             ,{" "}
-                            {
-                              new Date(project.createdAt)
-                                .toLocaleString()
-                                .split(",")[1]
-                            }
+                            {new Date(project.createdAt).toLocaleString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </span>
                           <span>
                             {
@@ -294,11 +293,10 @@ function ListProjects({
                                 .split(",")[0]
                             }
                             ,{" "}
-                            {
-                              new Date(project.updatedAt)
-                                .toLocaleString()
-                                .split(",")[1]
-                            }
+                            {new Date(project.updatedAt).toLocaleString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </span>
                         </div>
                       </button>

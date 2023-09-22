@@ -241,7 +241,7 @@ function SideNav({
                 e.preventDefault();
                 setMiddleNav(true);
                 dispatch(addToState("projectList"));
-                // setWhichTabisActive("projectList");
+                setWhichTabisActive("projectList");
               }}
             >
               <svg
@@ -597,7 +597,7 @@ function SideNav({
             </div>
           </li>
 
-          {/* <li>
+          <li>
             <a
               href=""
               onClick={(e) => {
@@ -620,7 +620,7 @@ function SideNav({
               </svg>
               Reports & Dashboards
             </a>
-          </li> */}
+          </li>
           {userInfo && userInfo.isAdmin && (
             <li>
               <a

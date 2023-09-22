@@ -126,14 +126,18 @@ function Entries({
           </div>
           <span>ENT-000{index + 1}</span>
           <span>
-            Updated on{" "}
             {new Date(doc.updatedAt).toLocaleString("en-GB").split(",")[0]},{" "}
-            {new Date(doc.updatedAt).toLocaleString().split(",")[1]}
+            {new Date(doc.updatedAt).toLocaleString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </span>
           <span>
-            created on{" "}
             {new Date(doc.createdAt).toLocaleString("en-GB").split(",")[0]},{" "}
-            {new Date(doc.createdAt).toLocaleString().split(",")[1]}
+            {new Date(doc.updatedAt).toLocaleString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </span>
         </div>
       )}

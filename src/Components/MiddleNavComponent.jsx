@@ -89,6 +89,7 @@ function MiddleNavComponent({
           viewBox="0 0 18 18"
           fill="none"
           onClick={() => {
+            setWhichTabisActive("home");
             setMiddleNav(false);
           }}
         >
@@ -141,6 +142,9 @@ function MiddleNavComponent({
                   </svg>
                   <a
                     href="#"
+                    onClick={(e) => {
+                      setWhichTabisActive("projectList");
+                    }}
                     className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2"
                   >
                     {project && project.name}

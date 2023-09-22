@@ -87,11 +87,13 @@ function CreateEntry({
   } = entryTemplateListMy;
   const templateOptions =
     templates &&
-    templates.map(({ _id: value, name: label, ...rest }) => ({
-      value,
-      label,
-      ...rest,
-    }));
+    templates
+      .filter((t) => !t.deleted)
+      .map(({ _id: value, name: label, ...rest }) => ({
+        value,
+        label,
+        ...rest,
+      }));
 
   const submitHandler = async (e) => {
     e.preventDefault();
