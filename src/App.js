@@ -24,12 +24,22 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!localStorage.getItem("stellrLogout")) {
+    if (!localStorage.getItem("stellrLogout2")) {
       dispatch(logout());
-      localStorage.setItem("stellrLogout", true);
+      localStorage.setItem("stellrLogout2", true);
     }
   }, []);
-  return (
+
+  return window.screen.width < 700 ? (
+    <div className="App">
+      <div className="mobile-responsive">
+        <img src="../assets/stellr-logo.png" alt="" className="logo-login" />
+        <p>
+          Stellr is currently only available for desktops, laptops, and tablets.
+        </p>
+      </div>
+    </div>
+  ) : (
     <div className="App">
       <Router>
         <Routes>

@@ -43,6 +43,24 @@ body {
   }
 }
 
+.mobile-responsive {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 5rem;
+    margin-bottom: 1rem;
+  }
+  p {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+}
+
 .link-hidder {
   text-decoration: none;
 }

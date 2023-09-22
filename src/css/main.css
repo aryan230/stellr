@@ -47,6 +47,23 @@ body {
   font-size: 1.5rem;
 }
 
+.mobile-responsive {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-responsive img {
+  width: 5rem;
+  margin-bottom: 1rem;
+}
+.mobile-responsive p {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 .link-hidder {
   text-decoration: none;
 }
