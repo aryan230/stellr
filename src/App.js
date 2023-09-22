@@ -10,15 +10,25 @@ import {
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Project from "./Pages/Project";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectComp from "./Components/Project/ProjectComp";
 import ProfilePage from "./Pages/ProfilePage";
 import AccountSetup from "./Pages/AccountSetup";
 import OrganizationSetup from "./Pages/OrganizationSetup";
 import Footer from "./Pages/Footer";
 import Banner from "./Components/Banner";
+import { useDispatch } from "react-redux";
+import { logout } from "./redux/actions/userActions";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!localStorage.getItem("stellrLogout")) {
+      dispatch(logout());
+      localStorage.setItem("stellrLogout", true);
+    }
+  }, []);
   return (
     <div className="App">
       <Router>
