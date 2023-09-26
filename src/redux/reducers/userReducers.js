@@ -18,6 +18,10 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCESS,
   USER_LOGOUT,
+  USER_METRICS_FAIL,
+  USER_METRICS_REQUEST,
+  USER_METRICS_RESET,
+  USER_METRICS_SUCESS,
   USER_NAME_UPDATE,
   USER_PASSWORD_FORGOT_FAIL,
   USER_PASSWORD_FORGOT_REQUEST,
@@ -122,6 +126,23 @@ export const userAdminMetricsReducer = (state = { metrics: {} }, action) => {
     case USER_ADMIN_METRICS_FAIL:
       return { loading: false, error: action.payload };
     case USER_ADMIN_METRICS_RESET:
+      return {
+        metrics: {},
+      };
+    default:
+      return state;
+  }
+};
+
+export const userMetricsReducer = (state = { metrics: {} }, action) => {
+  switch (action.type) {
+    case USER_METRICS_REQUEST:
+      return { ...state, loading: true };
+    case USER_METRICS_SUCESS:
+      return { loading: false, sucess: true, userMetrics: action.payload };
+    case USER_METRICS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_METRICS_RESET:
       return {
         metrics: {},
       };

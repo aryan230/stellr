@@ -18,6 +18,9 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCESS,
   USER_LOGOUT,
+  USER_METRICS_FAIL,
+  USER_METRICS_REQUEST,
+  USER_METRICS_SUCESS,
   USER_NAME_UPDATE,
   USER_PASSWORD_FORGOT_FAIL,
   USER_PASSWORD_FORGOT_REQUEST,
@@ -216,6 +219,39 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserMetrics = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_METRICS_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${URL[0]}api/users/userMetricsIndvidual`,
+      config
+    );
+
+    dispatch({
+      type: USER_METRICS_SUCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_METRICS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

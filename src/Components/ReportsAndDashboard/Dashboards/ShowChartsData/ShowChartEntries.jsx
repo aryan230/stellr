@@ -120,13 +120,16 @@ function ShowChartEntries({ c }) {
               }}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-              <option></option>
+              <option disabled selected value>
+                {" "}
+                -- select an option --{" "}
+              </option>
               {newArr &&
                 newArr.length > 0 &&
                 newArr.map((p) => <option value={p._id}>{p.name}</option>)}
             </select>
           </div>
-          {entries && c.value.split("-")[1] === "line" && (
+          {entries && c.value.split("-")[1] === "line" && selectedProject ? (
             <div className="py-10">
               <CustomLine
                 dataInside={{
@@ -183,8 +186,18 @@ function ShowChartEntries({ c }) {
                 }}
               />
             </div>
+          ) : (
+            <div className="w-[100%] h-64 flex justify-center items-center">
+              <div
+                className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
+                role="alert"
+              >
+                <span className="font-medium">No Project Selected</span> Please
+                select a project.
+              </div>
+            </div>
           )}
-          {entries && c.value.split("-")[1] === "area" && (
+          {entries && c.value.split("-")[1] === "area" && selectedProject ? (
             <div className="py-10">
               <CustomAreaChart
                 dataInside={{
@@ -240,6 +253,16 @@ function ShowChartEntries({ c }) {
                   ],
                 }}
               />
+            </div>
+          ) : (
+            <div className="w-[100%] h-64 flex justify-center items-center">
+              <div
+                className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
+                role="alert"
+              >
+                <span className="font-medium">No Project Selected</span> Please
+                select a project.
+              </div>
             </div>
           )}
         </>
