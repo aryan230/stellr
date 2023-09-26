@@ -23,6 +23,7 @@ import _ from "lodash";
 import InsideLoader from "./Loader/InsideLoader";
 import Select from "react-select";
 import MiddleNavComponent from "./MiddleNavComponent";
+import SmallProjectController from "./Projects/SmallProjectController";
 
 function MiddleNav({
   id,
@@ -384,54 +385,62 @@ function MiddleNav({
             </div>
           ) : (
             <div className="sl-elements-content">
-              {selectedProjectType === "ALL" &&
-                newArr &&
-                newArr.length > 0 &&
-                newArr
-                  .filter((entry) =>
-                    entry.name.toLowerCase().includes(inputSearch.toLowerCase())
-                  )
-                  .map((order) => (
-                    <ProjectController
-                      order={order}
-                      setProjectListActive={setProjectListActive}
-                      setProjectInsideActive={setProjectInsideActive}
-                      setProjectInsideActiveId={setProjectInsideActiveId}
-                      setWhichTabisActive={setWhichTabisActive}
-                    />
-                  ))}{" "}
-              {selectedProjectType === "MY" &&
-                projects &&
-                projects.length > 0 &&
-                projects
-                  .filter((entry) =>
-                    entry.name.toLowerCase().includes(inputSearch.toLowerCase())
-                  )
-                  .map((order) => (
-                    <ProjectController
-                      order={order}
-                      setProjectListActive={setProjectListActive}
-                      setProjectInsideActive={setProjectInsideActive}
-                      setProjectInsideActiveId={setProjectInsideActiveId}
-                      setWhichTabisActive={setWhichTabisActive}
-                    />
-                  ))}
-              {selectedProjectType === "CP" &&
-                projectsCollab &&
-                projectsCollab.length > 0 &&
-                projectsCollab
-                  .filter((entry) =>
-                    entry.name.toLowerCase().includes(inputSearch.toLowerCase())
-                  )
-                  .map((order) => (
-                    <ProjectController
-                      order={order}
-                      setProjectListActive={setProjectListActive}
-                      setProjectInsideActive={setProjectInsideActive}
-                      setProjectInsideActiveId={setProjectInsideActiveId}
-                      setWhichTabisActive={setWhichTabisActive}
-                    />
-                  ))}
+              <ul className="flex flex-col py-4 space-y-1">
+                {selectedProjectType === "ALL" &&
+                  newArr &&
+                  newArr.length > 0 &&
+                  newArr
+                    .filter((entry) =>
+                      entry.name
+                        .toLowerCase()
+                        .includes(inputSearch.toLowerCase())
+                    )
+                    .map((order) => (
+                      <SmallProjectController
+                        order={order}
+                        setProjectListActive={setProjectListActive}
+                        setProjectInsideActive={setProjectInsideActive}
+                        setProjectInsideActiveId={setProjectInsideActiveId}
+                        setWhichTabisActive={setWhichTabisActive}
+                      />
+                    ))}{" "}
+                {selectedProjectType === "MY" &&
+                  projects &&
+                  projects.length > 0 &&
+                  projects
+                    .filter((entry) =>
+                      entry.name
+                        .toLowerCase()
+                        .includes(inputSearch.toLowerCase())
+                    )
+                    .map((order) => (
+                      <SmallProjectController
+                        order={order}
+                        setProjectListActive={setProjectListActive}
+                        setProjectInsideActive={setProjectInsideActive}
+                        setProjectInsideActiveId={setProjectInsideActiveId}
+                        setWhichTabisActive={setWhichTabisActive}
+                      />
+                    ))}
+                {selectedProjectType === "CP" &&
+                  projectsCollab &&
+                  projectsCollab.length > 0 &&
+                  projectsCollab
+                    .filter((entry) =>
+                      entry.name
+                        .toLowerCase()
+                        .includes(inputSearch.toLowerCase())
+                    )
+                    .map((order) => (
+                      <SmallProjectController
+                        order={order}
+                        setProjectListActive={setProjectListActive}
+                        setProjectInsideActive={setProjectInsideActive}
+                        setProjectInsideActiveId={setProjectInsideActiveId}
+                        setWhichTabisActive={setWhichTabisActive}
+                      />
+                    ))}
+              </ul>
             </div>
           )}
           {/* {projectsCollab && projectsCollab.length > 0 ? (

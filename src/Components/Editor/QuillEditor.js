@@ -61,8 +61,8 @@ Size.whitelist = ["14px", "16px", "18px"];
 Quill.register(Size, true);
 Quill.register("modules/imageResize", ImageResize);
 
-const QuillToolbar = () => (
-  <div id="toolbar">
+const QuillToolbar = (id) => (
+  <div id={`toolbar`}>
     <span className="ql-formats">
       <select className="ql-font" defaultValue="arial">
         <option value="arial">Arial</option>
@@ -338,31 +338,27 @@ function TextEditor({
 
   console.log(userType);
 
+  const toolbarRef = useRef(null);
+
   const wrapperRef = useCallback((wrapper) => {
-    if (wrapper == null) return;
+    if (wrapper == null || toolbarRef == null) return;
     wrapper.innerHTML = "";
     const editor = document.createElement("div");
+    editor.setAttribute("id", tab._id);
     wrapper.append(editor);
     const q = new Quill(editor, {
       theme: "snow",
       modules: {
-        toolbar: {
-          container: "#toolbar",
-          handlers: {},
-        },
+        toolbar: TOOLBAR_OPTIONS,
         // toolbar: {
-        //   container: TOOLBAR_OPTIONS,
-        //   format: ["Image"],
+        //   toolbar: `#toolbar`,
+        //   handlers: {},
         // },
+
         imageResize: {
           parchment: Quill.import("parchment"),
           modules: ["Resize", "DisplaySize", "Toolbar"],
         },
-
-        // imageResize: {
-        //   parchment: Quill.import("parchment"),
-        //   modules: ["Resize"],
-        // },
         mention: {
           allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
           mentionDenotationChars: ["@", "#"],
@@ -559,6 +555,13 @@ function TextEditor({
   }, [socket, quill]);
 
   useEffect(() => {
+    if (socket == null || quill == null) return;
+    socket.on("receive-user", (user) => {
+      console.log(user);
+    });
+  }, [socket, quill]);
+
+  useEffect(() => {
     const s = io(URL[0].substring(0, URL[0].length - 1));
     setSocket(s);
     return () => {
@@ -568,13 +571,16 @@ function TextEditor({
 
   useEffect(() => {
     if (socket == null || quill == null) return;
-    socket.once("load-document", (document) => {
-      console.log(document);
+    socket.once("load-document", ({ document, user }) => {
+      socket.emit("send-user", userInfo);
       setOriginalContent(document);
       quill.setContents(document);
       quill.enable();
     });
-    socket.emit("get-document", tab._id);
+    socket.emit("get-document", {
+      documentId: tab._id,
+      user: userInfo,
+    });
   }, [socket, quill, tab]);
 
   //Update version control
@@ -1059,7 +1065,7 @@ function TextEditor({
             </div>
           ) : (
             <>
-              <QuillToolbar />
+              {/* <QuillToolbar ref={toolbarRef} /> */}
               <div className={`container-editor-quill`} ref={wrapperRef}></div>
             </>
           )}

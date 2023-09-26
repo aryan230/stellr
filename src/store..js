@@ -6,6 +6,7 @@ import {
   userAdminMetricsReducer,
   userDetailsReducer,
   userLoginReducer,
+  userNameUpdateReducer,
   userUpdateProfileReducer,
   userUpdateReducer,
 } from "./redux/reducers/userReducers";

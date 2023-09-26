@@ -347,7 +347,7 @@ function StepperThree({
             onClick={submitHandler}
             sx={{ mt: 1, mr: 1 }}
           >
-            Create New Protocol
+            Save
           </Button>
           <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
             Back

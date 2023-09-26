@@ -3,9 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   getUserDetails,
+  updateUserName,
   updateUserProfile,
 } from "../redux/actions/userActions";
-import { USER_UPDATE_PROFILE_RESET } from "../redux/constants/userConstants";
+import {
+  USER_NAME_UPDATE,
+  USER_UPDATE_PROFILE_RESET,
+} from "../redux/constants/userConstants";
 import { Box, Drawer, FormControlLabel, Switch } from "@mui/material";
 import DrawerProfile from "./DrawerProfile/DrawerProfile";
 import { Helmet } from "react-helmet";
@@ -73,7 +77,6 @@ function ProfilePage() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
     await dispatch(updateUserProfile({ name }));
     await dispatch({ type: USER_UPDATE_PROFILE_RESET });
   };

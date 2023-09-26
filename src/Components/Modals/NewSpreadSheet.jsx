@@ -15,7 +15,7 @@ import { registerLicense } from "@syncfusion/ej2-base";
 // import "luckysheet/dist/plugins/js/plugin.js";
 
 registerLicense(
-  "ORg4AjUWIQA/Gnt2V1hiQlRPf0BAXnxLflF1VWFTf116dlFWESFaRnZdQV1rS3pTdEVgXHhfc3NW"
+  "ORg4AjUWIQA/Gnt2VlhhQlJCfV5CQmFMYVF2R2BJfl56dl1MZVVBNQtUQF1hSn5adEBiWXxccXdXT2Fe"
 );
 
 function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {

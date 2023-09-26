@@ -11,7 +11,16 @@ function CustomPieChart({ labels, seriesData }) {
       enabled: true,
     },
 
-    colors: ["#4669FA", "#F1595C", "#50C793"],
+    colors: [
+      "#4669FA",
+      "#F1595C",
+      "#50C793",
+      "#ED254E",
+      "#011936",
+      "#011936",
+      "#2D3319",
+      "#1EA896",
+    ],
     legend: {
       position: "bottom",
       fontSize: "12px",

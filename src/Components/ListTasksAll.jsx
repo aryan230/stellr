@@ -132,7 +132,7 @@ function ListTasksAll({
           content="Effectively manage and maintain data registries with our specialized Bio-Pharma ELN software. Simplify data organization and accessibility."
         />
       </Helmet>
-      {reportTab && (
+      {newArr && tasks && selectedProject && reportTab && (
         <Reports
           setReportTab={setReportTab}
           dataValue={{
@@ -238,6 +238,10 @@ function ListTasksAll({
               }}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
+              <option disabled selected value>
+                {" "}
+                -- select an option --{" "}
+              </option>
               {newArr &&
                 newArr.length > 0 &&
                 newArr.map((p) => <option value={p._id}>{p.name}</option>)}
@@ -266,7 +270,7 @@ function ListTasksAll({
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
-          ) : (
+          ) : selectedProject ? (
             tasks && (
               <CustomAreaChart
                 dataInside={{
@@ -323,6 +327,16 @@ function ListTasksAll({
                 }}
               />
             )
+          ) : (
+            <div className="w-[100%] h-64 flex justify-center items-center">
+              <div
+                className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
+                role="alert"
+              >
+                <span className="font-medium">No Project Selected</span> Please
+                select a project.
+              </div>
+            </div>
           )}
         </div>
 

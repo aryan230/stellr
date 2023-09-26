@@ -25,11 +25,11 @@ function ReagentModal({
       e[0] === "manufacturer"
         ? {
             name: "Manufacturer/Supplier",
-            value: _.startCase(e[1]),
+            value: e[1],
           }
         : {
             name: _.startCase(e[0]),
-            value: _.startCase(e[1]),
+            value: e[1],
           }
     )
   );

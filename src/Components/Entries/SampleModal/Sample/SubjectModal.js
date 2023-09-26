@@ -31,7 +31,7 @@ function SubjectModal({
   const [data, setData] = useState(
     Object.entries(insideData).map((e) => ({
       name: _.startCase(e[0]),
-      value: _.startCase(e[1]),
+      value: e[1],
     }))
   );
   const [activeTab, setActiveTab] = useState("data");

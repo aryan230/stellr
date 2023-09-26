@@ -11,21 +11,29 @@ export const cartReducer = (state = { tabDetails: [] }, action) => {
     case CART_ADD_ITEM:
       const tab = action.payload;
       console.log(state.tabDetails);
-      // const existTab = state.tabDetails.find((x) => x.doc._id == tab.doc._id);
-      return {
-        tabDetails: [tab],
-      };
-    // if (existTab) {
-    //   return {
-    //     ...state,
-    //     tabDetails: [...state.tabDetails],
-    //   };
-    // } else {
-    //   return {
-    //     ...state,
-    //     tabDetails: [...state.tabDetails, tab],
-    //   };
-    // }
+      const existTab = state.tabDetails.find((x) => x.doc._id == tab.doc._id);
+      // return {
+      //   tabDetails: [tab],
+      // };
+      if (existTab) {
+        return {
+          ...state,
+          tabDetails: [...state.tabDetails],
+        };
+      } else {
+        if (state.tabDetails.length > 2) {
+          let newTabDetails = state.tabDetails.shift();
+          return {
+            ...state,
+            tabDetails: [newTabDetails, tab],
+          };
+        } else {
+          return {
+            ...state,
+            tabDetails: [...state.tabDetails, tab],
+          };
+        }
+      }
     case CART_REMOVE_ITEM:
       return {
         ...state,
