@@ -11,9 +11,11 @@ import { useReactToPrint } from "react-to-print";
 import { saveAs } from "file-saver";
 import html2pdf from "html2pdf.js";
 import TopDataReport from "./TopDataReport";
+import generatePDF from "react-to-pdf";
 
 function ProjectReport({ data }) {
   const pdfRef = useRef();
+
   const [chartsData, setChartsData] = useState(JSON.parse(data.dataSet).charts);
   const [newArr, setNewArr] = useState(
     JSON.parse(JSON.parse(data.dataSet).insideData).projects
@@ -86,7 +88,9 @@ function ProjectReport({ data }) {
   return (
     <div ref={pdfRef}>
       <TopDataReport data={data} />
-
+      {/* <button onClick={() => generatePDF(pdfRef, { filename: "page.pdf" })}>
+        download
+      </button> */}
       <div className="view-report-charts">
         {chartsData.map(
           (e) =>

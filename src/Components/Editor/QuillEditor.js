@@ -752,7 +752,12 @@ function TextEditor({
           onClose={() => setDrawerInformations(false)}
         >
           <Box width="500px" p={2} role="presentation">
-            <DrawerInformation quill={quill} tab={tab} project={project} />
+            <DrawerInformation
+              quill={quill}
+              tab={tab}
+              project={project}
+              pdfRef={wrapperRef}
+            />
           </Box>
         </Drawer>
       )}

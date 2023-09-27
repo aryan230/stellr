@@ -10,9 +10,15 @@ import { htmlToPdf } from "../../Functions/htmlToPdf";
 import html2canvas from "html2canvas";
 import html2pdf from "html2pdf.js";
 import ExportModal from "./ExportModal";
+import generatePDF from "react-to-pdf";
+import htmlDocx from "html-docx-fixed/dist/html-docx";
+import { htmlToDelta } from "deltaconvert";
+import mammoth from "mammoth/mammoth.browser";
 
-function DrawerInformation({ quill, tab, project }) {
+function DrawerInformation({ quill, tab, project, pdfRef }) {
   const [exportModal, setExportModal] = useState(false);
+  const [htmlContent, setHtmlContent] = useState("");
+
   const exportAuditLog = async (e) => {
     e.preventDefault();
     const doc = new jsPDF();
@@ -187,6 +193,40 @@ function DrawerInformation({ quill, tab, project }) {
   //     var html = await converter.convert();
   //     console.log(html);
   //   };
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const result = await convertDocxToHtml(file);
+      console.log(htmlToDelta(result));
+      setHtmlContent(result);
+    }
+  };
+
+  const convertDocxToHtml = async (file) => {
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+      reader.onload = async () => {
+        const arrayBuffer = reader.result;
+
+        try {
+          const { value } = await mammoth.convertToHtml({ arrayBuffer });
+          resolve(value);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
   return (
     <div className="drawer-info">
       {exportModal && (
@@ -256,6 +296,20 @@ function DrawerInformation({ quill, tab, project }) {
               </svg>
               Delete Entry
             </button>
+            {/* <button
+              onClick={async (e) => {
+                e.preventDefault();
+                const quillContents = quill.root.innerHTML;
+                let htmlString = "<p>hello, <strong>world</strong></p>";
+                // console.log(htmlToDelta(quillContents));
+
+                // var converted = htmlDocx.asBlob(quillContents);
+                // saveAs(converted, "test.docx");
+              }}
+            >
+              download
+            </button>
+            <input type="file" accept=".docx" onChange={handleFileUpload} /> */}
             {/* <button className="lock">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
