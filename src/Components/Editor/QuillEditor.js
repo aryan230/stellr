@@ -683,6 +683,10 @@ function TextEditor({
     }
   }, [document.querySelectorAll(".ql-formats button"), quill]);
 
+  const getElem = () => {
+    return wrapperRef;
+  };
+
   return (
     <div className={`editor-holder-reactjs ${active && "active"}`}>
       {warningModal && (
@@ -752,12 +756,7 @@ function TextEditor({
           onClose={() => setDrawerInformations(false)}
         >
           <Box width="500px" p={2} role="presentation">
-            <DrawerInformation
-              quill={quill}
-              tab={tab}
-              project={project}
-              pdfRef={wrapperRef}
-            />
+            <DrawerInformation quill={quill} tab={tab} project={project} />
           </Box>
         </Drawer>
       )}

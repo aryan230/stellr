@@ -14,8 +14,10 @@ import generatePDF from "react-to-pdf";
 import htmlDocx from "html-docx-fixed/dist/html-docx";
 import { htmlToDelta } from "deltaconvert";
 import mammoth from "mammoth/mammoth.browser";
+import { useReactToPrint } from "react-to-print";
+import { toPng } from "html-to-image";
 
-function DrawerInformation({ quill, tab, project, pdfRef }) {
+function DrawerInformation({ quill, tab, project }) {
   const [exportModal, setExportModal] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
 
@@ -296,11 +298,57 @@ function DrawerInformation({ quill, tab, project, pdfRef }) {
               </svg>
               Delete Entry
             </button>
-            {/* <button
+            <button
               onClick={async (e) => {
                 e.preventDefault();
-                const quillContents = quill.root.innerHTML;
-                let htmlString = "<p>hello, <strong>world</strong></p>";
+                const element = document.getElementById(tab._id);
+                console.log(element);
+                if (element) {
+                  // Capture the HTML content as an image
+                  toPng(element)
+                    .then((dataUrl) => {
+                      // Convert the image to base64
+                      const img = new Image();
+                      img.src = dataUrl;
+                      img.onload = () => {
+                        // Create a canvas element and draw the image
+                        const canvas = document.createElement("canvas");
+                        const ctx = canvas.getContext("2d");
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+
+                        // Get the base64 data URL of the image
+                        const base64Image = canvas.toDataURL("image/png");
+
+                        // Create a PDF with the base64 image
+                        const pdfOptions = {
+                          margin: 10,
+                          filename: "converted.pdf",
+                          image: { type: "jpeg", quality: 0.98 },
+                          html2canvas: { scale: 2 },
+                          jsPDF: {
+                            unit: "mm",
+                            format: "a4",
+                            orientation: "portrait",
+                          },
+                        };
+
+                        const pdfDoc = new html2pdf().set(pdfOptions);
+                        pdfDoc.from(base64Image).outputPdf();
+                      };
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Error while capturing HTML content as an image:",
+                        error
+                      );
+                    });
+                } else {
+                  console.error('Element with id "pdf-content" not found.');
+                }
+                // const quillContents = quill.root.innerHTML;
+                // let htmlString = "<p>hello, <strong>world</strong></p>";
                 // console.log(htmlToDelta(quillContents));
 
                 // var converted = htmlDocx.asBlob(quillContents);
@@ -309,7 +357,7 @@ function DrawerInformation({ quill, tab, project, pdfRef }) {
             >
               download
             </button>
-            <input type="file" accept=".docx" onChange={handleFileUpload} /> */}
+            <input type="file" accept=".docx" onChange={handleFileUpload} />
             {/* <button className="lock">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

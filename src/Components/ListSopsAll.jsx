@@ -21,6 +21,14 @@ function ListSopsAll({
   const [showStats, setShowStats] = useState(false);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const {
+    loading: loadingUserDetails,
+    error: errorLoadingDetails,
+    sucess: sucessLoadingDetails,
+    user,
+  } = userDetails;
+
   const [tableData, setTableData] = useState([]);
 
   const sopListMy = useSelector((state) => state.sopListMy);
@@ -250,8 +258,8 @@ function ListSopsAll({
                         .toLocaleString("en-GB")
                         .split(",")[0],
                       createdDate: createdAt,
-                      createdBy: userInfo.name,
-                      updatedBy: userInfo.name,
+                      createdBy: user.name ? user.name : userInfo.name,
+                      updatedBy: user.name ? user.name : userInfo.name,
                       view: "View",
                     })
                   )

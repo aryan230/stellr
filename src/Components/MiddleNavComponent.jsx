@@ -179,19 +179,6 @@ function MiddleNavComponent({
           placeholder={`Search Project`}
           onChange={(e) => setInputSearch(e.target.value)}
         />
-        {/* <div className="sl-header-select">
-          {" "}
-          <select
-            id="countries"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5"
-          >
-            <option value="US" selected>
-              All Projects
-            </option>
-            <option value="CA">My Projects</option>
-            <option value="FR">Collaborated Projects</option>
-          </select>
-        </div> */}
       </div>{" "}
       {loadingEntries ? (
         <div className="loader-div-main-stellr">
@@ -239,7 +226,7 @@ function MiddleNavComponent({
                   ))}
             </ul>
           </div> */}
-          <ul className="flex flex-col py-4 space-y-1">
+          <ul className="flex flex-col py-2">
             <li className="px-5">
               <div className="flex flex-row items-center h-8">
                 <div className="text-sm font-light tracking-wide text-gray-500">

@@ -252,7 +252,9 @@ function CreateEntry({
           </div>
           {projects.concat(arr).length ? (
             <>
-              <h1>Create New Entry (Import)</h1>
+              <h1>
+                Create New Entry <span className="font-karla">(Import)</span>
+              </h1>
               <form onSubmit={submitHandlerImport}>
                 <input
                   type="text"
@@ -283,6 +285,7 @@ function CreateEntry({
                 <h4>
                   <span>Import</span>
                 </h4>
+
                 <input
                   type="file"
                   accept=".docx"
@@ -327,6 +330,31 @@ function CreateEntry({
                   </svg>
                   <span className="w-full ml-5">Import an entry</span>
                 </a> */}
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCreationType(false);
+                  }}
+                  className="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100"
+                >
+                  <svg
+                    className="w-4 h-4 rotate-180"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                  <span className="w-full ml-2"> back</span>
+                </a>
               </form>
             </>
           ) : (
