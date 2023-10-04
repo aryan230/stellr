@@ -422,6 +422,8 @@ function EditorComponent() {
                 UpdatedUserCollabRoleOrg={UpdatedUserCollabRoleOrg}
                 setProtocolContent={setProtocolContent}
                 setProtocolModal={setProtocolModal}
+                setSopContent={setSopContent}
+                setSopModal={setSopModal}
               />
             )}
 

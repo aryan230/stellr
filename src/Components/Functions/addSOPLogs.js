@@ -1,6 +1,6 @@
 import axios from "axios";
 import URL from "./../../Data/data.json";
-export const addProtocolLogs = async ({
+export const addSOPLogs = async ({
   entryId,
   user,
   userName,

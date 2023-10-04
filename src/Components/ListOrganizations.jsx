@@ -21,12 +21,15 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
+import { addSOPLogs } from "./Functions/addSOPLogs";
 function ListOrganizations({
   newOrg,
   setUpdatedUserCollabRoleOrg,
   UpdatedUserCollabRoleOrg,
   setProtocolContent,
   setProtocolModal,
+  setSopContent,
+  setSopModal,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,6 +39,7 @@ function ListOrganizations({
   const [orgContent, setOrgContent] = useState();
   const [orgContentSettings, setOrgContentSettings] = useState();
   const [inputSearch, setInputSearch] = useState("");
+  const [eType, setEType] = useState();
   const [newCollab, setNewCollab] = useState(false);
   const userLogin = useSelector((state) => state.userLogin);
   const [updateCollabRole, setUpdateCollabRole] = useState(false);
@@ -65,30 +69,6 @@ function ListOrganizations({
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  // <th scope="col" className="px-6 py-3">
-  //                       Entity Name
-  //                     </th>
-  //                     <th scope="col" className="px-6 py-3">
-  //                       Entity Type
-  //                     </th>
-  //                     <th scope="col" className="px-6 py-3">
-  //                       Entity Status
-  //                     </th>
-  //                     <th scope="col" className="px-6 py-3">
-  //                       Entity Created by
-  //                     </th>
-  //                     <th scope="col" className="px-6 py-3">
-  //                       Approved/Declined by
-  //                     </th>
-  //                     <th scope="col" className="px-6 py-3">
-  //                       View
-  //                     </th>
-  //                     {findOrgRole === "Owner" && (
-  //                       <th scope="col" className="px-6 py-3">
-  //                         Edit
-  //                       </th>
-  //                     )}
 
   const columns = [
     { id: "name", label: "Entity Name", minWidth: 100 },
@@ -198,32 +178,62 @@ function ListOrganizations({
 
   useEffect(() => {
     if (localStorage.getItem("stellrStatusUpdate")) {
-      const { sendData: data, logData } = JSON.parse(
+      const { sendData: data, logData, type, user } = JSON.parse(
         localStorage.getItem("stellrStatusUpdateData")
       );
-      const finalLogData = JSON.parse(logData);
-      var config = {
-        method: "put",
-        url: `${URL}api/protocols/status/${finalLogData.entryId}`,
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
+      if (user) {
+        if (user === userInfo._id) {
+          if (type === "Protocol") {
+            const finalLogData = JSON.parse(logData);
+            var config = {
+              method: "put",
+              url: `${URL}api/protocols/status/${finalLogData.entryId}`,
+              headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+                "Content-Type": "application/json",
+              },
+              data: data,
+            };
 
-      axios(config)
-        .then(async function(response) {
-          console.log(response.data);
-          await addProtocolLogs(finalLogData);
-          setNewCollab(true);
-          setOrgStatus(false);
-          localStorage.removeItem("stellrStatusUpdate");
-          localStorage.removeItem("stellrStatusUpdateData");
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+            axios(config)
+              .then(async function(response) {
+                console.log(response.data);
+                await addProtocolLogs(finalLogData);
+                setNewCollab(true);
+                setOrgStatus(false);
+                localStorage.removeItem("stellrStatusUpdate");
+                localStorage.removeItem("stellrStatusUpdateData");
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          } else {
+            const finalLogData = JSON.parse(logData);
+            var config = {
+              method: "put",
+              url: `${URL}api/sops/status/${finalLogData.entryId}`,
+              headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+                "Content-Type": "application/json",
+              },
+              data: data,
+            };
+
+            axios(config)
+              .then(async function(response) {
+                console.log(response.data);
+                await addSOPLogs(finalLogData);
+                setNewCollab(true);
+                setOrgStatus(false);
+                localStorage.removeItem("stellrStatusUpdate");
+                localStorage.removeItem("stellrStatusUpdateData");
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          }
+        }
+      }
     }
   }, []);
 
@@ -261,6 +271,7 @@ function ListOrganizations({
             setNewCollab={setNewCollab}
             setOrgStatus={setOrgStatus}
             orgStatusContent={orgStatusContent}
+            type={eType}
           />
         )}
         {orgs && (
@@ -407,6 +418,7 @@ function ListOrganizations({
                                                   let content = u.protocols.find(
                                                     (e) => e._id === row._id
                                                   );
+                                                  setEType("Protocol");
                                                   setOrgStatusContent(content);
                                                   setOrgStatus(true);
                                                 }}
@@ -470,6 +482,142 @@ function ListOrganizations({
                                               );
                                               setProtocolContent(content);
                                               setProtocolModal(true);
+                                            }}
+                                          >
+                                            View
+                                          </a>
+                                        </TableCell>
+                                      );
+                                    } else {
+                                      const value = row[column.id];
+                                      return (
+                                        <TableCell
+                                          key={column.id}
+                                          align={column.align}
+                                        >
+                                          {column.format &&
+                                          typeof value === "number"
+                                            ? column.format(value)
+                                            : value}
+                                        </TableCell>
+                                      );
+                                    }
+                                  })}
+                                </TableRow>
+                              );
+                            })
+                        )}
+                      {orgContent &&
+                        orgContent.orgData.map((u) =>
+                          u.sops
+                            .map(
+                              ({
+                                title: name,
+                                createdAt: createdAt,
+                                _id,
+                                status,
+                                statusBy,
+                              }) => ({
+                                _id,
+                                name,
+                                type: "SOP",
+                                status,
+                                statusBy,
+                                createdBy: u.name,
+                                createdAt: new Date(createdAt).toLocaleString(),
+                              })
+                            )
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                            .map((row) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={row.code}
+                                >
+                                  {columns.map((column) => {
+                                    if (column.id === "edit") {
+                                      if (findOrgRole) {
+                                        if (findOrgRole === "Owner") {
+                                          return (
+                                            <TableCell
+                                              key={column.id}
+                                              align={column.align}
+                                            >
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  let content = u.sops.find(
+                                                    (e) => e._id === row._id
+                                                  );
+                                                  setEType("SOP");
+                                                  setOrgStatusContent(content);
+                                                  setOrgStatus(true);
+                                                }}
+                                                className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                              >
+                                                Edit Status
+                                              </button>
+                                            </TableCell>
+                                          );
+                                        } else {
+                                          return (
+                                            <TableCell
+                                              key={column.id}
+                                              align={column.align}
+                                            ></TableCell>
+                                          );
+                                        }
+                                      }
+                                    } else if (column.id === "status") {
+                                      return (
+                                        <TableCell
+                                          key={column.id}
+                                          align={column.align}
+                                        >
+                                          {row.status === "Draft" && (
+                                            <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                              Draft
+                                            </span>
+                                          )}
+                                          {row.status === "In Progress" && (
+                                            <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                              In Progress
+                                            </span>
+                                          )}
+                                          {row.status === "Approved" && (
+                                            <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                              Approved
+                                            </span>
+                                          )}
+                                          {row.status === "Rejected" && (
+                                            <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                              Rejected
+                                            </span>
+                                          )}
+                                        </TableCell>
+                                      );
+                                    } else if (column.id === "view") {
+                                      const value = row[column.id];
+                                      return (
+                                        <TableCell
+                                          key={column.id}
+                                          align={column.align}
+                                        >
+                                          <a
+                                            href="#"
+                                            className="font-medium text-blue-600 hover:underline"
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              let content = u.sops.find(
+                                                (e) => e._id === row._id
+                                              );
+                                              setSopContent(content);
+                                              setSopModal(true);
                                             }}
                                           >
                                             View

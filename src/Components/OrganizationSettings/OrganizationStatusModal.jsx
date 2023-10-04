@@ -10,6 +10,7 @@ function OrganizationStatusModal({
   setOrgStatus,
   orgStatusContent,
   setNewCollab,
+  type,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,7 +46,8 @@ function OrganizationStatusModal({
   ];
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // localStorage.removeItem("stellrStatusUpdate");
+    // localStorage.removeItem("stellrStatusUpdateData");
     var data = await JSON.stringify({
       status: selectedExport.value,
       userName: userInfo.name,
@@ -57,12 +59,14 @@ function OrganizationStatusModal({
       user: userInfo._id,
       userName: userInfo.name,
       userEmail: userInfo.email,
-      message: `The status of the protocol was changed to ${selectedExport.value} with the message ${statusMessage}.`,
+      message: `The status of the entity was changed to ${selectedExport.value} with the message ${statusMessage}.`,
     });
 
     const finalData = await JSON.stringify({
       sendData: data,
       logData: logData,
+      type: type,
+      user: userInfo._id,
     });
     await localStorage.setItem("stellrStatusUpdate", true);
     await localStorage.setItem("stellrStatusUpdateData", finalData);
