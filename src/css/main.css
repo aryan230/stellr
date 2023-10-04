@@ -1896,6 +1896,24 @@ div.ql-tooltip {
   cursor: pointer;
 }
 
+.custom-sample-template {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.custom-sample-template .cst-left {
+  width: 30%;
+  height: 100%;
+}
+.custom-sample-template .cst-right {
+  width: 70%;
+  height: 100%;
+}
+.custom-sample-template .cst-right .cst-right-inside {
+  width: 80%;
+  margin: 0 auto;
+}
+
 .data-e-modal {
   width: 60%;
   min-height: 80%;
@@ -3699,6 +3717,31 @@ div.ql-tooltip {
 .modal-inside-protocol h4 span {
   background: #fff;
   padding: 0 10px;
+}
+
+.quill-read-only-editor .quill > .ql-container > .ql-editor.ql-blank::before {
+  font-size: 1rem;
+  font-family: Poppins;
+  font-style: normal;
+  color: #8f8585;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+.quill-read-only-editor .quill {
+  text-align: left;
+  margin: 1rem 0;
+  border-radius: 0.125rem;
+}
+.quill-read-only-editor .quill .ql-toolbar.ql-snow {
+  border: 0px !important;
+  padding: 0px;
+  display: none;
+  background: #eaecec;
+}
+.quill-read-only-editor .quill .ql-editor {
+  padding: 0.5rem;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .search-modal {

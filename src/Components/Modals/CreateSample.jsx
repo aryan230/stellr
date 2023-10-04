@@ -10,7 +10,8 @@ import Reagent from "./Sample/Reagent";
 import Primer from "./Sample/Primer";
 import AntiBody from "./Sample/AntiBody";
 import CustomRecordSample from "./Sample/CustomRecordSample";
-
+import AddIcon from "@mui/icons-material/Add";
+import CustomSampleTemplate from "./Sample/CustomSamples/CustomSampleTemplate";
 function CreateSample({
   setSampleModal,
   projects,
@@ -22,7 +23,7 @@ function CreateSample({
   const [project, setProject] = useState(projects.length && projects[0]._id);
   const [collabs, setCollabs] = useState();
   const [data, setData] = useState();
-
+  const [customSample, setCustomSample] = useState(false);
   const sampleCreate = useSelector((state) => state.sampleCreate);
   const { loading, error, sucess, sample } = sampleCreate;
   const options = [
@@ -50,10 +51,6 @@ function CreateSample({
       value: "Antibody",
       label: "Antibody",
     },
-    // {
-    //   value: "Create custom Record",
-    //   label: "Create custom Record",
-    // },
   ];
   const optionsValue = projects.map(({ _id: value, name: label }) => ({
     value,
@@ -95,8 +92,11 @@ function CreateSample({
   }, [sucess]);
   return (
     <div className="modal">
+      {customSample && (
+        <CustomSampleTemplate setCustomSample={setCustomSample} />
+      )}
       <div className="modal-inside">
-        <div className="top-modal">
+        <div className="top-modal top-0 sticky">
           <button
             onClick={() => {
               setSampleModal(false);
@@ -119,11 +119,6 @@ function CreateSample({
         <>
           {" "}
           <h1>Sample Management</h1>
-          {/* <div className=" bottom-0">
-            <a href="" className="pt-2 text-indigo-600">
-              Create custom template
-            </a>
-          </div> */}
           <div className="form-element">
             <Select
               options={options}
@@ -131,6 +126,18 @@ function CreateSample({
               placeholder="Select Record Type"
               required
             />
+            <div className="margin-maker"></div>
+            {/* <a
+              href=""
+              onClick={(e) => {
+                e.preventDefault();
+                setCustomSample(true);
+              }}
+              className="text-indigo-600 font-karla flex items-center justify-center"
+            >
+              <AddIcon sx={{ width: 15, marginRight: 0.5 }} />
+              or create custom sample
+            </a> */}
             <div className="margin-maker"></div>
             {sampleType && sampleType.value === "Create custom Record" && (
               <CustomRecordSample

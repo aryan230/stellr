@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store.";
+import { registerLicense } from "@syncfusion/ej2-base";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -68,6 +68,10 @@
 // }
 
 #spreadsheet-opener {
+  // width: 80%;
+  // margin: 0 auto;
+  // height: 50vh;
+  // border: 1px solid #5d00d2;
   background-color: transparent;
   border: 0px;
   width: 20%;
@@ -76,8 +80,6 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.625rem;
-
-  // background: #188038;
   color: #188038;
   font-family: Gotham-Black;
   font-size: 1rem;
@@ -85,18 +87,7 @@
   font-weight: 500;
   text-decoration: underline;
   line-height: normal;
-  // p {
-  //   color: #000;
-  //   font-family: Inter;
-  //   font-size: 1rem;
-  //   font-style: normal;
-  //   font-weight: 400;
-  //   line-height: normal;
-  // }
-  // img {
-  //   width: 3rem;
-  //   margin-right: 0.25rem;
-  // }
+
   transition: 0.2s all;
   &:hover {
     cursor: pointer;

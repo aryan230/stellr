@@ -15,7 +15,7 @@ import { registerLicense } from "@syncfusion/ej2-base";
 // import "luckysheet/dist/plugins/js/plugin.js";
 
 registerLicense(
-  "ORg4AjUWIQA/Gnt2VlhhQlJCfV5CQmFMYVF2R2BJfl56dl1MZVVBNQtUQF1hSn5adEBiWXxccXdXT2Fe"
+  "Ngo9BigBOggjHTQxAR8/V1NHaF5cXmVCf1NpRGNGfV5yd0VHal5YTnNaUj0eQnxTdEZiWX9dcXdXT2VZWEF2WA=="
 );
 
 function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
@@ -134,12 +134,12 @@ function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
           </button>
         </div>{" "}
         <div className="main-modal-spreadsheet">
-          <SpreadsheetComponent
+          {/* <SpreadsheetComponent
             ref={spreadsheetRef}
             sheets={data && data.data ? JSON.parse(data.data) : []}
             openUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/open"
             saveUrl="https://ej2services.syncfusion.com/production/web-services/api/spreadsheet/save"
-          ></SpreadsheetComponent>
+          ></SpreadsheetComponent> */}
         </div>
       </div>
     </div>

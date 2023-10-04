@@ -196,6 +196,7 @@ function ProjectSettings({
                   user: response.data[0]._id,
                   userName: response.data[0].name ? response.data[0].name : "",
                 },
+                userEmail: response.data[0].email,
               })
             );
             await dispatch({

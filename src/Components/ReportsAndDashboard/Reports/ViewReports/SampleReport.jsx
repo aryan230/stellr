@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import CustomLine from "../../../CustomCharts/CustomLine";
 import CustomPieChart from "../../../CustomCharts/CustomPieChart";
 import { useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import CustomColumnChartDist from "../../../CustomCharts/CustomColumnChartDist";
 import CustomFunnel from "../../../CustomCharts/CustomFunnel";
 import TopDataReport from "./TopDataReport";
 function SampleReport({ data }) {
+  const pdfRef = useRef();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -100,8 +101,8 @@ function SampleReport({ data }) {
     ],
   };
   return (
-    <>
-      <TopDataReport data={data} />
+    <div ref={pdfRef}>
+      <TopDataReport data={data} pdfRef={pdfRef} />
       <div className="view-report-charts">
         {chartsData.map(
           (e) =>
@@ -213,7 +214,7 @@ function SampleReport({ data }) {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

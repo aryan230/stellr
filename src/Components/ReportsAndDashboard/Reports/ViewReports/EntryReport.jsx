@@ -8,7 +8,9 @@ import CustomFunnel from "../../../CustomCharts/CustomFunnel";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import TopDataReport from "./TopDataReport";
-function EntryReport({ data, pdfRef }) {
+function EntryReport({ data }) {
+  const pdfRef = useRef();
+
   const [chartsData, setChartsData] = useState(JSON.parse(data.dataSet).charts);
   const [newArr, setNewArr] = useState(
     JSON.parse(JSON.parse(data.dataSet).insideData).newArr
@@ -65,8 +67,8 @@ function EntryReport({ data, pdfRef }) {
   const labels = ["My Projects", "Collaborated Projects"];
 
   return (
-    <>
-      <TopDataReport data={data} />
+    <div ref={pdfRef}>
+      <TopDataReport data={data} pdfRef={pdfRef} />
       <div className="view-report-charts">
         {chartsData.map(
           (e) =>
@@ -187,7 +189,7 @@ function EntryReport({ data, pdfRef }) {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

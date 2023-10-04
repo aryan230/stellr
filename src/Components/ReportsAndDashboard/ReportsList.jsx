@@ -12,6 +12,7 @@ import Button from "../ui/Button";
 import ViewReport from "./ViewReport";
 import URL from "./../../Data/data.json";
 import Reports from "./Reports/Reports";
+import DownloadReportsModal from "./Reports/DownloadReportsModal";
 
 function ReportsList({ newReport, setNewReport, setActiveReport }) {
   const [data, setData] = useState([]);
@@ -19,7 +20,7 @@ function ReportsList({ newReport, setNewReport, setActiveReport }) {
   const [viewReportContent, setViewReportContent] = useState();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+  const [downloadReport, setDownloadReport] = useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -107,6 +108,15 @@ function ReportsList({ newReport, setNewReport, setActiveReport }) {
           setViewReport={setViewReport}
         />
       )}
+      {downloadReport && (
+        <DownloadReportsModal
+          setDownloadReport={setDownloadReport}
+          data={data && data}
+          viewReportContent={viewReportContent}
+          setViewReportContent={setViewReportContent}
+          setViewReport={setViewReport}
+        />
+      )}
       <div className="p-c-s-i-t">
         <div className="ps-c-it-inside">
           <nav className="flex" aria-label="Breadcrumb">
@@ -142,6 +152,7 @@ function ReportsList({ newReport, setNewReport, setActiveReport }) {
             type="button"
             onClick={(e) => {
               e.preventDefault();
+              setDownloadReport(true);
             }}
             className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
           >

@@ -420,6 +420,8 @@ function EditorComponent() {
                 newOrg={newOrg}
                 setUpdatedUserCollabRoleOrg={setUpdatedUserCollabRoleOrg}
                 UpdatedUserCollabRoleOrg={UpdatedUserCollabRoleOrg}
+                setProtocolContent={setProtocolContent}
+                setProtocolModal={setProtocolModal}
               />
             )}
 

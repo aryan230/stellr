@@ -1,113 +1,32 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import Select from "react-select";
-import html2pdf from "html2pdf.js";
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
-import { downloadObjectAsJson } from "../../Functions/downloadJson";
-import { Alert } from "@mui/material";
-
-import htmlDocx from "html-docx-fixed/dist/html-docx";
-const zip = new JSZip();
-
-function ExportModal({ setExportModal, quill }) {
+function DownloadReportsModal({
+  setDownloadReport,
+  data,
+  viewReportContent,
+  setViewReport,
+  setViewReportContent,
+}) {
   const [selectedExport, setSelectedExport] = useState();
-  const roleOptions = [
-    {
-      label: "HTML",
-      value: "HTML",
-    },
-    {
-      value: "JSON",
-      label: "JSON",
-    },
-    {
-      value: "PDF",
-      label: "PDF",
-    },
-    {
-      value: "DOCX",
-      label: "DOCX",
-    },
-  ];
-  const handleSubmit = async () => {
-    let html = `
-    <html>
-<head>
-<link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css">
-<style>
-.mention {
-  height: 24px;
-  width: 65px;
-  border-radius: 6px;
-  background-color: #4655ff;
-  color: white;
-  padding: 3px 0;
-  margin-right: 2px;
-  user-select: all;
-}
 
-.mention > span {
-  margin: 0 3px;
-}
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-a#file-opener {
-  &::after {
-    content: attr(title);
-  }
+  const roleOptions = data.map(({ name: label, _id: value }) => ({
+    label,
+    value,
+  }));
 
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-button#spreadsheet-opener {
-  &::after {
-    content: attr(dataName);
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-</style>
-</head>
-<body>
-${quill.root.innerHTML}
-</body>
-</html>
-    `;
-    if (selectedExport.value === "HTML") {
-      let entry = zip.folder("entry");
-      entry.file(`entry.html`, html);
-      zip.generateAsync({ type: "blob" }).then((content) => {
-        saveAs(content, `export.zip`);
-      });
-    } else if (selectedExport.value === "JSON") {
-      const deltas = quill.getContents();
-      const quillToWordConfig = {
-        exportAs: "blob",
-      };
-      if (!deltas) {
-        return alert("Content not found");
-      }
-      downloadObjectAsJson(deltas.ops, "editor-text");
-    } else if (selectedExport.value === "DOCX") {
-      const quillContents = quill.root.innerHTML;
-      var converted = htmlDocx.asBlob(quillContents);
-      saveAs(converted, "test.docx");
-    } else {
-      html2pdf()
-        .from(html)
-        .save();
-    }
-  };
+  const handleSubmit = async () => {};
   return (
     <div className="settings-modal">
       <div className="settings-modal-inside">
         <div className="top-modal">
           <button
             onClick={() => {
-              setExportModal(false);
+              setDownloadReport(false);
             }}
           >
             <svg
@@ -166,7 +85,7 @@ ${quill.root.innerHTML}
                 stroke-linejoin="round"
               />
             </svg>
-            <h1>Export entry</h1>
+            <h1>Select Report</h1>
           </div>
           <div className="setting-main-div-modal">
             <div className="settings-main-div-modal-inside">
@@ -176,18 +95,26 @@ ${quill.root.innerHTML}
                   <Select
                     options={roleOptions}
                     onChange={(e) => setSelectedExport(e)}
-                    placeholder="Select Format"
+                    placeholder="Select Report"
                     required
                   />
-                  {selectedExport &&
-                    selectedExport.value &&
-                    selectedExport.value === "PDF" && (
-                      <Alert severity="warning" sx={{ mt: 2 }}>
-                        The PDF export is still under development.
-                      </Alert>
-                    )}
                   <div className="margin-maker"></div>
-                  <button type="submit">Download</button>
+                  {selectedExport && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        let content = data.find(
+                          (e) => e._id === selectedExport.value
+                        );
+                        setViewReportContent(content);
+                        setViewReport(true);
+                        setDownloadReport(false);
+                      }}
+                      type="submit"
+                    >
+                      Download
+                    </button>
+                  )}
                 </form>
               </div>
             </div>
@@ -198,4 +125,4 @@ ${quill.root.innerHTML}
   );
 }
 
-export default ExportModal;
+export default DownloadReportsModal;

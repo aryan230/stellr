@@ -193,6 +193,8 @@ function TextEditor({
   setSampleContent,
   setSampleModal,
 }) {
+  const luckysheet = window.luckysheet;
+  const pdfRef = useRef();
   const dispatch = useDispatch();
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
@@ -632,6 +634,51 @@ function TextEditor({
   useEffect(() => {
     if (quill == null) return;
     const handler = async () => {
+      // const element = document.querySelectorAll("#spreadsheet-opener");
+      // if (element) {
+      //   element.forEach((e) => {
+      //     e.innerHTML = `<div class="main-modal-spreadsheet" id="luckysheet-${e.getAttribute(
+      //       "dataId"
+      //     )}"></div>`;
+      //   });
+      // }
+      // const lukcyelements = document.querySelectorAll(
+      //   ".main-modal-spreadsheet"
+      // );
+
+      // lukcyelements.forEach((e) => {
+      //   console.log(e.getAttribute("id"));
+      //   if (e.getAttribute("id")) {
+      //     var options = {
+      //       container: e.getAttribute("id"), //luckysheet为容器id
+      //       showinfobar: false,
+      //       plugins: ["chart"],
+      //       showsheetbar: false,
+      //       data: [],
+      //       // data: [sheetData],
+      //       enableAddRow: true,
+      //       showtoolbar: true,
+      //       showtoolbarConfig: {
+      //         chart: true, //'chart' (the icon is hidden, but if the chart plugin is configured, you can still create a new chart by right click)
+      //         postil: false, //'comment'
+      //         pivotTable: false, //'PivotTable'
+      //         function: false, //'formula'
+      //         frozenMode: false, //'freeze mode'
+      //         protection: false, // 'Worksheet protection'
+      //         print: false, // 'Print'
+      //         link: false,
+      //         currencyFormat: false,
+      //         image: false,
+      //         screenshot: false,
+      //         splitColumn: false,
+      //         dataVerification: false,
+      //       },
+      //       allowUpdate: false,
+      //       enableAddBackTop: true,
+      //     };
+      //     luckysheet.create(options);
+      //   }
+      // });
       // if (e.target.id === "spreadsheet-opener") {
       //   e.innerHTML += html;
       //   // setSpreadsheetId(e.target.getAttribute("dataId"));
@@ -683,10 +730,6 @@ function TextEditor({
     }
   }, [document.querySelectorAll(".ql-formats button"), quill]);
 
-  const getElem = () => {
-    return wrapperRef;
-  };
-
   return (
     <div className={`editor-holder-reactjs ${active && "active"}`}>
       {warningModal && (
@@ -704,7 +747,7 @@ function TextEditor({
       )}
       {loader && <Loader />}
       {isSpreadSheetOpen && (
-        <NewSpreadSheet
+        <SpreadSheet
           id={spreadsheetId}
           name={spreadsheetNameInside}
           setIsSpreadSheetOpen={setIsSpreadSheetOpen}
@@ -756,7 +799,12 @@ function TextEditor({
           onClose={() => setDrawerInformations(false)}
         >
           <Box width="500px" p={2} role="presentation">
-            <DrawerInformation quill={quill} tab={tab} project={project} />
+            <DrawerInformation
+              quill={quill}
+              tab={tab}
+              project={project}
+              pdfRef={pdfRef}
+            />
           </Box>
         </Drawer>
       )}
@@ -1070,7 +1118,11 @@ function TextEditor({
           ) : (
             <>
               {/* <QuillToolbar ref={toolbarRef} /> */}
-              <div className={`container-editor-quill`} ref={wrapperRef}></div>
+              <div
+                className={`container-editor-quill`}
+                id={`pdf-ref-${tab._id}`}
+                ref={wrapperRef}
+              ></div>
             </>
           )}
         </>

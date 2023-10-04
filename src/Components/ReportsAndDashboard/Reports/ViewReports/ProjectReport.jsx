@@ -87,10 +87,8 @@ function ProjectReport({ data }) {
   };
   return (
     <div ref={pdfRef}>
-      <TopDataReport data={data} />
-      {/* <button onClick={() => generatePDF(pdfRef, { filename: "page.pdf" })}>
-        download
-      </button> */}
+      <TopDataReport data={data} pdfRef={pdfRef} />
+
       <div className="view-report-charts">
         {chartsData.map(
           (e) =>

@@ -1,105 +1,96 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import html2pdf from "html2pdf.js";
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
-import { downloadObjectAsJson } from "../../Functions/downloadJson";
-import { Alert } from "@mui/material";
+import URL from "./../../Data/data.json";
+import { addProtocolLogs } from "../Functions/addProtocolLogs";
+import { logout } from "../../redux/actions/userActions";
+import { useNavigate } from "react-router-dom";
+function OrganizationStatusModal({
+  setOrgStatus,
+  orgStatusContent,
+  setNewCollab,
+}) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [selectedExport, setSelectedExport] = useState({
+    value: orgStatusContent.status,
+    label: orgStatusContent.status,
+  });
+  const [statusMessage, setStatusMessage] = useState("");
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-import htmlDocx from "html-docx-fixed/dist/html-docx";
-const zip = new JSZip();
+  {
+    /* /Draft, In Progress, Approved, Rejected */
+  }
 
-function ExportModal({ setExportModal, quill }) {
-  const [selectedExport, setSelectedExport] = useState();
   const roleOptions = [
     {
-      label: "HTML",
-      value: "HTML",
+      label: "Draft",
+      value: "Draft",
     },
     {
-      value: "JSON",
-      label: "JSON",
+      label: "In Progress",
+      value: "In Progress",
     },
     {
-      value: "PDF",
-      label: "PDF",
+      value: "Approved",
+      label: "Approved",
     },
     {
-      value: "DOCX",
-      label: "DOCX",
+      value: "Rejected",
+      label: "Rejected",
     },
   ];
-  const handleSubmit = async () => {
-    let html = `
-    <html>
-<head>
-<link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css">
-<style>
-.mention {
-  height: 24px;
-  width: 65px;
-  border-radius: 6px;
-  background-color: #4655ff;
-  color: white;
-  padding: 3px 0;
-  margin-right: 2px;
-  user-select: all;
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-.mention > span {
-  margin: 0 3px;
-}
+    var data = await JSON.stringify({
+      status: selectedExport.value,
+      userName: userInfo.name,
+      statusMessage: statusMessage,
+    });
 
-a#file-opener {
-  &::after {
-    content: attr(title);
-  }
+    const logData = await JSON.stringify({
+      entryId: orgStatusContent._id,
+      user: userInfo._id,
+      userName: userInfo.name,
+      userEmail: userInfo.email,
+      message: `The status of the protocol was changed to ${selectedExport.value} with the message ${statusMessage}.`,
+    });
 
-  &:hover {
-    cursor: pointer;
-  }
-}
+    const finalData = await JSON.stringify({
+      sendData: data,
+      logData: logData,
+    });
+    await localStorage.setItem("stellrStatusUpdate", true);
+    await localStorage.setItem("stellrStatusUpdateData", finalData);
 
-button#spreadsheet-opener {
-  &::after {
-    content: attr(dataName);
-  }
+    dispatch(logout());
+    navigate("/login");
 
-  &:hover {
-    cursor: pointer;
-  }
-}
-</style>
-</head>
-<body>
-${quill.root.innerHTML}
-</body>
-</html>
-    `;
-    if (selectedExport.value === "HTML") {
-      let entry = zip.folder("entry");
-      entry.file(`entry.html`, html);
-      zip.generateAsync({ type: "blob" }).then((content) => {
-        saveAs(content, `export.zip`);
-      });
-    } else if (selectedExport.value === "JSON") {
-      const deltas = quill.getContents();
-      const quillToWordConfig = {
-        exportAs: "blob",
-      };
-      if (!deltas) {
-        return alert("Content not found");
-      }
-      downloadObjectAsJson(deltas.ops, "editor-text");
-    } else if (selectedExport.value === "DOCX") {
-      const quillContents = quill.root.innerHTML;
-      var converted = htmlDocx.asBlob(quillContents);
-      saveAs(converted, "test.docx");
-    } else {
-      html2pdf()
-        .from(html)
-        .save();
-    }
+    // var config = {
+    //   method: "put",
+    //   url: `${URL}api/protocols/status/${orgStatusContent._id}`,
+    //   headers: {
+    //     Authorization: `Bearer ${userInfo.token}`,
+    //     "Content-Type": "application/json",
+    //   },
+    //   data: data,
+    // };
+
+    // axios(config)
+    //   .then(async function(response) {
+    //     console.log(response.data);
+
+    //     await addProtocolLogs(logData);
+    //     setNewCollab(true);
+    //     setOrgStatus(false);
+    //   })
+    //   .catch(function(error) {
+    //     console.log(error);
+    //   });
   };
   return (
     <div className="settings-modal">
@@ -107,7 +98,7 @@ ${quill.root.innerHTML}
         <div className="top-modal">
           <button
             onClick={() => {
-              setExportModal(false);
+              setOrgStatus(false);
             }}
           >
             <svg
@@ -166,7 +157,7 @@ ${quill.root.innerHTML}
                 stroke-linejoin="round"
               />
             </svg>
-            <h1>Export entry</h1>
+            <h1>Change Status</h1>
           </div>
           <div className="setting-main-div-modal">
             <div className="settings-main-div-modal-inside">
@@ -174,20 +165,34 @@ ${quill.root.innerHTML}
                 <form onSubmit={handleSubmit}>
                   {" "}
                   <Select
+                    value={selectedExport}
                     options={roleOptions}
                     onChange={(e) => setSelectedExport(e)}
-                    placeholder="Select Format"
+                    placeholder="Select Status"
                     required
                   />
-                  {selectedExport &&
-                    selectedExport.value &&
-                    selectedExport.value === "PDF" && (
-                      <Alert severity="warning" sx={{ mt: 2 }}>
-                        The PDF export is still under development.
-                      </Alert>
-                    )}
                   <div className="margin-maker"></div>
-                  <button type="submit">Download</button>
+                  <>
+                    <label
+                      htmlFor="message"
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      required
+                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Write your message here..."
+                      defaultValue={""}
+                      onChange={(e) => {
+                        setStatusMessage(e.target.value);
+                      }}
+                    />
+                  </>
+                  <div className="margin-maker"></div>
+                  <button type="submit">Submit</button>
                 </form>
               </div>
             </div>
@@ -198,4 +203,4 @@ ${quill.root.innerHTML}
   );
 }
 
-export default ExportModal;
+export default OrganizationStatusModal;
