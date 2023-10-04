@@ -121,7 +121,7 @@ function ProtocolModal({
         {/* border-2 border-slate-700 */}
         <div className="relative bg-white rounded-xl shadow max-h-[80vh] overflow-y-auto custom-scrollbar-task">
           {/* Modal header */}
-          <div className="flex items-center justify-between p-5 border-b rounded-t sticky top-0 bg-white z-50">
+          <div className="flex items-center justify-between p-5 border-b rounded-t sticky top-0 bg-white z-50 py-8">
             <h3 className="text-xl font-medium text-gray-900">{doc.title}</h3>
             <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ml-2">
               Draft
@@ -154,6 +154,69 @@ function ProtocolModal({
           </div>
           {/* Modal body */}
           <div className="p-6 space-y-6 min-h-[50%]">
+            <a
+              href="#"
+              className="block max-full p-6 bg-white border border-gray-200 rounded-lg"
+            >
+              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
+                Details
+              </h5>
+              <div className="border-t border-gray-200 px-4 py-15 sm:p-0">
+                <dl className="sm:divide-y sm:divide-gray-200">
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">ID</dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      #{doc._id}
+                    </dd>
+                  </div>
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Created on
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      {new Date(doc.createdAt).toLocaleDateString()}
+                    </dd>
+                  </div>
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Approval Status
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      {doc.status === "Draft" && (
+                        <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                          Draft
+                        </span>
+                      )}
+                      {doc.status === "In Progress" && (
+                        <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                          In Progress
+                        </span>
+                      )}
+                      {doc.status === "Approved" && (
+                        <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                          Approved
+                        </span>
+                      )}
+                      {doc.status === "Rejected" && (
+                        <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                          Rejected
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                  {doc.statusBy && (
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Approval By
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {doc.statusBy}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
+            </a>
             {insideData &&
               insideData.map((d) => (
                 <a

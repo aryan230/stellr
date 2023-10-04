@@ -92,7 +92,7 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
           {/* border-2 border-slate-700 */}
           <div className="relative bg-white rounded-xl shadow max-h-[80vh] overflow-y-auto custom-scrollbar-task">
             {/* Modal header */}
-            <div className="flex items-center justify-between p-5 border-b rounded-t sticky top-0 bg-white z-50">
+            <div className="flex items-center justify-between p-5 border-b rounded-t sticky top-0 bg-white z-50 py-8">
               <h3 className="text-xl font-medium text-gray-900">{doc.title}</h3>
               <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ml-2">
                 Draft

@@ -12,6 +12,13 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import NewSampleHeader from "./NewSampleHeader";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+
 function ClinicalModal({
   doc,
   setSampleModal,
@@ -78,6 +85,85 @@ function ClinicalModal({
         )}
         {/* new sample starts here */}
         <NewSampleHeader setActiveTab={setActiveTab} activeTab={activeTab} />
+        {activeTab === "home" && (
+          <div className="main-content-inside-modals">
+            {" "}
+            <div className="bg-white  sm:rounded-lg  h-[100%] overflow-y-auto custom-scrollbar-task">
+              <div className="py-10">
+                <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                  <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Data inside {JSON.parse(doc.data).sampleName}
+                    </dt>
+                    <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                      {data && data.length}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+              <div className="border-t border-gray-200 px-4 py-15 sm:p-0">
+                <dl className="sm:divide-y sm:divide-gray-200">
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Sample Unique ID
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      {doc._id}
+                    </dd>
+                  </div>
+
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Sample Name
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      {JSON.parse(doc.data).sampleName}
+                    </dd>
+                  </div>
+
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">
+                      Last Modified By
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      {doc.logs.length > 0
+                        ? doc.logs.slice(-1)[0].userEmail
+                        : "Not yet Updated"}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        )}
+        {activeTab === "timeline" && (
+          <div className="main-content-inside-modals">
+            <Timeline position="alternate">
+              <TimelineItem>
+                <TimelineSeparator>
+                  <TimelineDot color="secondary" />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  Created on {new Date(doc.createdAt).toLocaleString()}
+                </TimelineContent>
+              </TimelineItem>
+              {doc.logs &&
+                doc.logs.length > 0 &&
+                doc.logs.map((l) => (
+                  <TimelineItem>
+                    <TimelineSeparator>
+                      <TimelineDot color="success" />
+                      <TimelineConnector />
+                    </TimelineSeparator>
+                    <TimelineContent>
+                      Updated on {new Date(l.date).toLocaleString()}
+                    </TimelineContent>
+                  </TimelineItem>
+                ))}
+            </Timeline>
+          </div>
+        )}
         {activeTab === "settings" && (
           <div className="main-content-inside-modals">
             <div className="inside-modal-main-content-edit">
