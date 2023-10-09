@@ -19,7 +19,7 @@ import Footer from "./Pages/Footer";
 import Banner from "./Components/Banner";
 import { useDispatch } from "react-redux";
 import { logout } from "./redux/actions/userActions";
-
+import ENV from "./Data/data.json";
 function App() {
   const dispatch = useDispatch();
 
@@ -30,7 +30,7 @@ function App() {
     }
   }, []);
 
-  return window.screen.width < 700 ? (
+  return window.screen.width === 1 && ENV[1] != "staging" ? (
     <div className="App">
       <div className="mobile-responsive">
         <img src="../assets/stellr-logo.png" alt="" className="logo-login" />

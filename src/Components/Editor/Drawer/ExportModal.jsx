@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { downloadObjectAsJson } from "../../Functions/downloadJson";
 import { Alert } from "@mui/material";
-
+import mammoth from "mammoth/mammoth.browser";
 import htmlDocx from "html-docx-fixed/dist/html-docx";
 const zip = new JSZip();
 
@@ -29,7 +29,8 @@ function ExportModal({ setExportModal, quill }) {
       label: "DOCX",
     },
   ];
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let html = `
     <html>
 <head>
@@ -93,6 +94,7 @@ ${quill.root.innerHTML}
       downloadObjectAsJson(deltas.ops, "editor-text");
     } else if (selectedExport.value === "DOCX") {
       const quillContents = quill.root.innerHTML;
+
       var converted = htmlDocx.asBlob(quillContents);
       saveAs(converted, "test.docx");
     } else {

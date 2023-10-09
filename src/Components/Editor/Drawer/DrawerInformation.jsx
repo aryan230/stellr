@@ -15,10 +15,23 @@ import htmlDocx from "html-docx-fixed/dist/html-docx";
 import { htmlToDelta } from "deltaconvert";
 import mammoth from "mammoth/mammoth.browser";
 import { useReactToPrint } from "react-to-print";
-
-function DrawerInformation({ quill, tab, project, pdfRef }) {
+import axios from "axios";
+import URL from "./../../../Data/data.json";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFromCart } from "../../../redux/actions/cartActions";
+function DrawerInformation({
+  quill,
+  tab,
+  project,
+  pdfRef,
+  setEntryUpdate,
+  setWhichTabisActive,
+}) {
+  const dispatch = useDispatch();
   const [exportModal, setExportModal] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const exportAuditLog = async (e) => {
     e.preventDefault();
@@ -228,6 +241,30 @@ function DrawerInformation({ quill, tab, project, pdfRef }) {
     });
   };
 
+  const deleteEntry = async () => {
+    var data = "";
+
+    var config = {
+      method: "delete",
+      url: `${URL[0]}api/entries/${tab._id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(async function(response) {
+        console.log(JSON.stringify(response.data));
+        await dispatch(removeFromCart(tab._id));
+        setEntryUpdate(true);
+        setWhichTabisActive("projectList");
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="drawer-info">
       {exportModal && (
@@ -272,7 +309,13 @@ function DrawerInformation({ quill, tab, project, pdfRef }) {
             <div className="margin-maker"></div>
             <h3>Entry Created on {tab.createdAt.split("T")[0]}</h3>
 
-            <button className="delete">
+            <button
+              className="delete"
+              onClick={(e) => {
+                e.preventDefault();
+                deleteEntry();
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

@@ -26,6 +26,15 @@ function CustomAreaChart({ dataInside, height }) {
       text: "Data Movements",
       align: "left",
     },
+    yaxis: [
+      {
+        labels: {
+          formatter: function(val) {
+            return val.toFixed(0);
+          },
+        },
+      },
+    ],
     xaxis: {
       categories: [
         "Jan",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { v4 as uuid } from "uuid";
@@ -13,6 +13,8 @@ import { userRoleExtract } from "../Functions/userRoleFunction";
 import _ from "lodash";
 import { htmlToDelta } from "deltaconvert";
 import mammoth from "mammoth/mammoth.browser";
+import Quill from "quill";
+import ReactQuill from "react-quill";
 
 function CreateEntry({
   setEntryModal,
@@ -99,20 +101,26 @@ function CreateEntry({
         label,
         ...rest,
       }));
+  const [quillHTML, setQuillHTML] = useState("");
+  const quillRef = useRef(null);
 
   const submitHandlerImport = async (e) => {
     e.preventDefault();
     if (file) {
       const result = await convertDocxToHtml(file[0]);
-      const finalResult = await htmlToDelta(result);
-      console.log(finalResult);
+      console.log(result);
+      const quill = quillRef.current.getEditor();
+      const delta = quill.clipboard.convert(result);
+      // const finalResult = await htmlToDelta(result);
+      // const finalResult = await quill.clipboard.convert(container);;
+      // console.log(finalResult);
       const entryObject = {
         projectId: project,
         name: name,
         data: [
           {
             user: userInfo._id,
-            block: finalResult,
+            block: delta,
             date: Date.now(),
           },
         ],
@@ -258,6 +266,7 @@ function CreateEntry({
               <form onSubmit={submitHandlerImport}>
                 <input
                   type="text"
+                  value={name}
                   placeholder="Enter a name for your entry"
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -291,6 +300,7 @@ function CreateEntry({
                   accept=".docx"
                   onChange={(e) => {
                     setFile(e.target.files);
+                    setName(e.target.files[0].name);
                   }}
                   required
                 />
@@ -299,6 +309,15 @@ function CreateEntry({
                 <div className="margin-maker"></div>
                 <button type="submit">Submit</button>
                 <div className="margin-maker"></div>
+                <ReactQuill
+                  ref={quillRef}
+                  theme="snow"
+                  readOnly
+                  value={quillHTML}
+                  style={{
+                    display: "none",
+                  }}
+                />
                 {/* <a
                   href="#"
                   className="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100"

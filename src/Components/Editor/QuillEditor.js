@@ -52,6 +52,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import WarningModal from "../Modals/WarningModal";
 import { listMySops } from "../../redux/actions/sopActions";
 import { listMyProtocols } from "../../redux/actions/protocolActions";
+import QuillBetterTable from "quill-better-table";
 
 // import ImageResize from "quill-image-resize-module-react";
 // Quill.register("modules/imageResize", ImageResize);
@@ -60,6 +61,41 @@ var Size = Quill.import("attributors/style/size");
 Size.whitelist = ["14px", "16px", "18px"];
 Quill.register(Size, true);
 Quill.register("modules/imageResize", ImageResize);
+Quill.register(
+  {
+    "modules/better-table": QuillBetterTable,
+  },
+  true
+);
+
+//bullet list
+
+const CustomBulletListModule = {
+  formats: ["list"],
+};
+
+const CustomBulletList = Quill.import("formats/list");
+CustomBulletList.tagName = "UL";
+Quill.register(CustomBulletList, true);
+
+// const CustomNumberedList = Quill.import("formats/list");
+// CustomNumberedList.tagName = "OL";
+// Quill.register(CustomNumberedList, true);
+
+// Define a custom module to handle numbered list formats
+// const CustomBulletListModule = {
+//   formats: ["list"],
+// };
+
+//end
+
+const NumberedList = ({ children }) => {
+  return <ol>{children}</ol>;
+};
+
+const BulletList = ({ children }) => {
+  return <ul style={{ listStyleType: "disc" }}>{children}</ul>;
+};
 
 const QuillToolbar = (id) => (
   <div id={`toolbar`}>
@@ -233,7 +269,22 @@ function TextEditor({
     loading: loadingProtocols,
     error: errorProtocols,
   } = protocolListMy;
-
+  const CustomButton = () => (
+    <button className="ql-custom-button">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+      >
+        <path
+          d="M15.75 1.5H2.25C2.05109 1.5 1.86032 1.57902 1.71967 1.71967C1.57902 1.86032 1.5 2.05109 1.5 2.25V15.75C1.5 15.9489 1.57902 16.1397 1.71967 16.2803C1.86032 16.421 2.05109 16.5 2.25 16.5H15.75C15.9489 16.5 16.1397 16.421 16.2803 16.2803C16.421 16.1397 16.5 15.9489 16.5 15.75V2.25C16.5 2.05109 16.421 1.86032 16.2803 1.71967C16.1397 1.57902 15.9489 1.5 15.75 1.5V1.5ZM6 15H3V12H6V15ZM6 10.5H3V7.5H6V10.5ZM6 6H3V3H6V6ZM10.5 15H7.5V12H10.5V15ZM10.5 10.5H7.5V7.5H10.5V10.5ZM10.5 6H7.5V3H10.5V6ZM15 15H12V12H15V15ZM15 10.5H12V7.5H15V10.5ZM15 6H12V3H15V6Z"
+          fill="black"
+        />
+      </svg>
+    </button>
+  );
   const sopListMy = useSelector((state) => state.sopListMy);
   const { sops, loading: loadingSops, error: errorSops } = sopListMy;
 
@@ -329,13 +380,13 @@ function TextEditor({
     [{ color: [] }, { background: [] }],
     [{ script: "sub" }, { script: "super" }],
     [{ align: [] }],
-    ["blockquote", "code-block"],
+    ["blockquote", "code-block", "image"],
     ["link"],
     ["clean"],
     ["video"],
     ["img"],
     ["fileUploadAttach"],
-    ["igAttach"],
+    // ["igAttach"],
   ];
 
   console.log(userType);
@@ -351,12 +402,28 @@ function TextEditor({
     const q = new Quill(editor, {
       theme: "snow",
       modules: {
-        toolbar: TOOLBAR_OPTIONS,
+        toolbar: {
+          container: TOOLBAR_OPTIONS,
+          list: CustomBulletListModule,
+          handlers: {
+            image: () => {
+              if (!clicked) {
+                console.log("custom image clicked");
+                setClicked(true);
+                fileRefImage.current.click();
+              }
+            },
+          },
+        },
+
         // toolbar: {
         //   toolbar: `#toolbar`,
         //   handlers: {},
         // },
 
+        clipboard: {
+          matchVisual: false, // Disable visual matching for clipboard pasting
+        },
         imageResize: {
           parchment: Quill.import("parchment"),
           modules: ["Resize", "DisplaySize", "Toolbar"],
@@ -415,8 +482,10 @@ function TextEditor({
   //   var value = prompt("What is the image URL");
   //   this.quill.insertEmbed(range.index, "image", value);
   // }
+
   useEffect(() => {
     if (quill == null) return;
+
     if (document.querySelector(".ql-img")) {
       document.querySelector(
         ".ql-img"
@@ -507,25 +576,45 @@ function TextEditor({
 
   const fileImageHandler = async (e) => {
     let fileData = e.target.files[0];
-    const imageRef = ref(storage, `files/${fileData.name + uuid()}`);
-    uploadBytes(imageRef, fileData).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setClicked(false);
-        let range = quill.getSelection(true);
-        quill.insertText(range.index, "\n", Quill.sources.USER);
-        quill.insertEmbed(
-          range.index + 1,
-          "ig",
-          {
-            src: url,
-            id: "img",
-            width: "150",
-          },
-          Quill.sources.USER
-        );
-        quill.setSelection(range.index + 2, Quill.sources.SILENT);
-      });
-    });
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+      const base64 = loadEvent.target.result;
+      setClicked(false);
+      let range = quill.getSelection(true);
+      quill.insertText(range.index, "\n", Quill.sources.USER);
+      quill.insertEmbed(
+        range.index + 1,
+        "image",
+        {
+          src: base64,
+          id: "img",
+          width: "150",
+        },
+        Quill.sources.USER
+      );
+      quill.setSelection(range.index + 2, Quill.sources.SILENT);
+    };
+
+    reader.readAsDataURL(fileData);
+    // const imageRef = ref(storage, `files/${fileData.name + uuid()}`);
+    // uploadBytes(imageRef, fileData).then((snapshot) => {
+    //   getDownloadURL(snapshot.ref).then((url) => {
+    //     setClicked(false);
+    //     let range = quill.getSelection(true);
+    //     quill.insertText(range.index, "\n", Quill.sources.USER);
+    //     quill.insertEmbed(
+    //       range.index + 1,
+    //       "ig",
+    //       {
+    //         src: url,
+    //         id: "img",
+    //         width: "150",
+    //       },
+    //       Quill.sources.USER
+    //     );
+    //     quill.setSelection(range.index + 2, Quill.sources.SILENT);
+    //   });
+    // });
   };
 
   useEffect(() => {
@@ -564,7 +653,9 @@ function TextEditor({
   }, [socket, quill]);
 
   useEffect(() => {
-    const s = io(URL[0].substring(0, URL[0].length - 1));
+    const s = io(URL[0].substring(0, URL[0].length - 1), {
+      maxHttpBufferSize: 1e8,
+    });
     setSocket(s);
     return () => {
       s.disconnect();
@@ -698,6 +789,22 @@ function TextEditor({
     quill.on("text-change", handler);
   }, [quill]);
 
+  useEffect(() => {
+    if (quill == null) return;
+    const handler = async (delta) => {
+      delta.ops.forEach((op) => {
+        if (op.insert && typeof op.insert === "string") {
+          // Check if a newline is inserted after an image
+          const prevChar = quill.getText(op.retain - 1, 1);
+          if (prevChar === "\n") {
+            quill.deleteText(op.retain - 1, 1); // Remove the newline character
+          }
+        }
+      });
+    };
+    quill.on("text-change", handler);
+  }, [quill]);
+
   //handleMentionsPopupMenu
   useEffect(() => {
     if (quill == null || samples == null) return;
@@ -747,7 +854,7 @@ function TextEditor({
       )}
       {loader && <Loader />}
       {isSpreadSheetOpen && (
-        <SpreadSheet
+        <NewSpreadSheet
           id={spreadsheetId}
           name={spreadsheetNameInside}
           setIsSpreadSheetOpen={setIsSpreadSheetOpen}
@@ -804,6 +911,8 @@ function TextEditor({
               tab={tab}
               project={project}
               pdfRef={pdfRef}
+              setEntryUpdate={setEntryUpdate}
+              setWhichTabisActive={setWhichTabisActive}
             />
           </Box>
         </Drawer>

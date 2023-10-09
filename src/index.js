@@ -7,6 +7,10 @@ import { Provider } from "react-redux";
 import store from "./store.";
 import { registerLicense } from "@syncfusion/ej2-base";
 
+registerLicense(
+  "Ngo9BigBOggjHTQxAR8/V1NHaF5cXmtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdgWH9edHVXQ2lcWUJyX0Q="
+);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>

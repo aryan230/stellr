@@ -1,5 +1,6 @@
 import Quill from "quill";
 let BlockEmbed = Quill.import("blots/block/embed");
+let Inline = Quill.import("blots/inline");
 
 export class ImageBlot extends BlockEmbed {
   static create(value) {
@@ -7,6 +8,7 @@ export class ImageBlot extends BlockEmbed {
     node.setAttribute("src", value.src);
     node.setAttribute("id", value.id);
     node.setAttribute("width", value.width);
+    node.setAttribute("url", value.url);
     return node;
   }
 
@@ -14,11 +16,12 @@ export class ImageBlot extends BlockEmbed {
     return {
       src: node.getAttribute("src"),
       id: node.getAttribute("id"),
+      url: node.getAttribute("url"),
       width: node.getAttribute("width"),
     };
   }
 }
-ImageBlot.blotName = "ig";
+ImageBlot.blotName = "image";
 ImageBlot.tagName = "img";
 
 Quill.register(ImageBlot);

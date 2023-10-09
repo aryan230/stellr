@@ -90,6 +90,15 @@ function SpreadSheetName({
                     onChange={(e) => setName(e.target.value)}
                   />
                   <button type="submit">Save</button>
+                  <div
+                    className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50"
+                    role="alert"
+                  >
+                    <span className="font-medium">
+                      Once a spreadsheet is created you can import your existing
+                      spreadsheet directly into the spreadsheet. (csv,xlsx)
+                    </span>{" "}
+                  </div>
                 </form>
               </div>
             </div>

@@ -8,6 +8,10 @@
   margin: 0 auto;
   padding-top: 2%;
   display: flex;
+
+  @media (max-width: 800px) {
+    height: 5%;
+  }
   .tab-header-element {
     min-width: 15%;
     width: fit-content;
@@ -150,7 +154,10 @@
       left: 0;
       background-color: white;
       z-index: 99;
-
+      @media (max-width: 800px) {
+        min-height: 10%;
+        padding: 1rem;
+      }
       .top-div-holder-editor-inside {
         width: 50%;
         height: 100%;
@@ -351,6 +358,10 @@
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       background: #555;
+    }
+
+    img {
+      display: inline !important;
     }
   }
 }

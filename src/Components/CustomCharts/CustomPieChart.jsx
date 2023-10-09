@@ -12,14 +12,21 @@ function CustomPieChart({ labels, seriesData }) {
     },
 
     colors: [
-      "#4669FA",
-      "#F1595C",
-      "#50C793",
-      "#ED254E",
-      "#011936",
-      "#011936",
-      "#2D3319",
-      "#1EA896",
+      "#0074D9", // Blue
+      "#FF4136", // Red
+      "#2ECC40", // Green
+      "#FF851B", // Orange
+      "#7FDBFF", // Light Blue
+      "#FFDC00", // Yellow
+      "#001f3f", // Navy
+      "#39CCCC", // Teal
+      "#B10DC9", // Purple
+      "#01FF70", // Lime
+      "#85144b", // Maroon
+      "#F012BE", // Fuchsia
+      "#3D9970", // Olive
+      "#111111", // Black
+      "#AAAAAA", // Gray
     ],
     legend: {
       position: "bottom",

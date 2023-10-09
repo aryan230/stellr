@@ -26,6 +26,15 @@ function CustomColumnChartDist({ dataInside, dataLabel }) {
     legend: {
       show: false,
     },
+    yaxis: [
+      {
+        labels: {
+          formatter: function(val) {
+            return val.toFixed(0);
+          },
+        },
+      },
+    ],
     xaxis: {
       categories: dataLabel,
       labels: {

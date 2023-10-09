@@ -1,0 +1,97 @@
+.mobile-nav-shower-icon {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  background-color: #4d00aa;
+  padding: 1rem;
+  border-radius: 200px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 800px) {
+    display: none;
+  }
+}
+
+.mobile-navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(180deg, #5d00d2 0%, #530094 100%);
+  z-index: 9999999;
+  transition: 0.4s all;
+  @media (min-width: 800px) {
+    display: none;
+  }
+
+  .mobile-navbar-inside {
+    width: 80%;
+    height: 100%;
+    margin: 0 auto;
+
+    .top-cross-mobile-navbar {
+      width: 100%;
+      height: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+    }
+
+    .main-navbar-mobile-tablet {
+      width: 100%;
+      ul {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        li {
+          margin: 1.5rem 1rem;
+          a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            h4 {
+              color: #fff;
+              font-family: GothamBook;
+              font-size: 1.6rem;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              margin-left: 1.5rem;
+            }
+          }
+        }
+
+        .dropdown {
+          display: none;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          li {
+            margin: 1.5rem 2rem;
+            a {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              h4 {
+                color: #fff;
+                font-family: GothamBook;
+                font-size: 1.4rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                margin-left: 1rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

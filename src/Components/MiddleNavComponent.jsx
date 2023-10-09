@@ -29,6 +29,8 @@ function MiddleNavComponent({
   setTaskContent,
   newEntry,
   setNewEntry,
+  entryUpdate,
+  setEntryUpdate,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -66,8 +68,18 @@ function MiddleNavComponent({
       dispatch(getProjectDetails(id));
       dispatch(listMyTasks(id));
       dispatch(listMyEntries(id));
+      setNewEntry(false);
     }
   }, [newEntry]);
+
+  useEffect(() => {
+    if (entryUpdate) {
+      dispatch(getProjectDetails(id));
+      dispatch(listMyTasks(id));
+      dispatch(listMyEntries(id));
+      setEntryUpdate(false);
+    }
+  }, [entryUpdate]);
 
   const findOrg =
     orgs && orgs.length > 0

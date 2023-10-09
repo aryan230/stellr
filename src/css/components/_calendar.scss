@@ -7,12 +7,18 @@
   .calender-holder {
     width: 70%;
     height: 100%;
+
+    @media (max-width: 800px) {
+      width: 100%;
+    }
   }
 
   .calender-tasks {
     width: 30%;
     height: 100%;
-
+    @media (max-width: 800px) {
+      display: none;
+    }
     .calender-task-top {
       width: 80%;
       margin: 2rem auto;

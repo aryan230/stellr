@@ -30,7 +30,7 @@ function ReportsAndDashboard({ setWhichTabisActive }) {
     <div className="reports-and-dashboards">
       <aside
         id="default-sidebar"
-        className="fixed top-0 left-[6vw] z-40 w-[15vw] h-screen transition-transform -translate-x-full sm:translate-x-0"
+        className="fixed top-0 left-[6vw] z-40 w-[15vw] h-screen transition-transform -translate-x-full sm:translate-x-0 max-md:invisible"
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50">

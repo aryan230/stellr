@@ -65,6 +65,8 @@ function MiddleNav({
   projectInsideActiveId,
   newEntry,
   setNewEntry,
+  entryUpdate,
+  setEntryUpdate,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -265,6 +267,8 @@ function MiddleNav({
           setNewCollab={setNewCollab}
           newEntry={newEntry}
           setNewEntry={setNewEntry}
+          entryUpdate={entryUpdate}
+          setEntryUpdate={setEntryUpdate}
         />
       ) : (
         <div className="sl-inside">
