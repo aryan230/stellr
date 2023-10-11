@@ -10,11 +10,10 @@ import {
 } from "@syncfusion/ej2-react-spreadsheet";
 import { registerLicense } from "@syncfusion/ej2-base";
 
-// import Luckysheet from "../SpreadSheetContainers/Luckysheet";
-// import luckysheet from "luckysheet";
-// import "luckysheet/dist/plugins/js/plugin.js";
-
-function NewSpreadSheet({ name, id, setIsSpreadSheetOpen }) {
+function NewSpreadSheet({
+  spreadsheetData: { name, id },
+  setIsSpreadSheetOpen,
+}) {
   const spreadsheetRef = useRef(null);
   const [data, setData] = useState();
   const [loader, setLoader] = useState(false);

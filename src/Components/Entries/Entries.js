@@ -61,28 +61,44 @@ function Entries({
       className="sl-element"
       onClick={async (e) => {
         e.preventDefault();
-        if (userRole) {
-          const logObject = {
-            entryId: doc._id,
-            user: userInfo._id,
-            userName: userInfo.name,
-            userEmail: userInfo.email,
-            message:
-              userRole == "Admin" || userRole == "owner"
-                ? `Updated The Entry With Name ${doc.name}  and id ${doc._id}`
-                : `Opened The Entry With Name ${doc.name}  and id ${doc._id}`,
-          };
-          await dispatch(addToState(`tabs#${doc._id}`));
-          await addEntryLogs(logObject);
-          await dispatch(
-            addToCart({
-              doc,
-              project,
-              userType: userRole,
-            })
-          );
-          setTabId(doc._id);
-          setWhichTabisActive("tabs");
+        if (doc.type === "Lab Sheet") {
+          if (userRole) {
+            const logObject = {
+              entryId: doc._id,
+              user: userInfo._id,
+              userName: userInfo.name,
+              userEmail: userInfo.email,
+              message:
+                userRole == "Admin" || userRole == "owner"
+                  ? `Updated The Entry With Name ${doc.name}  and id ${doc._id}`
+                  : `Opened The Entry With Name ${doc.name}  and id ${doc._id}`,
+            };
+            await addEntryLogs(logObject);
+          }
+        } else {
+          if (userRole) {
+            const logObject = {
+              entryId: doc._id,
+              user: userInfo._id,
+              userName: userInfo.name,
+              userEmail: userInfo.email,
+              message:
+                userRole == "Admin" || userRole == "owner"
+                  ? `Updated The Entry With Name ${doc.name}  and id ${doc._id}`
+                  : `Opened The Entry With Name ${doc.name}  and id ${doc._id}`,
+            };
+            await dispatch(addToState(`tabs#${doc._id}`));
+            await addEntryLogs(logObject);
+            await dispatch(
+              addToCart({
+                doc,
+                project,
+                userType: userRole,
+              })
+            );
+            setTabId(doc._id);
+            setWhichTabisActive("tabs");
+          }
         }
       }}
     >

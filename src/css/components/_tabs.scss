@@ -26,11 +26,10 @@
     justify-content: space-between;
     transition: 0.2s ease-in-out;
     &.active {
-      background: #fff;
+      background: #ffffff;
       &:hover {
-        cursor: default;
+        cursor: pointer;
         transform: scale(1);
-
         background: #ffffff;
       }
     }
@@ -124,6 +123,7 @@
     position: relative;
     display: none;
     padding: 1rem 0;
+    outline: 0px;
 
     .blur-for-entry {
       width: 100%;
@@ -320,7 +320,11 @@
 .editor-checker {
   .editor-holder-reactjs {
     width: 100%;
-    height: 100%;
+    height: 70vw;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    .ql-editor-container {
+      height: 80%;
+    }
   }
 }
 
@@ -328,13 +332,29 @@
   border: 0px !important;
 }
 
+.main-inside-nothing-here {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 30rem;
+    margin-bottom: 5rem;
+  }
+}
+
 .container-editor-quill {
   width: 100%;
-  height: 60vh;
+  height: 80%;
 
   .quill {
     width: 100%;
     height: 100%;
+  }
+  .ql-toolbar {
+    display: none;
   }
   .ql-editor {
     width: 100%;

@@ -264,10 +264,20 @@ body {
   flex-direction: column;
 }
 
-.mention_tool_at {
+.mention_tool_at,
+.mention-here {
+  width: fit-content;
   background-color: #0a80f3;
-  padding: 3px 8px;
+  padding: 0.2rem 2rem !important;
+  color: white;
   border-radius: 999px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.tribute-active {
+  outline: none !important;
+  /* Add any other styles as needed */
 }
 
 // Some styles

@@ -133,7 +133,7 @@ const QuillToolbar = (id) => (
   </div>
 );
 
-function TextEditorTwo({
+function TextEditorTwoRead({
   tab,
   active,
   project,
@@ -626,10 +626,11 @@ function TextEditorTwo({
           getQuill={getQuill}
           ref={quill}
           content={htmlData}
+          readOnly={true}
         />
       </div>
     </>
   );
 }
 
-export default TextEditorTwo;
+export default TextEditorTwoRead;

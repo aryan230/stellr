@@ -54,6 +54,7 @@ function DrawerHistory({ quill, tab, project }) {
                 <h2>Time</h2>
               </div>
               {entries &&
+                entries.find((e) => e._id == tab._id) &&
                 entries.find((e) => e._id == tab._id).logs &&
                 entries
                   .find((e) => e._id == tab._id)

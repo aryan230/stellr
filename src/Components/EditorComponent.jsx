@@ -50,6 +50,7 @@ import {
 import ListSopsAll from "./ListSopsAll";
 import MenuIcon from "@mui/icons-material/Menu";
 import { addToState } from "../redux/actions/stateActions";
+import TextEditorTwoRead from "./Editor/QuillEditorTwoRead";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -148,7 +149,7 @@ function EditorComponent() {
       setTabId(tabsPannel[0].id);
     }
   };
-
+  const [todaysDate, setTodaysDate] = useState();
   useEffect(() => {
     if (localStorage.getItem("showBanner")) {
       setShowBanner(false);
@@ -250,6 +251,30 @@ function EditorComponent() {
       }
     }
   }, [dispatch, sucess, sucessCollab]);
+
+  const getTodaysDate = () => {
+    var date_not_formatted = new Date(Date.now());
+
+    var formatted_string = date_not_formatted.getFullYear() + "-";
+
+    if (date_not_formatted.getMonth() < 9) {
+      formatted_string += "0";
+    }
+    formatted_string += date_not_formatted.getMonth() + 1;
+    formatted_string += "-";
+
+    if (date_not_formatted.getDate() < 10) {
+      formatted_string += "0";
+    }
+    formatted_string += date_not_formatted.getDate();
+    setTodaysDate(formatted_string);
+  };
+
+  useEffect(() => {
+    if (!todaysDate) {
+      getTodaysDate();
+    }
+  }, [todaysDate]);
 
   return (
     <div className="main-container">
@@ -751,7 +776,14 @@ function EditorComponent() {
               setEntryUpdate={setEntryUpdate}
             />
           )}
-          <div className="main-structure" ref={mainDiv}>
+          <div
+            className="main-structure"
+            ref={mainDiv}
+            // style={{
+            //   backgroundColor:
+            //     whichTabisActive === "tabs" ? "#b0c4de" : "#ececec",
+            // }}
+          >
             {whichTabisActive === "home" && (
               <div className="main-inside calendar-main-inside">
                 {" "}
@@ -874,55 +906,119 @@ function EditorComponent() {
                 setSopContent={setSopContent}
               />
             )}
+            {/* {whichTabisActive === "tabs" && tabDetails.length === 0 && (
+              <div className="main-inside">
+                {" "}
+               
+                Nothing here yet.
+              </div>
+            )} */}
             {whichTabisActive === "tabs" && (
               <div className="main-inside">
-                <div className="tabs-header">
-                  {tabDetails.length > 0 &&
-                    tabDetails.map((tab) => (
-                      <TabsHeader
-                        tab={tab.doc}
-                        active={tab.doc._id == tabID ? true : false}
-                        setTabId={setTabId}
-                        removeTab={removeTab}
-                      />
-                    ))}
-                </div>
-                <div className="tabs-content">
-                  {tabDetails.length > 0 &&
-                    tabDetails.map((tab) =>
-                      tab.userType == "Admin" ||
-                      tab.userType == "Write" ||
-                      tab.userType == "owner" ? (
-                        <div className={`editor-checker`} key={tab.id}>
-                          <TextEditor
+                {tabDetails.length === 0 ? (
+                  <div className="main-inside-nothing-here">
+                    <img src="./assets/6.svg" alt="" />
+                    <span>
+                      Nothing opened yet. Browse through the explored to open
+                      entries
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="tabs-header">
+                      {tabDetails.length > 0 &&
+                        tabDetails.map((tab) => (
+                          <TabsHeader
                             tab={tab.doc}
                             active={tab.doc._id == tabID ? true : false}
-                            project={tab.project}
-                            userType={tab.userType}
-                            setProjectSettings={setProjectSettings}
-                            setNewCollab={setNewCollab}
-                            setProjectUpdatedProfilers={
-                              setProjectUpdatedProfilers
-                            }
-                            setUpdatedUserCollabRole={setUpdatedUserCollabRole}
-                            setEntryUpdate={setEntryUpdate}
-                            setWhichTabisActive={setWhichTabisActive}
-                            setSampleContent={setSampleContent}
-                            setSampleModal={setSampleModal}
+                            setTabId={setTabId}
+                            removeTab={removeTab}
                           />
-                        </div>
-                      ) : (
-                        <div className={`editor-checker`} key={tab.id}>
-                          <TextEditorRead
-                            tab={tab.doc}
-                            active={tab.doc._id == tabID ? true : false}
-                            project={tab.project}
-                            userType={tab.userType}
-                          />
-                        </div>
-                      )
-                    )}
-                </div>
+                        ))}
+                    </div>
+                    <div className="tabs-content">
+                      {tabDetails.length > 0 &&
+                        tabDetails.map((tab) =>
+                          tab.doc.createdAt > todaysDate ||
+                          tab.doc.converted ? (
+                            tab.userType == "Admin" ||
+                            tab.userType == "Write" ||
+                            tab.userType == "owner" ? (
+                              <TextEditorTwo
+                                tab={tab.doc}
+                                active={tab.doc._id == tabID ? true : false}
+                                project={tab.project}
+                                userType={tab.userType}
+                                setProjectSettings={setProjectSettings}
+                                setNewCollab={setNewCollab}
+                                setProjectUpdatedProfilers={
+                                  setProjectUpdatedProfilers
+                                }
+                                setUpdatedUserCollabRole={
+                                  setUpdatedUserCollabRole
+                                }
+                                setEntryUpdate={setEntryUpdate}
+                                setWhichTabisActive={setWhichTabisActive}
+                                setSampleContent={setSampleContent}
+                                setSampleModal={setSampleModal}
+                              />
+                            ) : (
+                              <div className={`editor-checker`} key={tab.id}>
+                                <TextEditorTwoRead
+                                  tab={tab.doc}
+                                  active={tab.doc._id == tabID ? true : false}
+                                  project={tab.project}
+                                  userType={tab.userType}
+                                  setProjectSettings={setProjectSettings}
+                                  setNewCollab={setNewCollab}
+                                  setProjectUpdatedProfilers={
+                                    setProjectUpdatedProfilers
+                                  }
+                                  setUpdatedUserCollabRole={
+                                    setUpdatedUserCollabRole
+                                  }
+                                  setEntryUpdate={setEntryUpdate}
+                                  setWhichTabisActive={setWhichTabisActive}
+                                  setSampleContent={setSampleContent}
+                                  setSampleModal={setSampleModal}
+                                />
+                              </div>
+                            )
+                          ) : tab.userType == "Admin" ||
+                            tab.userType == "Write" ||
+                            tab.userType == "owner" ? (
+                            <TextEditorRead
+                              tab={tab.doc}
+                              active={tab.doc._id == tabID ? true : false}
+                              project={tab.project}
+                              userType={tab.userType}
+                              setProjectSettings={setProjectSettings}
+                              setNewCollab={setNewCollab}
+                              setProjectUpdatedProfilers={
+                                setProjectUpdatedProfilers
+                              }
+                              setUpdatedUserCollabRole={
+                                setUpdatedUserCollabRole
+                              }
+                              setEntryUpdate={setEntryUpdate}
+                              setWhichTabisActive={setWhichTabisActive}
+                              setSampleContent={setSampleContent}
+                              setSampleModal={setSampleModal}
+                            />
+                          ) : (
+                            <div className={`editor-checker`} key={tab.id}>
+                              <TextEditorRead
+                                tab={tab.doc}
+                                active={tab.doc._id == tabID ? true : false}
+                                project={tab.project}
+                                userType={tab.userType}
+                              />
+                            </div>
+                          )
+                        )}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>

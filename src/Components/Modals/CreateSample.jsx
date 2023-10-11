@@ -12,6 +12,7 @@ import AntiBody from "./Sample/AntiBody";
 import CustomRecordSample from "./Sample/CustomRecordSample";
 import AddIcon from "@mui/icons-material/Add";
 import CustomSampleTemplate from "./Sample/CustomSamples/CustomSampleTemplate";
+import MainLoader from "../Loaders/MainLoader";
 function CreateSample({
   setSampleModal,
   projects,
@@ -96,6 +97,7 @@ function CreateSample({
         <CustomSampleTemplate setCustomSample={setCustomSample} />
       )}
       <div className="modal-inside">
+        {/* <MainLoader /> */}
         <div className="top-modal top-0 sticky">
           <button
             onClick={() => {

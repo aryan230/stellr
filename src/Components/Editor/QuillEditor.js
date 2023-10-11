@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-import mention from "quill-mention";
 import { Toaster, toast } from "react-hot-toast";
 import { Box, Drawer, Tooltip } from "@mui/material";
 import { io } from "socket.io-client";
@@ -53,30 +52,22 @@ import WarningModal from "../Modals/WarningModal";
 import { listMySops } from "../../redux/actions/sopActions";
 import { listMyProtocols } from "../../redux/actions/protocolActions";
 import QuillBetterTable from "quill-better-table";
-
+import ImageBlotTwo from "./Tools/CustomImage";
 // import ImageResize from "quill-image-resize-module-react";
 // Quill.register("modules/imageResize", ImageResize);
 
-var Size = Quill.import("attributors/style/size");
-Size.whitelist = ["14px", "16px", "18px"];
-Quill.register(Size, true);
-Quill.register("modules/imageResize", ImageResize);
-Quill.register(
-  {
-    "modules/better-table": QuillBetterTable,
-  },
-  true
-);
+// var Size = Quill.import("attributors/style/size");
+// Size.whitelist = ["14px", "16px", "18px"];
+// Quill.register(Size, true);
+// Quill.register("modules/imageResize", ImageResize);
+// Quill.register(
+//   {
+//     "modules/better-table": QuillBetterTable,
+//   },
+//   true
+// );
 
 //bullet list
-
-const CustomBulletListModule = {
-  formats: ["list"],
-};
-
-const CustomBulletList = Quill.import("formats/list");
-CustomBulletList.tagName = "UL";
-Quill.register(CustomBulletList, true);
 
 // const CustomNumberedList = Quill.import("formats/list");
 // CustomNumberedList.tagName = "OL";
@@ -88,14 +79,6 @@ Quill.register(CustomBulletList, true);
 // };
 
 //end
-
-const NumberedList = ({ children }) => {
-  return <ol>{children}</ol>;
-};
-
-const BulletList = ({ children }) => {
-  return <ul style={{ listStyleType: "disc" }}>{children}</ul>;
-};
 
 const QuillToolbar = (id) => (
   <div id={`toolbar`}>
@@ -404,7 +387,7 @@ function TextEditor({
       modules: {
         toolbar: {
           container: TOOLBAR_OPTIONS,
-          list: CustomBulletListModule,
+          // list: CustomBulletListModule,
           handlers: {
             image: () => {
               if (!clicked) {
