@@ -129,7 +129,7 @@ function CreateSample({
               required
             />
             <div className="margin-maker"></div>
-            {/* <a
+            <a
               href=""
               onClick={(e) => {
                 e.preventDefault();
@@ -139,7 +139,7 @@ function CreateSample({
             >
               <AddIcon sx={{ width: 15, marginRight: 0.5 }} />
               or create custom sample
-            </a> */}
+            </a>
             <div className="margin-maker"></div>
             {sampleType && sampleType.value === "Create custom Record" && (
               <CustomRecordSample

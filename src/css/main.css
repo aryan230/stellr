@@ -4969,11 +4969,16 @@ div.ql-tooltip {
 .project-component .project-c-header .project-c-header-left .p-c-h-l-t {
   border: 0px;
   display: flex;
-  flex-direction: column;
-  background-color: transparent;
+  align-items: center;
+  justify-content: center;
   transition: 0.2s all;
 }
-.project-component .project-c-header .project-c-header-left .p-c-h-l-t h1 {
+.project-component .project-c-header .project-c-header-left .p-c-h-l-t .p-c-h-t-l-inside {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+.project-component .project-c-header .project-c-header-left .p-c-h-l-t .p-c-h-t-l-inside h1 {
   color: #000;
   font-family: Poppins;
   font-size: 2rem;
@@ -4982,7 +4987,7 @@ div.ql-tooltip {
   line-height: normal;
   text-align: left;
 }
-.project-component .project-c-header .project-c-header-left .p-c-h-l-t p {
+.project-component .project-c-header .project-c-header-left .p-c-h-l-t .p-c-h-t-l-inside p {
   color: #000;
   font-family: Karla;
   font-size: 1rem;

@@ -15,7 +15,7 @@ import { htmlToDelta } from "deltaconvert";
 import mammoth from "mammoth/mammoth.browser";
 import Quill from "quill";
 import ReactQuill from "react-quill";
-import { Book, Table2 } from "lucide-react";
+import { Book, FileText, Table2 } from "lucide-react";
 
 import CreateEntryNew from "./CreateEntryNew";
 
@@ -168,6 +168,28 @@ function CreateEntry({
     });
   };
 
+  const submitHandlerSheet = async (e) => {
+    e.preventDefault();
+    console.log(project);
+    //Blank Template
+
+    const entryObject = {
+      projectId: project,
+      name: name,
+      type: entryType,
+      data: [
+        {
+          user: userInfo._id,
+          block: "",
+          date: Date.now(),
+        },
+      ],
+    };
+    console.log(entryObject);
+    await dispatch(createEntry(entryObject));
+    await dispatch({ type: ENTRY_CREATE_RESET });
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     console.log(project);
@@ -176,7 +198,7 @@ function CreateEntry({
       const entryObject = {
         projectId: project,
         name: name,
-        type: entryType.value,
+        type: entryType,
         data: [
           {
             user: userInfo._id,
@@ -192,6 +214,7 @@ function CreateEntry({
       const entryObject = {
         projectId: project,
         name: name,
+        type: entryType,
         data: [
           {
             user: userInfo._id,
@@ -207,23 +230,35 @@ function CreateEntry({
   };
 
   const entrySucessTrue = async () => {
-    const logObject = {
-      entryId: entry._id,
-      user: userInfo._id,
-      userName: userInfo.name,
-      userEmail: userInfo.email,
-      message: `Opened The Entry With Name ${entry.name}  and id ${entry._id}`,
-    };
-    await addEntryLogs(logObject);
-    await dispatch(
-      addToCart({
-        doc: entry,
-        project,
-        userType: "owner",
-      })
-    );
-    setTabId(entry._id);
-    setWhichTabisActive("tabs");
+    if (entry.type === "Lab Sheet") {
+      const logObject = {
+        entryId: entry._id,
+        user: userInfo._id,
+        userName: userInfo.name,
+        userEmail: userInfo.email,
+        message: `Opened The Entry With Name ${entry.name}  and id ${entry._id}`,
+      };
+      await addEntryLogs(logObject);
+      setWhichTabisActive("projectList");
+    } else {
+      const logObject = {
+        entryId: entry._id,
+        user: userInfo._id,
+        userName: userInfo.name,
+        userEmail: userInfo.email,
+        message: `Opened The Entry With Name ${entry.name}  and id ${entry._id}`,
+      };
+      await addEntryLogs(logObject);
+      await dispatch(
+        addToCart({
+          doc: entry,
+          project,
+          userType: "owner",
+        })
+      );
+      setTabId(entry._id);
+      setWhichTabisActive("tabs");
+    }
   };
   useEffect(() => {
     if (sucess) {
@@ -266,10 +301,36 @@ function CreateEntry({
     },
   ];
   console.log(entryType);
+  const [todaysDate, setTodaysDate] = useState();
+
+  const getTodaysDate = () => {
+    var date_not_formatted = new Date(Date.now());
+
+    var formatted_string = date_not_formatted.getFullYear() + "-";
+
+    if (date_not_formatted.getMonth() < 9) {
+      formatted_string += "0";
+    }
+    formatted_string += date_not_formatted.getMonth() + 1;
+    formatted_string += "-";
+
+    if (date_not_formatted.getDate() < 10) {
+      formatted_string += "0";
+    }
+    formatted_string += date_not_formatted.getDate();
+    setTodaysDate(formatted_string);
+  };
+
+  useEffect(() => {
+    if (!todaysDate) {
+      getTodaysDate();
+    }
+  }, [todaysDate]);
+
   return (
     <div className="modal">
       <div className="modal-inside">
-        <div className="top-modal">
+        <div className="top-modal top-0 sticky">
           <button
             onClick={() => {
               setEntryModal(false);
@@ -356,12 +417,12 @@ function CreateEntry({
                     className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100"
                   >
                     <div className="block">
-                      <Book size={30} color="#5D00D2" className="mb-2" />
+                      <FileText size={30} color="#2563eb" className="mb-2" />
                       <div className="w-full text-lg font-semibold">
-                        Lab Notebook
+                        Lab Entry
                       </div>
                       <div className="w-full">
-                        Stellr lab notebook creation and formatting.
+                        Stellr lab entry creation and formatting.
                       </div>
                     </div>
                     <svg
@@ -384,7 +445,7 @@ function CreateEntry({
               </ul>
             </div>
             {entryType === "Lab Sheet" && (
-              <form onSubmit={submitHandler}>
+              <form onSubmit={submitHandlerSheet}>
                 <input
                   type="text"
                   placeholder="Enter a name for your entry"
@@ -550,7 +611,10 @@ function CreateEntry({
                     <span>Choose template</span>
                   </h4>
                   <Select
-                    options={optionsValue.concat(templateOptions)}
+                    options={optionsValue.concat(
+                      templateOptions &&
+                        templateOptions.filter((v) => v.createdAt > todaysDate)
+                    )}
                     onChange={(e) => setTemplate(e)}
                     placeholder="Select Template"
                     required

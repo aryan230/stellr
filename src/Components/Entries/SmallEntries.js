@@ -11,6 +11,7 @@ import {
   File,
   FileSpreadsheet,
   FileText,
+  Lock,
   Table2,
 } from "lucide-react";
 function SmallEntries({
@@ -122,12 +123,13 @@ function SmallEntries({
           {doc.type === "Lab Sheet" ? (
             <Table2 size={16} color="#0f9d58" />
           ) : (
-            <Book size={16} color="#4d00aa" />
+            <FileText size={16} color="#2563eb" />
           )}
         </span>
         <span className="ml-2 text-sm tracking-wide truncate">{doc.name}</span>
-        {/* <span className="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-indigo-500 bg-indigo-50 rounded-full">
-          approved
+
+        {/* <span className="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide rounded-full">
+          <Lock size={12} color="#262626" />
         </span> */}
       </a>
     </li>

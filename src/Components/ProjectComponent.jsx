@@ -13,6 +13,7 @@ import { listMyEntries } from "../redux/actions/entryActions";
 import { Tooltip } from "@mui/material";
 import ProjectSettings from "./ProjectSettings/ProjectSettings";
 import CompleteLoader from "./Loaders/CompleteLoader";
+import { Folders } from "lucide-react";
 
 function ProjectComponent({
   id,
@@ -230,9 +231,11 @@ function ProjectComponent({
                   setProjectInsideActive(false);
                 }}
               >
-                {" "}
-                <h1> {project.name}</h1>
-                <p>app.getstellr.io/projects/{project._id}</p>
+                <div className="p-c-h-t-l-inside">
+                  {" "}
+                  <h1> {project.name}</h1>
+                  <p>app.getstellr.io/projects/{project._id}</p>
+                </div>{" "}
               </button>
               <div className="project-c-header-right">
                 <button className="setting-btn">

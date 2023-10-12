@@ -169,27 +169,35 @@
       .p-c-h-l-t {
         border: 0px;
         display: flex;
-        flex-direction: column;
-        background-color: transparent;
-        h1 {
-          color: #000;
-          font-family: Poppins;
-          font-size: 2rem;
-          font-style: normal;
-          font-weight: 400;
-          line-height: normal;
-          text-align: left;
+        align-items: center;
+        justify-content: center;
+        // flex-direction: column;
+        // background-color: transparent;
+        .p-c-h-t-l-inside {
+          display: flex;
+          flex-direction: column;
+          background-color: transparent;
+          h1 {
+            color: #000;
+            font-family: Poppins;
+            font-size: 2rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-align: left;
+          }
+
+          p {
+            color: #000;
+            font-family: Karla;
+            font-size: 1rem;
+            font-style: normal;
+            font-weight: 300;
+            line-height: normal;
+            margin: 0.2rem 0;
+          }
         }
 
-        p {
-          color: #000;
-          font-family: Karla;
-          font-size: 1rem;
-          font-style: normal;
-          font-weight: 300;
-          line-height: normal;
-          margin: 0.2rem 0;
-        }
         transition: 0.2s all;
         &:hover {
           cursor: pointer;

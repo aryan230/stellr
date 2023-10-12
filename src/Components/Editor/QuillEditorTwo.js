@@ -183,7 +183,7 @@ function TextEditorTwo({
   ];
 
   const getQuill = (quillIns) => {
-    quill.current = quillIns;
+    return (quill.current = quillIns);
   };
   const dispatch = useDispatch();
 
@@ -372,7 +372,11 @@ function TextEditorTwo({
 
   useEffect(() => {
     if (document.getElementById(tab._id)) {
-      tribute.attach(document.getElementById(tab._id));
+      let parent = document
+        .getElementById(tab._id)
+        .getElementsByClassName("ql-editor")[0];
+
+      tribute.attach(parent);
     }
   }, [document.getElementById(tab._id)]);
 

@@ -222,7 +222,7 @@ function Home({
                   <MenuItem value={40}> Overdue Tasks</MenuItem>
                 </Select>
               </FormControl>
-              <button
+              {/* <button
                 onClick={(e) => {
                   e.preventDefault();
                   setCreateNewTaskModal(true);
@@ -241,7 +241,7 @@ function Home({
                               C15.952,9,16,9.447,16,10z"
                   />
                 </svg>
-              </button>
+              </button> */}
 
               {age && age === 10 && (
                 <div className="calender-todays-task">
@@ -290,6 +290,22 @@ function Home({
                           />
                         )
                     )}
+                  {newArr &&
+                    newArr.findIndex((o) => o.due_date > todaysDate) == -1 && (
+                      <div className="no-task-container">
+                        <img src="./assets/task.svg" alt="" />
+                        <h1>No tasks pending for today.</h1>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCreateNewTaskModal(true);
+                          }}
+                        >
+                          Create new task
+                        </a>
+                      </div>
+                    )}
                 </div>
               )}
               {age && age === 30 && (
@@ -319,6 +335,22 @@ function Home({
                             taskFrom={true}
                           />
                         )
+                    )}
+                  {newArr &&
+                    newArr.findIndex((o) => o.due_date < todaysDate) == -1 && (
+                      <div className="no-task-container">
+                        <img src="./assets/task.svg" alt="" />
+                        <h1>No tasks pending for today.</h1>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCreateNewTaskModal(true);
+                          }}
+                        >
+                          Create new task
+                        </a>
+                      </div>
                     )}
                 </div>
               )}

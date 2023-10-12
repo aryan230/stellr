@@ -939,7 +939,7 @@ function EditorComponent() {
                     <div className="tabs-content">
                       {tabDetails.length > 0 &&
                         tabDetails.map((tab) =>
-                          tab.doc.createdAt > todaysDate ||
+                          tab.doc.createdAt >= todaysDate ||
                           tab.doc.converted ? (
                             tab.userType == "Admin" ||
                             tab.userType == "Write" ||
