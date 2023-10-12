@@ -769,6 +769,10 @@ div.ql-tooltip {
   font-family: "NexaBlackItalic";
   src: url("../fonts/NexaBlackItalic.otf") format("opentype");
 }
+@font-face {
+  font-family: "NexaRegular";
+  src: url("../fonts/NexaRegular.otf") format("opentype");
+}
 .org-content {
   width: 100vw;
   height: 100vh;
@@ -5078,7 +5082,7 @@ div.ql-tooltip {
 .project-component .project-c-bottom .sl-element .mnc-element-inside .mnc-element-left p {
   width: 80%;
   color: #000000;
-  font-family: Poppins;
+  font-family: GothamBook;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -5089,7 +5093,7 @@ div.ql-tooltip {
 .project-component .project-c-bottom .sl-element .mnc-element-inside span {
   width: 25%;
   color: #777;
-  font-family: Poppins;
+  font-family: GothamBook;
   font-size: 0.825rem;
   font-style: normal;
   font-weight: 400;

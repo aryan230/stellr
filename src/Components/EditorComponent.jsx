@@ -963,26 +963,24 @@ function EditorComponent() {
                                 setSampleModal={setSampleModal}
                               />
                             ) : (
-                              <div className={`editor-checker`} key={tab.id}>
-                                <TextEditorTwoRead
-                                  tab={tab.doc}
-                                  active={tab.doc._id == tabID ? true : false}
-                                  project={tab.project}
-                                  userType={tab.userType}
-                                  setProjectSettings={setProjectSettings}
-                                  setNewCollab={setNewCollab}
-                                  setProjectUpdatedProfilers={
-                                    setProjectUpdatedProfilers
-                                  }
-                                  setUpdatedUserCollabRole={
-                                    setUpdatedUserCollabRole
-                                  }
-                                  setEntryUpdate={setEntryUpdate}
-                                  setWhichTabisActive={setWhichTabisActive}
-                                  setSampleContent={setSampleContent}
-                                  setSampleModal={setSampleModal}
-                                />
-                              </div>
+                              <TextEditorTwoRead
+                                tab={tab.doc}
+                                active={tab.doc._id == tabID ? true : false}
+                                project={tab.project}
+                                userType={tab.userType}
+                                setProjectSettings={setProjectSettings}
+                                setNewCollab={setNewCollab}
+                                setProjectUpdatedProfilers={
+                                  setProjectUpdatedProfilers
+                                }
+                                setUpdatedUserCollabRole={
+                                  setUpdatedUserCollabRole
+                                }
+                                setEntryUpdate={setEntryUpdate}
+                                setWhichTabisActive={setWhichTabisActive}
+                                setSampleContent={setSampleContent}
+                                setSampleModal={setSampleModal}
+                              />
                             )
                           ) : tab.userType == "Admin" ||
                             tab.userType == "Write" ||

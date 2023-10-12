@@ -353,28 +353,6 @@ function TextEditorTwoRead({
   const commonUsers = _.unionBy(userCollabs, userOrgCollabs, "value");
 
   console.log(commonUsers && commonUsers);
-  var tribute;
-  useEffect(() => {
-    if (commonUsers) {
-      tribute = new Tribute({
-        values: commonUsers ? commonUsers : [],
-        lookup: "key",
-        fillAttr: "value",
-        menuItemTemplate: (item) => {
-          return `<span class="tribute-item">${item.original.key}</span>`;
-        },
-        selectTemplate: (item) => {
-          return `<p class="mention-here" contenteditable="false">@${item.original.key}</p>`;
-        },
-      });
-    }
-  }, [commonUsers]);
-
-  useEffect(() => {
-    if (document.getElementById(tab._id)) {
-      tribute.attach(document.getElementById(tab._id));
-    }
-  }, [document.getElementById(tab._id)]);
 
   useEffect(() => {
     if (socket == null || quill.current == null) return;
@@ -497,6 +475,7 @@ function TextEditorTwoRead({
         className={`editor-holder-reactjs-new ${active && "active"}`}
         id={tab._id}
       >
+        <div className="read-only-container-blur"></div>
         {mainLoader && <MainLoaderWithText text="Getting your entry ready" />}
 
         <Disclosure
