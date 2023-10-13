@@ -1,27 +1,159 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import URL from "./../../../../Data/data.json";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import Select from "react-select";
+import MainLoaderWithText from "../../../Loaders/MainLoaderWithText";
 
 function CustomFeildTeplate({
   setCustomFeild,
   customSampleData,
   setCustomSampleData,
 }) {
+  const userLogin = useSelector((state) => state.userLogin);
+  let { loading, error, userInfo } = userLogin;
+
   const [name, setName] = useState();
   const [type, setType] = useState();
-
+  const [description, setDescription] = useState();
+  const [newField, setNewField] = useState();
+  const [fieldOptions, setFieldOptions] = useState();
+  const [selectedField, setSelectedField] = useState();
+  const [loader, setLoader] = useState(false);
+  const [placeholder, setPlaceholder] = useState();
+  const [slug, setSlug] = useState();
+  const [loaderText, setLoaderText] = useState("Loading");
+  const fields = [
+    {
+      name: "Text",
+    },
+    {
+      name: "Textarea",
+    },
+    {
+      name: "Integer",
+    },
+    {
+      name: "Rich Text Editor",
+    },
+    {
+      name: "Date/Time",
+    },
+    {
+      name: "Date",
+    },
+  ];
   const handleAddFeild = async () => {
-    await setCustomSampleData((current) => [
-      ...current,
-      {
-        id: current.length + 1,
-        name: name,
-        type: type,
+    setLoaderText("Creating new field");
+    setLoader(true);
+    let textBlock = {
+      type,
+      isRequired: false,
+      slug,
+      placeholder,
+    };
+    var data = JSON.stringify({
+      name,
+      description,
+      data: JSON.stringify(textBlock),
+    });
+
+    var config = {
+      method: "post",
+      url: `${URL[0]}api/fields`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
       },
-    ]);
-    setCustomFeild(false);
+      data: data,
+    };
+
+    axios(config)
+      .then(async function(response) {
+        toast.success(`Custom field with ${name} was successfully created`);
+        setLoaderText("Adding feild to your sample data");
+        await setCustomSampleData((current) => [
+          ...current,
+          {
+            id: response.data._id,
+            name: response.data.name,
+            type: JSON.parse(response.data.data).type,
+            description: description,
+            placeholder: JSON.parse(response.data.data).placeholder,
+            slug: JSON.parse(response.data.data).placeholder,
+          },
+        ]);
+        setLoader(false);
+        setCustomFeild(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   };
+
+  const handleAddFieldInSample = async () => {
+    if (selectedField) {
+      setLoaderText("Adding Field to your sample data");
+      setLoader(true);
+      window.setTimeout(async () => {
+        await setCustomSampleData((current) => [
+          ...current,
+          {
+            id: selectedField.value,
+            name: selectedField.label,
+            type: JSON.parse(selectedField.data).type,
+            description: description,
+            placeholder: JSON.parse(selectedField.data).placeholder,
+            slug: JSON.parse(selectedField.data).slug,
+          },
+        ]);
+        setLoader(false);
+        setCustomFeild(false);
+      }, 3000);
+    }
+  };
+
+  const getMyFields = async () => {
+    var config = {
+      method: "get",
+      url: `${URL}api/fields/myfields`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log(response.data);
+        if (response.data.length > 0) {
+          console.log();
+          setFieldOptions(
+            response.data.map(({ name: label, _id: value, ...rest }) => ({
+              value,
+              label,
+              ...rest,
+            }))
+          );
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    if (!fieldOptions) {
+      getMyFields();
+    }
+  }, [fieldOptions]);
+
   return (
     <div className="modal">
       <div className="relative w-full max-w-xl max-h-full">
+        {loader && <MainLoaderWithText text={loaderText} />}
+
         {/* Modal content */}
         {/* border-2 border-slate-700 */}
         <div className="relative bg-white rounded-xl shadow max-h-[80vh] overflow-y-auto custom-scrollbar-task">
@@ -58,53 +190,188 @@ function CustomFeildTeplate({
             </button>
           </div>
           {/* Modal body */}
-          <div className="p-6 space-y-6 min-h-[50%]">
-            <div className="relative z-0 w-full mb-6 group mt-2">
-              <input
-                type="text"
-                name="floating_email"
-                id="floating_email"
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required="true"
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
-              <label
-                htmlFor="floating_email"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
-                Enter name for feild
-              </label>
-            </div>
+          <div className="p-6 space-y-6 min-h-[50%] max-h-fit">
             <>
-              <label htmlFor="underline_select" className="sr-only">
-                Underline select
-              </label>
-              <select
-                id="underline_select"
-                required="true"
-                onChange={(e) => {
-                  setType(e.target.value);
-                }}
-                className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-              >
-                <option selected="">Choose a Feild Type</option>
-                <option value="text">Text</option>
-                <option value="number">Number</option>
-                <option value="rte">Rich Text Editor</option>
-                <option value="textarea">Textarea</option>
-              </select>
+              <div className="flex items-center pl-4 border border-gray-200 rounded">
+                <input
+                  id="bordered-radio-1"
+                  type="radio"
+                  defaultValue=""
+                  name="bordered-radio"
+                  onClick={(e) => {
+                    setNewField("exist");
+                  }}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 "
+                />
+                <label
+                  htmlFor="bordered-radio-1"
+                  className="w-full py-4 ml-2 text-sm font-medium text-gray-900"
+                >
+                  Use an existing Field
+                </label>
+              </div>
+              {newField && newField === "exist" && (
+                <div className="w-[80%] py-10 mx-auto">
+                  {" "}
+                  <Select
+                    options={fieldOptions ? fieldOptions : []}
+                    onChange={(e) => setSelectedField(e)}
+                    placeholder="Select Field"
+                    required
+                  />{" "}
+                  <div className="margin-maker"></div>
+                  <button
+                    type="submit"
+                    onClick={handleAddFieldInSample}
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                  >
+                    Add Feild
+                  </button>
+                </div>
+              )}
+              <div className="flex items-center pl-4 border border-gray-200 rounded">
+                <input
+                  defaultChecked=""
+                  id="bordered-radio-2"
+                  type="radio"
+                  defaultValue=""
+                  name="bordered-radio"
+                  onClick={(e) => {
+                    setNewField("new");
+                  }}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                />
+                <label
+                  htmlFor="bordered-radio-2"
+                  className="w-full py-4 ml-2 text-sm font-medium text-gray-900"
+                >
+                  Created New Field
+                </label>
+              </div>
             </>
 
-            <button
-              type="submit"
-              onClick={handleAddFeild}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-            >
-              Add Feild
-            </button>
+            {newField && newField === "new" && (
+              <div className="w-[80%] mx-auto">
+                <div>
+                  <label
+                    htmlFor="first_name"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Enter Name for New Field
+                  </label>
+                  <input
+                    type="text"
+                    id="first_name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Field Name"
+                    required=""
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                </div>
+
+                <div className="my-4">
+                  <label
+                    htmlFor="message"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Description
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={4}
+                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Description"
+                    defaultValue={""}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                    }}
+                  />
+                </div>
+
+                <div className="my-4">
+                  <label
+                    htmlFor="countries"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Select a Field Type
+                  </label>
+                  <select
+                    id="countries"
+                    onChange={(e) => {
+                      setType(e.target.value);
+                    }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  >
+                    <option selected="true" disabled>
+                      Select a field
+                    </option>
+                    {fields.map((f) => (
+                      <option value={f.name}>{f.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="my-4">
+                  <label
+                    htmlFor="first_name"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Enter Value for Placeholer
+                  </label>
+                  <input
+                    type="text"
+                    id="first_name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Placeholer"
+                    required=""
+                    onChange={(e) => {
+                      setPlaceholder(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="my-4">
+                  <label
+                    htmlFor="first_name"
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Enter Slug
+                  </label>
+                  <input
+                    type="text"
+                    id="first_name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Slug"
+                    required=""
+                    onChange={(e) => {
+                      setSlug(e.target.value);
+                    }}
+                  />
+                </div>
+                {/* <div className="flex items-center my-4">
+                  <input
+                    id="default-checkbox"
+                    type="checkbox"
+                    defaultValue=""
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label
+                    htmlFor="default-checkbox"
+                    className="ml-2 text-sm font-medium text-gray-900"
+                  >
+                    Is Required
+                  </label>
+                </div> */}
+
+                <button
+                  type="submit"
+                  onClick={handleAddFeild}
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                >
+                  Add Feild
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

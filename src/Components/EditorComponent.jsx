@@ -51,6 +51,7 @@ import ListSopsAll from "./ListSopsAll";
 import MenuIcon from "@mui/icons-material/Menu";
 import { addToState } from "../redux/actions/stateActions";
 import TextEditorTwoRead from "./Editor/QuillEditorTwoRead";
+import MainToast from "./Toast/MainToast";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -278,6 +279,7 @@ function EditorComponent() {
 
   return (
     <div className="main-container">
+      <MainToast />
       <Toaster position="top-center" reverseOrder={true} />
       {taskModal && (
         <TaskModal

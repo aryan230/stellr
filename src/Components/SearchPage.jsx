@@ -272,7 +272,7 @@ function SearchPage({
                     .filter(
                       (entry) =>
                         JSON.parse(entry.data)
-                          .sampleName.toLowerCase()
+                          .sampleName?.toLowerCase()
                           .includes(inputSearch.toLowerCase()) ||
                         entry._id
                           .toLowerCase()
@@ -287,7 +287,7 @@ function SearchPage({
                           {s._id}
                         </th>
                         <td className="px-6 py-4">
-                          {JSON.parse(s.data).sampleName}
+                          {JSON.parse(s.data)?.sampleName}
                         </td>
                         <td className="px-6 py-4">Sample</td>
                         <td className="px-6 py-4">

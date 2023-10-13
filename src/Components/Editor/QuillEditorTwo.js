@@ -19,7 +19,7 @@ import { SSBlot } from "./Tools/SpreadSheetContainer";
 import "tributejs/dist/tribute.css";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import ReactQuill from "react-quill";
-import { Book } from "lucide-react";
+import { AlertTriangle, Book, Cloud, FileText } from "lucide-react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
@@ -502,6 +502,96 @@ function TextEditorTwo({
         id={tab._id}
       >
         {mainLoader && <MainLoaderWithText text="Getting your entry ready" />}
+        {/* <>
+          <nav className="bg-white border-gray-200">
+            <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+              <a href="#" className="flex items-center">
+                <FileText
+                  size={25}
+                  color="#2563eb"
+                  strokeWidth={1.5}
+                  className="mr-3"
+                />
+
+                <span className="self-center text-2xl font-semibold whitespace-nowrap">
+                  {tab.name}
+                </span>
+              </a>
+              <a
+                href="#"
+                className="text-md  text-indigo-700 hover:underline font-karla"
+              >
+                Submit for approval
+              </a>
+              <div className="flex items-center">
+                <span className="inline-flex items-center justify-center w-6 h-6 mr-2 text-sm font-semibold text-white bg-green-600 rounded-full">
+                  <svg
+                    className="w-2.5 h-2.5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 16 12"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M1 5.917 5.724 10.5 15 1.5"
+                    />
+                  </svg>
+
+                  <span className="sr-only">Icon description</span>
+                </span>
+
+                <span>Submit for approval</span>
+              </div>
+            </div>
+          </nav>
+          <nav className="bg-gray-50">
+            <div className="max-w-screen-xl px-4 py-3 mx-auto">
+              <div className="flex items-center">
+                <ul className="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-900  hover:underline"
+                      aria-current="page"
+                    >
+                      File
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#" className="text-gray-900  hover:underline">
+                      Edit
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-900  hover:underline">
+                      View
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-900 hover:underline">
+                      Insert
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-900  hover:underline">
+                      Extensions
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-900  hover:underline">
+                      Help
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </> */}
 
         <Disclosure
           as="nav"
@@ -513,7 +603,6 @@ function TextEditorTwo({
               <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
                 <div className="relative flex justify-between h-16">
                   <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                    {/* Mobile menu button */}
                     <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
@@ -532,7 +621,6 @@ function TextEditorTwo({
                       {tab.name}
                     </div>
                     <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                      {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                       <a
                         href="#"
                         onClick={(e) => {
@@ -587,7 +675,6 @@ function TextEditorTwo({
 
               <Disclosure.Panel className="sm:hidden">
                 <div className="pt-2 pb-4 space-y-1">
-                  {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
                   <Disclosure.Button
                     as="a"
                     href="#"

@@ -12,8 +12,15 @@ import {
   FileSpreadsheet,
   FileText,
   Lock,
+  Settings,
+  Settings2,
+  SlidersHorizontal,
   Table2,
 } from "lucide-react";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
 function SmallEntries({
   doc,
   projectId,
@@ -33,6 +40,16 @@ function SmallEntries({
   setIsSpreadSheetOpen,
 }) {
   const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const userLogin = useSelector((state) => state.userLogin);
   let { loading, error, userInfo } = userLogin;
   const [userRole, setUserRole] = useState();
@@ -121,15 +138,15 @@ function SmallEntries({
       >
         <span className="inline-flex justify-center items-center ml-4">
           {doc.type === "Lab Sheet" ? (
-            <Table2 size={16} color="#0f9d58" />
+            <Table2 size={16} color="#0f9d58" strokeWidth={1.5} />
           ) : (
-            <FileText size={16} color="#2563eb" />
+            <FileText size={16} color="#2563eb" strokeWidth={1.5} />
           )}
         </span>
         <span className="ml-2 text-sm tracking-wide truncate">{doc.name}</span>
 
         {/* <span className="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide rounded-full">
-          <Lock size={12} color="#262626" />
+          <SlidersHorizontal size={16} color="#5e00d1" />
         </span> */}
       </a>
     </li>

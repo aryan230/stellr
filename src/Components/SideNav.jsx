@@ -165,6 +165,8 @@ function SideNav({
           selectedProjectNow={selectedProjectNow}
           orgs={orgs}
           orgsCollab={orgsCollab}
+          setProjectInsideActive={setProjectInsideActive}
+          setProjectInsideActiveId={setProjectInsideActiveId}
         />
       )}
       {createNewProtocol && (

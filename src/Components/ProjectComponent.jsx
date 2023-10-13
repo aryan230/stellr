@@ -14,6 +14,7 @@ import { Tooltip } from "@mui/material";
 import ProjectSettings from "./ProjectSettings/ProjectSettings";
 import CompleteLoader from "./Loaders/CompleteLoader";
 import { Folders } from "lucide-react";
+import NewSpreadSheet from "./Modals/NewSpreadSheet";
 
 function ProjectComponent({
   id,
@@ -62,6 +63,9 @@ function ProjectComponent({
   const taskListMy = useSelector((state) => state.taskListMy);
   const { tasks, loading: loadingTasks, error: errorTasks } = taskListMy;
   const sampleListMy = useSelector((state) => state.sampleListMy);
+  const [isSpreadSheetOpen, setIsSpreadSheetOpen] = useState(false);
+  const [spreadsheetData, setSpreadsheetData] = useState({});
+
   const {
     samples,
     loading: loadingSamples,
@@ -221,6 +225,12 @@ function ProjectComponent({
                   ? findOrg.userType
                   : "no role found"
               }
+            />
+          )}
+          {isSpreadSheetOpen && (
+            <NewSpreadSheet
+              spreadsheetData={spreadsheetData}
+              setIsSpreadSheetOpen={setIsSpreadSheetOpen}
             />
           )}
           <div className="project-c-header">
@@ -411,6 +421,8 @@ function ProjectComponent({
                       orgs={orgs}
                       orgsCollab={orgsCollab}
                       index={index}
+                      setSpreadsheetData={setSpreadsheetData}
+                      setIsSpreadSheetOpen={setIsSpreadSheetOpen}
                     />
                   ))}
 

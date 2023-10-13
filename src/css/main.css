@@ -3423,6 +3423,15 @@ div.ql-tooltip {
 .editor-holder-reactjs-new:focus {
   outline: 0px;
 }
+.editor-holder-reactjs-new .ql-toolbar {
+  width: 95%;
+  margin: 0 auto;
+  border: 0px;
+  background-color: #edf2fa;
+  border-radius: 24px;
+  margin: 6px 16px 8px 16px;
+  padding: 0 8px;
+}
 .editor-holder-reactjs-new .ql-editor-container {
   width: 100%;
   height: 100%;
@@ -5082,7 +5091,7 @@ div.ql-tooltip {
 .project-component .project-c-bottom .sl-element .mnc-element-inside .mnc-element-left p {
   width: 80%;
   color: #000000;
-  font-family: GothamBook;
+  font-family: Poppins;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -5093,7 +5102,7 @@ div.ql-tooltip {
 .project-component .project-c-bottom .sl-element .mnc-element-inside span {
   width: 25%;
   color: #777;
-  font-family: GothamBook;
+  font-family: Poppins;
   font-size: 0.825rem;
   font-style: normal;
   font-weight: 400;

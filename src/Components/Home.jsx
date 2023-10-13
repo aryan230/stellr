@@ -16,6 +16,7 @@ import { Helmet } from "react-helmet";
 import _ from "lodash";
 import DashHome from "./ReportsAndDashboard/DashHome";
 import CompleteLoader from "./Loaders/CompleteLoader";
+import { PlusCircle } from "lucide-react";
 
 const localizer = momentLocalizer(moment);
 
@@ -222,26 +223,18 @@ function Home({
                   <MenuItem value={40}> Overdue Tasks</MenuItem>
                 </Select>
               </FormControl>
-              {/* <button
+
+              <a
+                href="#"
+                className="text-indigo-600 font-karla text-base py-2 flex items-center justify-left"
                 onClick={(e) => {
                   e.preventDefault();
                   setCreateNewTaskModal(true);
                 }}
-                className="p-0 w-10 h-10 absolute bottom-10 bg-indigo-600 rounded-full hover:bg-indigo-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
               >
-                <svg
-                  viewBox="0 0 20 20"
-                  enableBackground="new 0 0 20 20"
-                  className="w-6 h-6 inline-block"
-                >
-                  <path
-                    fill="#FFFFFF"
-                    d="M16,10c0,0.553-0.048,1-0.601,1H11v4.399C11,15.951,10.553,16,10,16c-0.553,0-1-0.049-1-0.601V11H4.601
-                              C4.049,11,4,10.553,4,10c0-0.553,0.049-1,0.601-1H9V4.601C9,4.048,9.447,4,10,4c0.553,0,1,0.048,1,0.601V9h4.399
-                              C15.952,9,16,9.447,16,10z"
-                  />
-                </svg>
-              </button> */}
+                <PlusCircle color="#4f46e5" size={12} className="mr-2" />
+                Create new task
+              </a>
 
               {age && age === 10 && (
                 <div className="calender-todays-task">
@@ -294,7 +287,7 @@ function Home({
                     newArr.findIndex((o) => o.due_date > todaysDate) == -1 && (
                       <div className="no-task-container">
                         <img src="./assets/task.svg" alt="" />
-                        <h1>No tasks pending for today.</h1>
+                        <h1>No tasks here.</h1>
                         <a
                           href="#"
                           onClick={(e) => {
@@ -320,6 +313,21 @@ function Home({
                         taskFrom={true}
                       />
                     ))}
+                  {tasksList && tasksList.length == 0 && (
+                    <div className="no-task-container">
+                      <img src="./assets/task.svg" alt="" />
+                      <h1>No tasks here.</h1>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCreateNewTaskModal(true);
+                        }}
+                      >
+                        Create new task
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
               {age && age === 40 && (
@@ -340,7 +348,7 @@ function Home({
                     newArr.findIndex((o) => o.due_date < todaysDate) == -1 && (
                       <div className="no-task-container">
                         <img src="./assets/task.svg" alt="" />
-                        <h1>No tasks pending for today.</h1>
+                        <h1>No tasks here.</h1>
                         <a
                           href="#"
                           onClick={(e) => {

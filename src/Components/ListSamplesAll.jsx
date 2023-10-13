@@ -43,11 +43,7 @@ function ListSamplesAll({
         type="button"
         onClick={() => {
           const docTwo =
-            samples &&
-            samples.find(
-              (e) => JSON.parse(e.data).sampleName == params.row.name
-            );
-
+            samples && samples.find((e) => e._id == params.row._id);
           setSampleContent(docTwo);
           setSampleModal(true);
         }}
@@ -222,12 +218,14 @@ function ListSamplesAll({
                 slots={{ toolbar: GridToolbar }}
                 rows={samples.map(
                   ({
+                    _id: _id,
                     sampleId: id,
                     data: name,
                     createdAt: createdAt,
                     type: recordType,
                     updatedAt: updatedAt,
                   }) => ({
+                    _id,
                     id: `SAM-000${id}`,
                     name: JSON.parse(name).sampleName,
                     createdAt: new Date(createdAt)

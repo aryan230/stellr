@@ -18,6 +18,8 @@ import ReactQuill from "react-quill";
 import { Book, FileText, Table2 } from "lucide-react";
 
 import CreateEntryNew from "./CreateEntryNew";
+import { toast } from "sonner";
+import MainLoaderWithText from "../Loaders/MainLoaderWithText";
 
 function CreateEntry({
   setEntryModal,
@@ -32,6 +34,8 @@ function CreateEntry({
   projectsOrg,
   orgs,
   orgsCollab,
+  setProjectInsideActiveId,
+  setProjectInsideActive,
 }) {
   let arr = [];
   if (projectsCollab && projectsCollab.length > 0) {
@@ -43,6 +47,7 @@ function CreateEntry({
   }
   const [mainRole, setMainRole] = useState();
   const [entryType, setEntryType] = useState();
+  const [loader, setLoader] = useState(false);
   const entryOptions = [
     {
       value: "Lab Notebook",
@@ -119,6 +124,7 @@ function CreateEntry({
   const quillRef = useRef(null);
 
   const submitHandlerImport = async (e) => {
+    setLoader(true);
     e.preventDefault();
     if (file) {
       const result = await convertDocxToHtml(file[0]);
@@ -142,6 +148,8 @@ function CreateEntry({
       console.log(entryObject);
       await dispatch(createEntry(entryObject));
       await dispatch({ type: ENTRY_CREATE_RESET });
+      toast.success("Entry created sucessfully!");
+      setLoader(false);
     }
   };
 
@@ -169,6 +177,7 @@ function CreateEntry({
   };
 
   const submitHandlerSheet = async (e) => {
+    setLoader(true);
     e.preventDefault();
     console.log(project);
     //Blank Template
@@ -188,9 +197,12 @@ function CreateEntry({
     console.log(entryObject);
     await dispatch(createEntry(entryObject));
     await dispatch({ type: ENTRY_CREATE_RESET });
+    toast.success("Lab Sheet created sucessfully!");
+    setLoader(false);
   };
 
   const submitHandler = async (e) => {
+    setLoader(true);
     e.preventDefault();
     console.log(project);
     //Blank Template
@@ -210,6 +222,8 @@ function CreateEntry({
       console.log(entryObject);
       await dispatch(createEntry(entryObject));
       await dispatch({ type: ENTRY_CREATE_RESET });
+      toast.success("Entry created sucessfully!");
+      setLoader(false);
     } else {
       const entryObject = {
         projectId: project,
@@ -226,6 +240,8 @@ function CreateEntry({
       console.log(entryObject);
       await dispatch(createEntry(entryObject));
       await dispatch({ type: ENTRY_CREATE_RESET });
+      toast.success("Entry created sucessfully!");
+      setLoader(false);
     }
   };
 
@@ -239,6 +255,9 @@ function CreateEntry({
         message: `Opened The Entry With Name ${entry.name}  and id ${entry._id}`,
       };
       await addEntryLogs(logObject);
+      setMiddleNav(false);
+      setProjectInsideActiveId(project);
+      setProjectInsideActive(true);
       setWhichTabisActive("projectList");
     } else {
       const logObject = {
@@ -330,6 +349,7 @@ function CreateEntry({
   return (
     <div className="modal">
       <div className="modal-inside">
+        {loader && <MainLoaderWithText text="Creating your Entry" />}
         <div className="top-modal top-0 sticky">
           <button
             onClick={() => {

@@ -13,6 +13,9 @@ import CustomRecordSample from "./Sample/CustomRecordSample";
 import AddIcon from "@mui/icons-material/Add";
 import CustomSampleTemplate from "./Sample/CustomSamples/CustomSampleTemplate";
 import MainLoader from "../Loaders/MainLoader";
+import URL from "./../../Data/data.json";
+import axios from "axios";
+import CustomSampleRecord from "./Sample/CustomSampleRecord";
 function CreateSample({
   setSampleModal,
   projects,
@@ -25,8 +28,44 @@ function CreateSample({
   const [collabs, setCollabs] = useState();
   const [data, setData] = useState();
   const [customSample, setCustomSample] = useState(false);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  let { userInfo } = userLogin;
+
   const sampleCreate = useSelector((state) => state.sampleCreate);
   const { loading, error, sucess, sample } = sampleCreate;
+  const [customSamples, setCustomSamples] = useState();
+
+  const getMySamples = async () => {
+    var config = {
+      method: "get",
+      url: `${URL}api/sampleTemplates/myfields`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log(response.data);
+        if (response.data.length > 0) {
+          console.log(response.data);
+          setCustomSamples(
+            response.data.map(({ name: label, _id: value, ...rest }) => ({
+              value,
+              label,
+              sampleInsideType: "Custom",
+              ...rest,
+            }))
+          );
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
   const options = [
     {
       value: "Subject/Patient",
@@ -57,6 +96,13 @@ function CreateSample({
     value,
     label,
   }));
+
+  useEffect(() => {
+    if (!customSamples) {
+      getMySamples();
+    }
+  }, [customSamples]);
+
   useEffect(() => {
     if (project) {
       const find = projects.find((e) => e._id == project.value);
@@ -91,10 +137,15 @@ function CreateSample({
       setSampleModal(false);
     }
   }, [sucess]);
+
+  console.log(sampleType);
   return (
     <div className="modal">
       {customSample && (
-        <CustomSampleTemplate setCustomSample={setCustomSample} />
+        <CustomSampleTemplate
+          setCustomSample={setCustomSample}
+          setSampleModal={setSampleModal}
+        />
       )}
       <div className="modal-inside">
         {/* <MainLoader /> */}
@@ -123,7 +174,7 @@ function CreateSample({
           <h1>Sample Management</h1>
           <div className="form-element">
             <Select
-              options={options}
+              options={customSamples ? options.concat(customSamples) : options}
               onChange={(e) => setSampleType(e)}
               placeholder="Select Record Type"
               required
@@ -141,6 +192,16 @@ function CreateSample({
               or create custom sample
             </a>
             <div className="margin-maker"></div>
+            {sampleType && sampleType.sampleInsideType === "Custom" && (
+              <CustomSampleRecord
+                projects={projects}
+                formData={sampleType}
+                setSampleModal={setSampleModal}
+                sampleType={sampleType}
+                setNewSample={setNewSample}
+                setWhichTabisActive={setWhichTabisActive}
+              />
+            )}
             {sampleType && sampleType.value === "Create custom Record" && (
               <CustomRecordSample
                 projects={projects}

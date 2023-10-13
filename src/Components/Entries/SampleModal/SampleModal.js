@@ -11,6 +11,7 @@ import DrawerLogsSample from "./Sample/DrawerLogsSample";
 import DrawerVersionControl from "./DrawerVersionControl";
 import AntiBody from "../../Modals/Sample/AntiBody";
 import AntibodyModal from "./Sample/AntibodyModal";
+import CustomSampleModal from "./Sample/CustomSampleModal";
 
 function SampleModal({
   doc,
@@ -23,6 +24,7 @@ function SampleModal({
   const [isDrawerOpenLogs, setIsDrawerOpenLogs] = useState(false);
   const [isDrawerVersion, setIsDrawerVersion] = useState(false);
   let { loading, error, userInfo } = userLogin;
+
   return (
     <div className="modal">
       <Drawer
@@ -46,6 +48,17 @@ function SampleModal({
           />
         </Box>
       </Drawer>
+      {insideData.sampleTypeInsideCustom === "Custom" && (
+        <CustomSampleModal
+          doc={doc}
+          insideData={insideData}
+          setSampleModal={setSampleModal}
+          setWhichTabisActive={setWhichTabisActive}
+          setSampleUpdate={setSampleUpdate}
+          setIsDrawerOpenLogs={setIsDrawerOpenLogs}
+          setIsDrawerVersion={setIsDrawerVersion}
+        />
+      )}
       {doc.type === "Subject/Patient" && (
         <SubjectModal
           doc={doc}
