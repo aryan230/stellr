@@ -257,10 +257,6 @@ function TextEditorTwoRead({
     setText(value);
   };
 
-  useEffect(() => {
-    CustomEmbedBlot(); // Register the custom blot
-  }, []);
-
   // useEffect(() => {
   //   const handler = (delta, oldDelta, source) => {
   //     console.log(delta);

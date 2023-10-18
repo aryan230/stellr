@@ -299,20 +299,6 @@ function TextEditorTwo({
   // Text to insert
   var newText = "This is some inserted text.";
 
-  // Insert the text at the current position or at the end
-  // quill.current &&
-  //   quill.current.insertText(quill.current.getLength(), newText, "user");
-
-  // useEffect(() => {
-  //   CustomEmbedBlot();
-  // }, []);
-
-  // useEffect(() => {
-  //   const handler = (delta, oldDelta, source) => {
-  //     console.log(delta);
-  //   };
-  //   quill.current.on("text-change", handler);
-  // }, [quill]);
   const handleSaveTemplate = async () => {
     setLoader(true);
     const newData = JSON.stringify(quill.current.getContents());
