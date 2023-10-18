@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import { v4 as uuid } from "uuid";
 import CustomEmbedBlot from "./Tools/CustomReactBlot";
-import Quill from "quill-react-commercial";
+import RichTextEditor from "quill-react-commercial";
 import URL from "./../../Data/data.json";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,10 +18,10 @@ import { MentionBlot } from "./Tools/MentionBlot";
 import { SSBlot } from "./Tools/SpreadSheetContainer";
 import "tributejs/dist/tribute.css";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import { AlertTriangle, Book, Cloud, FileText } from "lucide-react";
 import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import WarningModal from "../Modals/WarningModal";
 import Loader from "../../css/utils/Loader";
@@ -40,98 +40,135 @@ import _ from "lodash";
 import CompleteLoader from "../Loaders/CompleteLoader";
 import MainLoader from "../Loaders/MainLoader";
 import MainLoaderWithText from "../Loaders/MainLoaderWithText";
+import {
+  ChartBarIcon,
+  CursorClickIcon,
+  DocumentReportIcon,
+  RefreshIcon,
+  ShieldCheckIcon,
+  ViewGridIcon,
+} from "@heroicons/react/outline";
+import { ChevronDownIcon } from "@heroicons/react/solid";
+import htmlDocx from "html-docx-fixed/dist/html-docx";
+import { saveAs } from "file-saver";
+import "quill/dist/quill.snow.css";
+import "highlight.js/styles/darcula.css";
+import "quill-mention";
+import { pdfExporter } from "quill-to-pdf";
+import { toast } from "sonner";
+
+const BlockEmbed = Quill.import("blots/block/embed");
+
+class CustomBulletList extends BlockEmbed {
+  static blotName = "custom-bullet-list";
+  static className = "ql-custom-bullet-list";
+  static tagName = "ul";
+
+  static create() {
+    const node = super.create();
+    node.innerHTML = "<li><br></li>"; // Initial list item with a line break
+    return node;
+  }
+}
+
+Quill.register(CustomBulletList, true);
+
+const fileOptions = [
+  {
+    name: "Save as Template",
+    slug: "saveAsTemplates",
+  },
+];
+
+const exportOptions = [
+  {
+    name: "Microsoft Word (.docx)",
+    slug: "docx",
+  },
+  {
+    name: "PDF Document (.pdf)",
+    slug: "pdf",
+  },
+  {
+    name: "Web Page (.html)",
+    slug: "html",
+  },
+  {
+    name: "JavaScript Object Notation (.json)",
+    slug: "json",
+  },
+];
+
+const solutions = [
+  {
+    name: "Analytics",
+    description:
+      "Get a better understanding of where your traffic is coming from.",
+    href: "#",
+    icon: ChartBarIcon,
+  },
+  {
+    name: "Engagement",
+    description: "Speak directly to your customers in a more meaningful way.",
+    href: "#",
+    icon: CursorClickIcon,
+  },
+  {
+    name: "Security",
+    description: "Your customers' data will be safe and secure.",
+    href: "#",
+    icon: ShieldCheckIcon,
+  },
+  {
+    name: "Integrations",
+    description: "Connect with third-party tools that you're already using.",
+    href: "#",
+    icon: ViewGridIcon,
+  },
+  {
+    name: "Automations",
+    description:
+      "Build strategic funnels that will drive your customers to convert",
+    href: "#",
+    icon: RefreshIcon,
+  },
+  {
+    name: "Reports",
+    description:
+      "Get detailed reports that will help you make more informed decisions ",
+    href: "#",
+    icon: DocumentReportIcon,
+  },
+];
+const resources = [
+  {
+    name: "Help Center",
+    description:
+      "Get all of your questions answered in our forums or contact support.",
+    href: "#",
+  },
+  {
+    name: "Guides",
+    description:
+      "Learn how to maximize our platform to get the most out of it.",
+    href: "#",
+  },
+  {
+    name: "Events",
+    description:
+      "See what meet-ups and other events we might be planning near you.",
+    href: "#",
+  },
+  {
+    name: "Security",
+    description: "Understand how we take your privacy seriously.",
+    href: "#",
+  },
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
-const CustomUndo = () => (
-  <svg viewBox="0 0 18 18">
-    <polygon className="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10" />
-    <path
-      className="ql-stroke"
-      d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"
-    />
-  </svg>
-);
-
-// Redo button icon component for Quill editor
-const CustomRedo = () => (
-  <svg viewBox="0 0 18 18">
-    <polygon className="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10" />
-    <path
-      className="ql-stroke"
-      d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"
-    />
-  </svg>
-);
-
-const QuillToolbar = (id) => (
-  <div id={`#toolbar-${id}`}>
-    <span className="ql-formats">
-      <select className="ql-font" defaultValue="arial">
-        <option value="arial">Arial</option>
-        <option value="comic-sans">Comic Sans</option>
-        <option value="courier-new">Courier New</option>
-        <option value="georgia">Georgia</option>
-        <option value="helvetica">Helvetica</option>
-        <option value="lucida">Lucida</option>
-      </select>
-      <select className="ql-size" defaultValue="medium">
-        <option value="extra-small">Size 1</option>
-        <option value="small">Size 2</option>
-        <option value="medium">Size 3</option>
-        <option value="large">Size 4</option>
-      </select>
-      <select className="ql-header" defaultValue="3">
-        <option value="1">Heading</option>
-        <option value="2">Subheading</option>
-        <option value="3">Normal</option>
-      </select>
-    </span>
-    <span className="ql-formats">
-      <button className="ql-bold" />
-      <button className="ql-italic" />
-      <button className="ql-underline" />
-      <button className="ql-strike" />
-    </span>
-    <span className="ql-formats">
-      <button className="ql-list" value="ordered" />
-      <button className="ql-list" value="bullet" />
-      <button className="ql-indent" value="-1" />
-      <button className="ql-indent" value="+1" />
-    </span>
-    <span className="ql-formats">
-      <button className="ql-script" value="super" />
-      <button className="ql-script" value="sub" />
-      <button className="ql-blockquote" />
-      <button className="ql-direction" />
-    </span>
-    <span className="ql-formats">
-      <select className="ql-align" />
-      <select className="ql-color" />
-      <select className="ql-background" />
-    </span>
-    <span className="ql-formats">
-      <button className="ql-link" />
-      <button className="ql-image" />
-      <button className="ql-video" />
-    </span>
-    <span className="ql-formats">
-      <button className="ql-formula" />
-      <button className="ql-code-block" />
-      <button className="ql-clean" />
-    </span>
-    <span className="ql-formats">
-      <button className="ql-undo">
-        <CustomUndo />
-      </button>
-      <button className="ql-redo">
-        <CustomRedo />
-      </button>
-    </span>
-  </div>
-);
 
 function TextEditorTwo({
   tab,
@@ -151,12 +188,6 @@ function TextEditorTwo({
   const quill = useRef(null);
   const reactQuill = useRef(null);
   const [value, setValue] = useState();
-  // useEffect(() => {
-  //   if (quill.current) {
-  //     const { Quill } = quill.current;
-  //     // const customBlot = Quill.import("blots/block/embed");
-  //   }
-  // }, [quill]);
 
   const [socket, setSocket] = useState();
   const [htmlData, setHtmlData] = useState("");
@@ -232,6 +263,14 @@ function TextEditorTwo({
   //   toolbar: TOOLBAR_OPTIONS,
   // };
 
+  console.log({
+    ops: [
+      {
+        insert: `Hello world`,
+      },
+    ],
+  });
+
   const formats = [
     "header",
     "font",
@@ -257,9 +296,16 @@ function TextEditorTwo({
     setText(value);
   };
 
-  useEffect(() => {
-    CustomEmbedBlot(); // Register the custom blot
-  }, []);
+  // Text to insert
+  var newText = "This is some inserted text.";
+
+  // Insert the text at the current position or at the end
+  // quill.current &&
+  //   quill.current.insertText(quill.current.getLength(), newText, "user");
+
+  // useEffect(() => {
+  //   CustomEmbedBlot();
+  // }, []);
 
   // useEffect(() => {
   //   const handler = (delta, oldDelta, source) => {
@@ -276,6 +322,7 @@ function TextEditorTwo({
       blocks: newData,
     };
     await dispatch(createEntryTemplate(data));
+    toast.success("Saved as Template");
     setLoader(false);
 
     // console.log(localStorage.getItem("tab"));
@@ -427,6 +474,16 @@ function TextEditorTwo({
     });
   }, [socket, quill, tab, value]);
 
+  // useEffect(() => {
+  //   if (document.querySelectorAll('li[data-list="bullet"]')) {
+  //     let element = document.querySelectorAll('li[data-list="bullet"]')[0]
+  //       .parentElement;
+  //     let ul = document.createElement("ul");
+  //     ul.innerHTML = element.innerHTML;
+  //     console.log()
+  //   }
+  // }, [document.querySelectorAll('li[data-list="bullet"]')]);
+
   const modules = 1;
 
   return (
@@ -487,7 +544,7 @@ function TextEditorTwo({
         >
           <Box width="500px" p={2} role="presentation">
             <DrawerInformation
-              quill={quill}
+              quill={quill.current}
               tab={tab}
               project={project}
               setEntryUpdate={setEntryUpdate}
@@ -502,98 +559,350 @@ function TextEditorTwo({
         id={tab._id}
       >
         {mainLoader && <MainLoaderWithText text="Getting your entry ready" />}
-        {/* <>
-          <nav className="bg-white border-gray-200">
-            <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
-              <a href="#" className="flex items-center">
-                <FileText
-                  size={25}
-                  color="#2563eb"
-                  strokeWidth={1.5}
-                  className="mr-3"
-                />
 
-                <span className="self-center text-2xl font-semibold whitespace-nowrap">
-                  {tab.name}
-                </span>
+        <Popover className="relative bg-white font-body">
+          <div className="flex justify-between items-center px-4 py-6 sm:px-6 md:justify-start md:space-x-10">
+            <div>
+              <a href="#" className="flex">
+                <FileText size={30} color="#2563eb" strokeWidth={1.5} />
               </a>
-              <a
-                href="#"
-                className="text-md  text-indigo-700 hover:underline font-karla"
-              >
-                Submit for approval
-              </a>
-              <div className="flex items-center">
-                <span className="inline-flex items-center justify-center w-6 h-6 mr-2 text-sm font-semibold text-white bg-green-600 rounded-full">
-                  <svg
-                    className="w-2.5 h-2.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 16 12"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M1 5.917 5.724 10.5 15 1.5"
-                    />
-                  </svg>
+            </div>
+            <div className="-mr-2 -my-2 md:hidden">
+              <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <span className="sr-only">Open menu</span>
+                <MenuIcon className="h-6 w-6" aria-hidden="true" />
+              </Popover.Button>
+            </div>
+            <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
+              <Popover.Group as="nav" className="flex space-x-10">
+                <Popover className="relative">
+                  {({ open }) => (
+                    <>
+                      <Popover.Button
+                        className={classNames(
+                          open ? "text-gray-900" : "text-gray-500",
+                          "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-offset-2 focus:ring-indigo-500"
+                        )}
+                      >
+                        <span>File</span>
+                        <ChevronDownIcon
+                          className={classNames(
+                            open ? "text-gray-600" : "text-gray-400",
+                            "ml-2 h-5 w-5 group-hover:text-gray-500"
+                          )}
+                          aria-hidden="true"
+                        />
+                      </Popover.Button>
 
-                  <span className="sr-only">Icon description</span>
-                </span>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                      >
+                        <Popover.Panel className="absolute z-10 mt-3 px-2 w-screen max-w-lg sm:px-0">
+                          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                            <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                              {fileOptions.map((item) => (
+                                <a
+                                  key={item.name}
+                                  href="#"
+                                  onClick={async (e) => {
+                                    e.preventDefault();
+                                    handleSaveTemplate();
+                                    // if (item.slug === "saveAsTemplate") {
+                                    //   console.log("clicked");
 
-                <span>Submit for approval</span>
+                                    // }
+                                  }}
+                                  className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150"
+                                >
+                                  <p className="text-base font-medium text-gray-900">
+                                    {item.name}
+                                  </p>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        </Popover.Panel>
+                      </Transition>
+                    </>
+                  )}
+                </Popover>
+                <Popover className="relative">
+                  {({ open }) => (
+                    <>
+                      <Popover.Button
+                        className={classNames(
+                          open ? "text-gray-900" : "text-gray-500",
+                          "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-offset-2 focus:ring-indigo-500"
+                        )}
+                      >
+                        <span>Export</span>
+                        <ChevronDownIcon
+                          className={classNames(
+                            open ? "text-gray-600" : "text-gray-400",
+                            "ml-2 h-5 w-5 group-hover:text-gray-500"
+                          )}
+                          aria-hidden="true"
+                        />
+                      </Popover.Button>
+
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                      >
+                        <Popover.Panel className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-lg sm:px-0">
+                          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                            <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                              {exportOptions.map((item) => (
+                                <a
+                                  key={item.name}
+                                  href="#"
+                                  onClick={async (e) => {
+                                    e.preventDefault();
+                                    if (item.slug === "docx") {
+                                      const quillContents =
+                                        quill.current.root.innerHTML;
+
+                                      var converted = htmlDocx.asBlob(
+                                        quillContents
+                                      );
+                                      saveAs(converted, tab.name);
+                                    } else if (item.slug === "pdf") {
+                                      const delta = quill.current.getContents();
+                                      const pdfAsBlob = await pdfExporter.generatePdf(
+                                        delta
+                                      );
+                                      saveAs(pdfAsBlob, "pdf-export.pdf");
+                                    }
+                                  }}
+                                  className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150"
+                                >
+                                  <p className="text-base font-medium text-gray-900">
+                                    {item.name}
+                                  </p>
+                                  {/* <p className="mt-1 text-sm text-gray-500">
+                                    {item.description}
+                                  </p> */}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        </Popover.Panel>
+                      </Transition>
+                    </>
+                  )}
+                </Popover>
+
+                {/* <a
+                  href="#"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Edit
+                </a>
+                <a
+                  href="#"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  View
+                </a>
+                <a
+                  href="#"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Format
+                </a>
+                <a
+                  href="#"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Tools
+                </a>
+                <a
+                  href="#"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Extensions
+                </a>
+
+                <Popover className="relative">
+                  {({ open }) => (
+                    <>
+                      <Popover.Button
+                        className={classNames(
+                          open ? "text-gray-900" : "text-gray-500",
+                          "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        )}
+                      >
+                        <span>Help</span>
+                        <ChevronDownIcon
+                          className={classNames(
+                            open ? "text-gray-600" : "text-gray-400",
+                            "ml-2 h-5 w-5 group-hover:text-gray-500"
+                          )}
+                          aria-hidden="true"
+                        />
+                      </Popover.Button>
+
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                      >
+                        <Popover.Panel className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-xs sm:px-0">
+                          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                            <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                              {resources.map((item) => (
+                                <a
+                                  key={item.name}
+                                  href={item.href}
+                                  className="-m-3 p-3 block rounded-md hover:bg-gray-50"
+                                >
+                                  <p className="text-base font-medium text-gray-900">
+                                    {item.name}
+                                  </p>
+                                  <p className="mt-1 text-sm text-gray-500">
+                                    {item.description}
+                                  </p>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        </Popover.Panel>
+                      </Transition>
+                    </>
+                  )}
+                </Popover> */}
+              </Popover.Group>
+              <div className="flex items-center md:ml-12">
+                {/* <a
+                  href="#"
+                  className="ml-8 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Submit for approval
+                </a> */}
               </div>
             </div>
-          </nav>
-          <nav className="bg-gray-50">
-            <div className="max-w-screen-xl px-4 py-3 mx-auto">
-              <div className="flex items-center">
-                <ul className="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
-                  <li>
+          </div>
+
+          <Transition
+            as={Fragment}
+            enter="duration-200 ease-out"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="duration-100 ease-in"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <Popover.Panel
+              focus
+              className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden"
+            >
+              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+                <div className="pt-5 pb-6 px-5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <img
+                        className="h-8 w-auto"
+                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                        alt="Workflow"
+                      />
+                    </div>
+                    <div className="-mr-2">
+                      <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                        <span className="sr-only">Close menu</span>
+                        <XIcon className="h-6 w-6" aria-hidden="true" />
+                      </Popover.Button>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <nav className="grid gap-6">
+                      {solutions.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50"
+                        >
+                          <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white">
+                            <item.icon className="h-6 w-6" aria-hidden="true" />
+                          </div>
+                          <div className="ml-4 text-base font-medium text-gray-900">
+                            {item.name}
+                          </div>
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                </div>
+                <div className="py-6 px-5">
+                  <div className="grid grid-cols-2 gap-4">
                     <a
                       href="#"
-                      className="text-gray-900  hover:underline"
-                      aria-current="page"
+                      className="text-base font-medium text-gray-900 hover:text-gray-700"
                     >
-                      File
+                      Pricing
                     </a>
-                  </li>
 
-                  <li>
-                    <a href="#" className="text-gray-900  hover:underline">
-                      Edit
+                    <a
+                      href="#"
+                      className="text-base font-medium text-gray-900 hover:text-gray-700"
+                    >
+                      Docs
                     </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-900  hover:underline">
-                      View
+
+                    <a
+                      href="#"
+                      className="text-base font-medium text-gray-900 hover:text-gray-700"
+                    >
+                      Enterprise
                     </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-900 hover:underline">
-                      Insert
+                    {resources.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className="text-base font-medium text-gray-900 hover:text-gray-700"
+                      >
+                        {item.name}
+                      </a>
+                    ))}
+                  </div>
+                  <div className="mt-6">
+                    <a
+                      href="#"
+                      className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                    >
+                      Sign up
                     </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-900  hover:underline">
-                      Extensions
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-900  hover:underline">
-                      Help
-                    </a>
-                  </li>
-                </ul>
+                    <p className="mt-6 text-center text-base font-medium text-gray-500">
+                      Existing customer?{" "}
+                      <a
+                        href="#"
+                        className="text-indigo-600 hover:text-indigo-500"
+                      >
+                        Sign in
+                      </a>
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </nav>
-        </> */}
+            </Popover.Panel>
+          </Transition>
+        </Popover>
 
-        <Disclosure
+        {/* <Disclosure
           as="nav"
           className="bg-white shadow"
           contentEditable="false"
@@ -707,16 +1016,74 @@ function TextEditorTwo({
               </Disclosure.Panel>
             </>
           )}
-        </Disclosure>
+        </Disclosure> */}
 
-        <Quill
+        <RichTextEditor
           modules={{
             table: {},
             codeHighlight: true,
+            toolbarOptions: [
+              ["undo", "redo"],
+              [
+                {
+                  font: ["arial", "inter", "roboto", "open-sans", "karla"],
+                },
+                { size: ["12px", "14px", "18px", "36px"] },
+              ],
+              [{ color: [] }, { background: [] }],
+              ["bold", "italic", "underline", "strike"],
+              [
+                { list: "ordered" },
+                // { list: "bullet" },
+                // { list: "check" },
+                { indent: "-1" },
+                { indent: "+1" },
+                { align: [] },
+              ],
+              [
+                "blockquote",
+                "code-block",
+                "link",
+                "image",
+                { script: "sub" },
+                { script: "super" },
+                "table",
+                "clean",
+                // "custom-bullet-list",
+              ],
+            ],
+            mention: {
+              allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+              mentionDenotationChars: ["@", "#"],
+              source: function(searchTerm, renderList, mentionChar) {
+                let values;
+
+                if (mentionChar === "@") {
+                  values = atValues;
+                } else {
+                  values = hashValues;
+                }
+
+                if (searchTerm.length === 0) {
+                  renderList(values, searchTerm);
+                } else {
+                  const matches = [];
+                  for (let i = 0; i < values.length; i++)
+                    if (
+                      ~values[i].value
+                        .toLowerCase()
+                        .indexOf(searchTerm.toLowerCase())
+                    )
+                      matches.push(values[i]);
+                  renderList(matches, searchTerm);
+                }
+              },
+            },
           }}
           getQuill={getQuill}
           ref={quill}
           content={htmlData}
+          placeholder=" "
         />
       </div>
     </>

@@ -250,7 +250,7 @@ function ListProjects({
                             <Folders size={16} color="#5D00D2" />
                             <p>{project.name}</p>
                           </div>
-                          <span>PROJ-000{index + 1}</span>
+                          <span>PROJ-{String(index + 1).padStart(4, "0")}</span>
                           <span>
                             {
                               new Date(project.createdAt)

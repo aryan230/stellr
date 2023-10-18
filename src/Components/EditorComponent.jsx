@@ -254,7 +254,7 @@ function EditorComponent() {
   }, [dispatch, sucess, sucessCollab]);
 
   const getTodaysDate = () => {
-    var date_not_formatted = new Date(Date.now());
+    var date_not_formatted = new Date("13-10-2023");
 
     var formatted_string = date_not_formatted.getFullYear() + "-";
 
@@ -268,6 +268,7 @@ function EditorComponent() {
       formatted_string += "0";
     }
     formatted_string += date_not_formatted.getDate();
+    console.log(formatted_string);
     setTodaysDate(formatted_string);
   };
 
@@ -276,6 +277,10 @@ function EditorComponent() {
       getTodaysDate();
     }
   }, [todaysDate]);
+
+  //checmical Drawing
+
+  const [createDrawingModal, setCreateDrawingModal] = useState(false);
 
   return (
     <div className="main-container">
@@ -357,6 +362,8 @@ function EditorComponent() {
         setCreateNewSop={setCreateNewSop}
         createNewSop={createNewSop}
         setNewSop={setNewSop}
+        createDrawingModal={createDrawingModal}
+        setCreateDrawingModal={setCreateDrawingModal}
       />
       <div className="main-content">
         {showBanner && <Banner setShowBanner={setShowBanner} />}
@@ -941,7 +948,7 @@ function EditorComponent() {
                     <div className="tabs-content">
                       {tabDetails.length > 0 &&
                         tabDetails.map((tab) =>
-                          tab.doc.createdAt >= todaysDate ||
+                          tab.doc.createdAt >= "2023-10-15T00:00:00.000Z" ||
                           tab.doc.converted ? (
                             tab.userType == "Admin" ||
                             tab.userType == "Write" ||

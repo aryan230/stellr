@@ -35,3 +35,49 @@
 @import "projectSettings.scss";
 @import url("https://cdn.syncfusion.com/ej2/bootstrap5.css");
 @import "mobile/mobile";
+
+.multi-button {
+  border-radius: 6px;
+  font-size: 0;
+  box-shadow: 6px 6px 2px 1px rgba(0, 0, 255, 0.2);
+  a {
+    font-family: Lato, sans-serif;
+    outline: none;
+    display: inline-flex;
+    place-items: center;
+    font-family: Lato, sans-serif;
+    font-weight: bold;
+    background-color: #eeeeee;
+    border: none;
+    color: #222222;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.4s;
+  }
+
+  a:hover {
+    background-color: #dddddd;
+    transform: translate(0, 1px);
+  }
+
+  a:active {
+    background-color: #cccccc;
+    transform: translate(0, 2px);
+  }
+
+  a + a {
+    margin-left: 0;
+  }
+
+  .outer-left {
+    border-radius: 6px 0 0 6px;
+  }
+
+  .outer-right {
+    border-radius: 0 6px 6px 0;
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+}

@@ -12,6 +12,7 @@ import DrawerVersionControl from "./DrawerVersionControl";
 import AntiBody from "../../Modals/Sample/AntiBody";
 import AntibodyModal from "./Sample/AntibodyModal";
 import CustomSampleModal from "./Sample/CustomSampleModal";
+import MainModalTailwind from "../../../UI/MainModals/MainModalTailwind";
 
 function SampleModal({
   doc,

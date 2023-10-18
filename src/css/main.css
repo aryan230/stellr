@@ -58,11 +58,11 @@ body {
   display: none;
   width: 0px;
   height: 0px;
-  border-width: 10px;
+  border-width: 0;
   border-style: solid;
   border-color: rgb(34, 41, 85) transparent transparent;
   left: 0px;
-  transform: translate(30%, -18px);
+  transform: translate(30%, -8px);
   z-index: 199999;
 }
 .ql-formats button[class^=ql-]:hover::after, .ql-formats button[class^=ql-]:hover::before,
@@ -145,6 +145,24 @@ body {
 .ql-formats button.ql-fileUploadAttach::after,
 .ql-formats .ql-picker.ql-fileUploadAttach::after {
   content: "File Upload";
+}
+
+.custom-react-quill-editor .quill {
+  border-radius: 15px !important;
+}
+.custom-react-quill-editor .quill .ql-toolbar {
+  background-color: transparent !important;
+  border-bottom: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 15px 15px 0 0;
+}
+.custom-react-quill-editor .quill .ql-formats {
+  border: 0px !important;
+}
+.custom-react-quill-editor .quill .ql-editor {
+  min-height: 150px;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
 }
 
 .everything-alignment-center {
@@ -3425,7 +3443,6 @@ div.ql-tooltip {
 }
 .editor-holder-reactjs-new .ql-toolbar {
   width: 95%;
-  margin: 0 auto;
   border: 0px;
   background-color: #edf2fa;
   border-radius: 24px;
@@ -3442,6 +3459,10 @@ div.ql-tooltip {
   /* Track */
   /* Handle */
   /* Handle on hover */
+}
+.editor-holder-reactjs-new .ql-editor-container .ql-editor ol {
+  list-style-type: square; /* Change the bullet style */
+  margin-left: 20px; /* Adjust the left margin */
 }
 .editor-holder-reactjs-new .ql-editor-container .ql-editor::-webkit-scrollbar {
   width: 5px;
@@ -4145,10 +4166,10 @@ div.ql-tooltip {
   margin: 0 auto;
 }
 .task-modal-container-main .project-main .project-main-inside .quill {
-  border: 1px solid #d1c9c9;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   text-align: left;
   margin: 1rem 0;
-  border-radius: 0.125rem;
+  border-radius: 15px;
 }
 .task-modal-container-main .project-main .project-main-inside .quill .ql-toolbar.ql-snow {
   border: 0px !important;
@@ -4158,7 +4179,10 @@ div.ql-tooltip {
 }
 .task-modal-container-main .project-main .project-main-inside .quill .ql-editor {
   padding: 0.5rem;
-  height: 100px;
+  min-height: 150px;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
+  font-family: GothamBook;
 }
 .task-modal-container-main .project-main .project-main-inside .project-s-header {
   width: 100%;
@@ -5696,8 +5720,9 @@ div.ql-tooltip {
 }
 .sample-modal-container-main .sample-modal-container-inside {
   width: 80%;
-  height: 100%;
+  height: 80%;
   margin: 0 auto;
+  overflow-y: auto;
 }
 .sample-modal-container-main .sample-modal-container-inside .sample-modal-container-top-div {
   width: 80%;
@@ -6600,4 +6625,44 @@ div.ql-tooltip {
   font-weight: 400;
   line-height: normal;
   margin-left: 1rem;
+}
+
+.multi-button {
+  border-radius: 6px;
+  font-size: 0;
+  box-shadow: 6px 6px 2px 1px rgba(0, 0, 255, 0.2);
+}
+.multi-button a {
+  font-family: Lato, sans-serif;
+  outline: none;
+  display: inline-flex;
+  place-items: center;
+  font-family: Lato, sans-serif;
+  font-weight: bold;
+  background-color: #eeeeee;
+  border: none;
+  color: #222222;
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.4s;
+}
+.multi-button a:hover {
+  background-color: #dddddd;
+  transform: translate(0, 1px);
+}
+.multi-button a:active {
+  background-color: #cccccc;
+  transform: translate(0, 2px);
+}
+.multi-button a + a {
+  margin-left: 0;
+}
+.multi-button .outer-left {
+  border-radius: 6px 0 0 6px;
+}
+.multi-button .outer-right {
+  border-radius: 0 6px 6px 0;
+}
+.multi-button svg {
+  margin-right: 5px;
 }/*# sourceMappingURL=main.css.map */

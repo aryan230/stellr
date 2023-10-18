@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { createSample } from "../../../redux/actions/sampleActions";
 import { SAMPLE_CREATE_RESET } from "../../../redux/constants/sampleConstants";
+import InputWithLabel from "../../../UI/Input/InputWithLabel";
+import DatePickerCustom from "../../../UI/Input/DatePickerCustom";
+import DefaultButton from "../../../UI/Button/DefaultButton";
+import ButtonGroupSample from "../../../UI/Button/ButtonGroupSample";
 function MolecularBiology({
   projects,
   setSampleModal,
@@ -91,26 +95,42 @@ function MolecularBiology({
     }
   }, [sucess]);
 
+  const handleChangeInside = async (name, value) => {
+    setDetails((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
   return (
     <div className="forms-inside-div">
       <form onSubmit={handleSubmit}>
-        <div className="form-inside-divider">
-          {" "}
-          <input
-            type="text"
-            placeholder="Sample Name"
-            required
-            name="sampleName"
-            onChange={handleChange}
-          />
-          <Select
-            options={sampleOptions}
-            onChange={(e) => setSampleInside(e.value)}
-            placeholder="Sample Type"
-            required
-          />
-        </div>{" "}
-        <div className="label-input">
+        <InputWithLabel
+          label="Sample Name"
+          placeholder="Sample Name"
+          required
+          name="sampleName"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <Select
+          options={sampleOptions}
+          onChange={(e) => setSampleInside(e.value)}
+          placeholder="Sample Type"
+          required
+        />
+        <div className="margin-maker"></div>
+        <DatePickerCustom
+          placeholder="Date of Entry"
+          name="dateOfEntry"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <DatePickerCustom
+          placeholder="Date of Expiry"
+          name="dateOfExpiry"
+          onChange={handleChange}
+        />
+        {/* <div className="label-input">
           {" "}
           <label htmlFor="">Date of Entry</label>
           <input type="date" name="dateOfEntry" onChange={handleChange} />
@@ -118,8 +138,31 @@ function MolecularBiology({
         <div className="label-input">
           <label htmlFor="">Date of Expiry</label>
           <input type="date" name="dateOfExpiry" onChange={handleChange} />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Batch No"
+          name="batchNo"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Volume"
+          name="volume"
+          value={data.volume}
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <ButtonGroupSample
+          name="volume"
+          currentValue={data}
+          changeFunction={handleChangeInside}
+          buttonData={{
+            name: "Volume",
+            buttons: ["ng/L", "mL", "L"],
+          }}
+        />
+        {/* <div className="form-inside-divider">
           {" "}
           <input
             type="text"
@@ -133,8 +176,31 @@ function MolecularBiology({
             name="volume"
             onChange={handleChange}
           />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Volume remaining"
+          name="volumeRemaining"
+          onChange={handleChange}
+          value={data.volumeRemaining}
+        />
+        <div className="margin-maker"></div>
+        <ButtonGroupSample
+          name="volumeRemaining"
+          currentValue={data}
+          changeFunction={handleChangeInside}
+          buttonData={{
+            name: "Volume",
+            buttons: ["ng/L", "mL", "L"],
+          }}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Freezer No"
+          name="freezerNo"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           <input
             type="text"
             placeholder="Volume remaining (ng/L)"
@@ -147,8 +213,20 @@ function MolecularBiology({
             name="freezerNo"
             onChange={handleChange}
           />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Shelf No"
+          name="shelfNo"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Shelf Position"
+          name="shelfPosition"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           <input
             type="text"
             placeholder="Shelf No"
@@ -161,8 +239,20 @@ function MolecularBiology({
             name="shelfPosition"
             onChange={handleChange}
           />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Box No"
+          name="boxNo"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Position in box"
+          name="positionInBox"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           <input
             type="text"
             placeholder="Box No"
@@ -175,8 +265,20 @@ function MolecularBiology({
             name="positionInBox"
             onChange={handleChange}
           />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Manufacturer"
+          name="manufacturer"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Lot No"
+          name="lotNo"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           <input
             type="text"
             placeholder="Manufacturer"
@@ -189,13 +291,19 @@ function MolecularBiology({
             name="lotNo"
             onChange={handleChange}
           />
-        </div>
-        <input
-          type="text"
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
           placeholder="Composition"
           name="composition"
           onChange={handleChange}
         />
+        {/* <input
+          type="text"
+          placeholder="Composition"
+          name="composition"
+          onChange={handleChange}
+        /> */}
         <div className="margin-maker"></div>
         {/* <Select
           isMulti
@@ -207,7 +315,7 @@ function MolecularBiology({
           required
         /> */}
         <div className="margin-maker"></div>
-        <button type="submit">Submit</button>
+        <DefaultButton label="Create New Sample" />
       </form>
     </div>
   );

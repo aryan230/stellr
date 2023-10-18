@@ -73,7 +73,7 @@ function ListOrganizations({
   const columns = [
     { id: "name", label: "Entity Name", minWidth: 100 },
     { id: "type", label: "Entity Type", minWidth: 170 },
-    { id: "status", label: "Entity Status", minWidth: 100 },
+    { id: "status", label: "Entity Status", minWidth: 170 },
     { id: "createdBy", label: "Created By", minWidth: 170 },
     { id: "statusBy", label: "Approved/Declined by", minWidth: 170 },
     {

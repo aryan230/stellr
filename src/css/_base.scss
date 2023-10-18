@@ -56,11 +56,11 @@ body {
         display: none;
         width: 0px;
         height: 0px;
-        border-width: 10px;
+        border-width: 0;
         border-style: solid;
         border-color: rgb(34, 41, 85) transparent transparent;
         left: 0px;
-        transform: translate(30%, -18px);
+        transform: translate(30%, -8px);
         z-index: 199999;
       }
       &:hover {
@@ -130,6 +130,27 @@ body {
     }
     &.ql-fileUploadAttach::after {
       content: "File Upload";
+    }
+  }
+}
+
+.custom-react-quill-editor {
+  .quill {
+    border-radius: 15px !important;
+
+    .ql-toolbar {
+      background-color: transparent !important;
+      border-bottom: 1px solid black;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      border-radius: 15px 15px 0 0;
+    }
+    .ql-formats {
+      border: 0px !important;
+    }
+
+    .ql-editor {
+      min-height: 150px;
+      max-height: fit-content;
     }
   }
 }

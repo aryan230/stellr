@@ -21,7 +21,8 @@ import {
 import CreateSop from "./Modals/CreateSop";
 import { addToState } from "../redux/actions/stateActions";
 import DataExport from "./DataExport/DataExport";
-import { Folders } from "lucide-react";
+import { Biohazard, Folders } from "lucide-react";
+import CreateKetcher from "./Modals/CreateKetcher";
 
 function SideNav({
   setMiddleNav,
@@ -59,6 +60,8 @@ function SideNav({
   setCreateNewSop,
   createNewSop,
   setNewSop,
+  createDrawingModal,
+  setCreateDrawingModal,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -149,6 +152,9 @@ function SideNav({
           setProjectInsideActiveId={setProjectInsideActiveId}
           setWhichTabisActive={setWhichTabisActive}
         />
+      )}
+      {createDrawingModal && (
+        <CreateKetcher setCreateDrawingModal={setCreateDrawingModal} />
       )}
       {dataExport && <DataExport setDataExport={setDataExport} />}
       {entryModal && (
@@ -319,18 +325,7 @@ function SideNav({
                 >
                   <div className="mnc-element-inside">
                     <div className="mnc-element-left">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M6.66645 8.66667H9.33312C9.50993 8.66667 9.6795 8.59643 9.80452 8.4714C9.92955 8.34638 9.99979 8.17681 9.99979 8C9.99979 7.82319 9.92955 7.65362 9.80452 7.5286C9.6795 7.40357 9.50993 7.33333 9.33312 7.33333H6.66645C6.48964 7.33333 6.32007 7.40357 6.19505 7.5286C6.07002 7.65362 5.99979 7.82319 5.99979 8C5.99979 8.17681 6.07002 8.34638 6.19505 8.4714C6.32007 8.59643 6.48964 8.66667 6.66645 8.66667V8.66667ZM12.6665 2H3.33312C2.86409 2.00364 2.41126 2.17201 2.05379 2.47568C1.69632 2.77935 1.45695 3.19899 1.37752 3.66126C1.29809 4.12353 1.38366 4.59901 1.61927 5.00458C1.85488 5.41015 2.22554 5.72001 2.66645 5.88V12C2.66645 12.5304 2.87717 13.0391 3.25224 13.4142C3.62731 13.7893 4.13602 14 4.66645 14H11.3331C11.8636 14 12.3723 13.7893 12.7473 13.4142C13.1224 13.0391 13.3331 12.5304 13.3331 12V5.88C13.774 5.72001 14.1447 5.41015 14.3803 5.00458C14.6159 4.59901 14.7015 4.12353 14.6221 3.66126C14.5426 3.19899 14.3033 2.77935 13.9458 2.47568C13.5883 2.17201 13.1355 2.00364 12.6665 2ZM11.9998 12C11.9998 12.1768 11.9295 12.3464 11.8045 12.4714C11.6795 12.5964 11.5099 12.6667 11.3331 12.6667H4.66645C4.48964 12.6667 4.32007 12.5964 4.19505 12.4714C4.07002 12.3464 3.99979 12.1768 3.99979 12V6H11.9998V12ZM12.6665 4.66667H3.33312C3.15631 4.66667 2.98674 4.59643 2.86172 4.4714C2.73669 4.34638 2.66645 4.17681 2.66645 4C2.66645 3.82319 2.73669 3.65362 2.86172 3.5286C2.98674 3.40357 3.15631 3.33333 3.33312 3.33333H12.6665C12.8433 3.33333 13.0128 3.40357 13.1379 3.5286C13.2629 3.65362 13.3331 3.82319 13.3331 4C13.3331 4.17681 13.2629 4.34638 13.1379 4.4714C13.0128 4.59643 12.8433 4.66667 12.6665 4.66667Z"
-                          fill="black"
-                        />
-                      </svg>
+                      <Folders size={16} />
                       <p>Project</p>
                     </div>
                   </div>
@@ -391,6 +386,23 @@ function SideNav({
                     </div>
                   </div>
                 </button>
+                {/* <button
+                  onClick={() => {
+                    setLoader(true);
+                    window.setTimeout(() => {
+                      setLoader(false);
+                      setCreateDrawingModal(true);
+                    }, 2000);
+                  }}
+                  className="mnc-element"
+                >
+                  <div className="mnc-element-inside">
+                    <div className="mnc-element-left">
+                      <Biohazard size={16} />
+                      <p>Chemical Drawing</p>
+                    </div>
+                  </div>
+                </button> */}
                 <button
                   onClick={() => {
                     setLoader(true);

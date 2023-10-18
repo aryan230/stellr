@@ -15,7 +15,6 @@
 
   .ql-toolbar {
     width: 95%;
-    margin: 0 auto;
     border: 0px;
     background-color: #edf2fa;
     border-radius: 24px;
@@ -29,6 +28,12 @@
     .ql-editor {
       height: 80%;
       padding: 0 5rem;
+
+      ol {
+        list-style-type: square; /* Change the bullet style */
+        margin-left: 20px; /* Adjust the left margin */
+      }
+
       &::-webkit-scrollbar {
         width: 5px;
       }

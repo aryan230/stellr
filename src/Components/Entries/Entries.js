@@ -119,7 +119,7 @@ function Entries({
           )}
           <p>{doc.name}</p>
         </div>
-        <span>ENT-000{index + 1}</span>
+        <span>ENT-{String(index + 1).padStart(4, "0")}</span>
         <span>
           {new Date(doc.updatedAt).toLocaleString("en-GB").split(",")[0]},{" "}
           {new Date(doc.updatedAt).toLocaleString([], {

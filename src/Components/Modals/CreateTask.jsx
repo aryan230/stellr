@@ -8,6 +8,7 @@ import { TASK_CREATE_RESET } from "../../redux/constants/taskConstants";
 import { userRoleExtract } from "../Functions/userRoleFunction";
 import _ from "lodash";
 import ReactQuill from "react-quill";
+import DefaultRTE from "../../UI/RichTextEditor/DefaultRTE";
 
 function CreateTask({
   setTaskModal,
@@ -236,14 +237,20 @@ function CreateTask({
               required
             />
             <div className="label-input">
-              <label htmlFor="">Enter Description</label>{" "}
-              <ReactQuill
-                theme="snow"
+              <DefaultRTE
+                label="Enter Description"
                 value={description}
                 onChange={(e) => {
                   setDescription(e);
                 }}
               />
+              {/* <ReactQuill
+                theme="snow"
+                value={description}
+                onChange={(e) => {
+                  setDescription(e);
+                }}
+              /> */}
             </div>
             <div className="label-input">
               <label htmlFor="">Set due date</label>

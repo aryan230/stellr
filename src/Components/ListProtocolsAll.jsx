@@ -78,6 +78,34 @@ function ListProtocolsAll({
     );
   };
 
+  const renderDetailsApprovalStatus = (params) => {
+    return (
+      <div className="flex items-center">
+        <span className="inline-flex items-center justify-center w-6 h-6 mr-2 text-sm font-semibold text-white bg-green-600 rounded-full">
+          <svg
+            className="w-2.5 h-2.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 16 12"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M1 5.917 5.724 10.5 15 1.5"
+            />
+          </svg>
+
+          <span className="sr-only">Icon description</span>
+        </span>
+
+        <span>Approved</span>
+      </div>
+    );
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 150 },
     {

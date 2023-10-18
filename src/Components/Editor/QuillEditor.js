@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Quill from "quill";
-import "quill/dist/quill.snow.css";
 import { Toaster, toast } from "react-hot-toast";
 import { Box, Drawer, Tooltip } from "@mui/material";
 import { io } from "socket.io-client";
@@ -66,19 +65,6 @@ import ImageBlotTwo from "./Tools/CustomImage";
 //   },
 //   true
 // );
-
-//bullet list
-
-// const CustomNumberedList = Quill.import("formats/list");
-// CustomNumberedList.tagName = "OL";
-// Quill.register(CustomNumberedList, true);
-
-// Define a custom module to handle numbered list formats
-// const CustomBulletListModule = {
-//   formats: ["list"],
-// };
-
-//end
 
 const QuillToolbar = (id) => (
   <div id={`toolbar`}>

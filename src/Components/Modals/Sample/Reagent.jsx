@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { createSample } from "../../../redux/actions/sampleActions";
 import { SAMPLE_CREATE_RESET } from "../../../redux/constants/sampleConstants";
+import InputWithLabel from "../../../UI/Input/InputWithLabel";
+import DatePickerCustom from "../../../UI/Input/DatePickerCustom";
+import DefaultButton from "../../../UI/Button/DefaultButton";
 function Reagent({
   projects,
   setSampleModal,
@@ -92,14 +95,33 @@ function Reagent({
     <div className="forms-inside-div">
       <form onSubmit={handleSubmit}>
         {" "}
-        <input
-          type="text"
+        <InputWithLabel
+          label="Sample Name"
           placeholder="Sample Name"
           required
           name="sampleName"
           onChange={handleChange}
         />
-        <div className="form-inside-divider">
+        {/* <input
+          type="text"
+          placeholder="Sample Name"
+          required
+          name="sampleName"
+          onChange={handleChange}
+        /> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Manufacturer Name"
+          name="manufacturer"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Batch No"
+          name="batchNo"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           {" "}
           <input
             type="text"
@@ -113,8 +135,20 @@ function Reagent({
             name="batchNo"
             onChange={handleChange}
           />
-        </div>
-        <div className="label-input">
+        </div> */}
+        <div className="margin-maker"></div>
+        <DatePickerCustom
+          placeholder="Date of Receipt"
+          name="dateOfReceipt"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <DatePickerCustom
+          placeholder="Date of Expiry"
+          name="dateOfExpiry"
+          onChange={handleChange}
+        />
+        {/* <div className="label-input">
           {" "}
           <label htmlFor="">Date of Receipt</label>
           <input type="date" name="dateOfReceipt" onChange={handleChange} />
@@ -122,8 +156,20 @@ function Reagent({
         <div className="label-input">
           <label htmlFor="">Date of Expiry</label>
           <input type="date" name="dateOfExpiry" onChange={handleChange} />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Storage Conditions"
+          name="storageConditions"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Quantity Received"
+          name="quantityReceived"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           {" "}
           <input
             type="text"
@@ -137,8 +183,20 @@ function Reagent({
             name="quantityReceived"
             onChange={handleChange}
           />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Current Quantity"
+          name="currentQuantity"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Used In Experiments"
+          name="usedInExperiments"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           <input
             type="text"
             placeholder="Current Quantity"
@@ -151,8 +209,26 @@ function Reagent({
             name="usedInExperiments"
             onChange={handleChange}
           />
-        </div>
-        <input
+        </div> */}
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Risk and Safety Information"
+          name="riskAndSafetyInformation"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Preperation Instructions"
+          name="preparationInstructions"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Comments"
+          name="comments"
+          onChange={handleChange}
+        />
+        {/* <input
           type="text"
           placeholder="Risk and Safety Information"
           name="riskAndSafetyInformation"
@@ -169,7 +245,7 @@ function Reagent({
           placeholder="Comments"
           name="comments"
           onChange={handleChange}
-        />
+        /> */}
         <div className="margin-maker"></div>
         {/* <Select
           isMulti
@@ -181,7 +257,7 @@ function Reagent({
           required
         /> */}
         <div className="margin-maker"></div>
-        <button type="submit">Submit</button>
+        <DefaultButton label="Create New Sample" />
       </form>
     </div>
   );

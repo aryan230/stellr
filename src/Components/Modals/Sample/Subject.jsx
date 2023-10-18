@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { createSample } from "../../../redux/actions/sampleActions";
 import { SAMPLE_CREATE_RESET } from "../../../redux/constants/sampleConstants";
+import InputWithLabel from "../../../UI/Input/InputWithLabel";
+import DatePickerCustom from "../../../UI/Input/DatePickerCustom";
+import TextareaWithLabel from "../../../UI/Input/TextareaWithLabel";
+import DefaultButton from "../../../UI/Button/DefaultButton";
 function Subject({
   projects,
   setSampleModal,
@@ -67,7 +71,26 @@ function Subject({
     <div className="forms-inside-div">
       <form onSubmit={handleSubmit}>
         {" "}
-        <div className="form-inside-divider">
+        <InputWithLabel
+          label="Sample Name"
+          placeholder="Sample Name"
+          required
+          name="sampleName"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <Select
+          options={genderOptions}
+          onChange={(e) =>
+            setDetails((prev) => {
+              return { ...prev, gender: e.value };
+            })
+          }
+          placeholder="Select Gender"
+          name="gender"
+          required
+        />
+        {/* <div className="form-inside-divider">
           {" "}
           <input
             type="text"
@@ -87,7 +110,7 @@ function Subject({
             name="gender"
             required
           />
-        </div>{" "}
+        </div> */}{" "}
         {/* <Select
           options={optionsValue}
           onChange={(e) => setProject(e.value)}
@@ -95,23 +118,42 @@ function Subject({
           required
           name="recordType"
         /> */}{" "}
-        <input
-          type="text"
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          label="Test Request"
           placeholder="Test Request"
           name="testRequest"
           onChange={handleChange}
         />
+        {/* <input
+          type="text"
+          placeholder="Test Request"
+          name="testRequest"
+          onChange={handleChange}
+        /> */}
         <div className="margin-maker"></div>
-        <div className="label-input">
-          <label htmlFor="">Enter Date of Birth</label>
-          <input
-            type="date"
-            placeholder="Sample Name"
-            name="dateOfBirth"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-inside-divider">
+        <DatePickerCustom
+          label="Enter Date of Birth"
+          name="dateOfBirth"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Contact information"
+          name="contactInformation"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <InputWithLabel
+          placeholder="Test Result"
+          name="testResult"
+          onChange={handleChange}
+        />
+        {/* <div className="label-input">
+          <label htmlFor=""></label>
+          <input type="date" placeholder="Sample Name" />
+        </div> */}
+        {/* <div className="form-inside-divider">
           {" "}
           <input
             type="text"
@@ -125,8 +167,20 @@ function Subject({
             name="testResult"
             onChange={handleChange}
           />
-        </div>
-        <div className="form-inside-divider">
+        </div> */}
+        <div className="margin-maker"></div>
+        <TextareaWithLabel
+          placeholder="Medical history"
+          name="medicalHistory"
+          onChange={handleChange}
+        />
+        <div className="margin-maker"></div>
+        <TextareaWithLabel
+          placeholder="Physician information"
+          name="physicianInformation"
+          onChange={handleChange}
+        />
+        {/* <div className="form-inside-divider">
           {" "}
           <textarea
             type="text"
@@ -140,14 +194,17 @@ function Subject({
             name="physicianInformation"
             onChange={handleChange}
           />
-        </div>
-        <textarea
-          type="text"
+        </div> */}
+        <TextareaWithLabel
           placeholder="Interpretation and Comments"
           name="comments"
           onChange={handleChange}
         />
-        <button type="submit">Submit</button>
+        {/* <textarea
+          type="text"
+          
+        /> */}
+        <DefaultButton label="Create New Sample" />
       </form>
     </div>
   );

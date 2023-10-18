@@ -3,7 +3,7 @@ import TaskModal from "./TaskModal/TaskModal";
 import { addTasksLogs } from "../Functions/addTaskLogs";
 import { useSelector } from "react-redux";
 import { PaperClipIcon } from "@heroicons/react/solid";
-import { CheckCheck } from "lucide-react";
+import { Check, CheckCheck } from "lucide-react";
 function SmallTasks({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
   console.log(doc);
   const userLogin = useSelector((state) => state.userLogin);
@@ -29,7 +29,11 @@ function SmallTasks({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
         className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
       >
         <span className="inline-flex justify-center items-center ml-4">
-          <CheckCheck size={16} color="#4d00aa" />
+          {doc.status === "Completed" ? (
+            <CheckCheck size={16} color="#4d00aa" />
+          ) : (
+            <Check size={16} color="#4d00aa" />
+          )}
         </span>
         <span className="ml-2 text-sm tracking-wide truncate">
           {doc.subject}

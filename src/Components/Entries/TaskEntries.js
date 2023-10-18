@@ -3,7 +3,7 @@ import TaskModal from "./TaskModal/TaskModal";
 import { addTasksLogs } from "../Functions/addTaskLogs";
 import { useSelector } from "react-redux";
 import { PaperClipIcon } from "@heroicons/react/solid";
-import { CheckCheck } from "lucide-react";
+import { Check, CheckCheck, CheckCircle, Circle } from "lucide-react";
 
 function TaskEntries({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
   console.log(doc);
@@ -30,9 +30,9 @@ function TaskEntries({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
         <div className="mnc-element-left">
           {" "}
           {doc.status == "Open" ? (
-            <CheckCheck size={16} color="#4d00aa" />
+            <Circle size={16} color="#4d00aa" />
           ) : (
-            <CheckCheck size={16} color="#4d00aa" />
+            <CheckCircle size={16} color="#4d00aa" />
           )}
           <div className="entity-name-right">
             <p>{doc.subject}</p>
@@ -59,7 +59,7 @@ function TaskEntries({ doc, setTaskModal, setTaskContent, index, taskFrom }) {
 
           <p>{doc.subject}</p>
         </div>
-        <span>TASK-000{index + 1}</span>
+        <span>TASK-{String(index + 1).padStart(4, "0")}</span>
         <span>
           {new Date(doc.createdAt).toLocaleString("en-GB").split(",")[0]},{" "}
           {new Date(doc.updatedAt).toLocaleString([], {
