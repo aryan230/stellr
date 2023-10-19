@@ -23,7 +23,7 @@ import html2pdf from "html2pdf.js";
 import { Alert } from "@mui/material";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-
+import htmlDocx from "html-docx-fixed/dist/html-docx";
 const zip = new JSZip();
 function DataExport({ setDataExport }) {
   const dispatch = useDispatch();
@@ -41,8 +41,8 @@ function DataExport({ setDataExport }) {
       label: "JSON",
     },
     {
-      value: "PDF",
-      label: "PDF",
+      value: "DOCX",
+      label: "DOCX",
     },
   ];
 
@@ -149,7 +149,7 @@ function DataExport({ setDataExport }) {
     let entryHTML = zip.folder("entryHTML");
     let auditLogs = zip.folder("Audit Logs");
     entries.forEach(async (element) => {
-      const value = await quillGetHTML(entries[0].data[0].block.ops);
+      const value = await quillGetHTML(element.data[0].block.ops);
       let html = `
       <html>
   <head>
@@ -232,6 +232,46 @@ function DataExport({ setDataExport }) {
   </html>
       `;
       entryHTML.file(`${element.name}.html`, html);
+    });
+    const d = new jsPDF();
+    const templateOptions =
+      newArr.find((e) => e._id === project.value).logs &&
+      newArr
+        .find((e) => e._id === project.value)
+        .logs.map(({ user, userEmail, message, date }) => [
+          user,
+          userEmail,
+          message,
+          new Date(date).toLocaleString(),
+        ]);
+    console.log(templateOptions);
+    autoTable(d, { html: "#my-table" });
+    autoTable(d, {
+      head: [["Name", "Email", "Message", "Date"]],
+      body: templateOptions,
+    });
+    const blobPDF = new Blob([d.output("blob")], {
+      type: "application/pdf",
+    });
+    auditLogs.file("Audit-logs.pdf", blobPDF);
+    window.setTimeout(() => {
+      setLoader(false);
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        saveAs(
+          content,
+          `${newArr.find((e) => e._id == project.value).name}.zip`
+        );
+      });
+    }, 3000);
+  };
+
+  const exportAsDOCX = async () => {
+    let entry = zip.folder("entry");
+    let auditLogs = zip.folder("Audit Logs");
+    entries.forEach(async (element) => {
+      const value = await quillGetHTML(element.data[0].block.ops);
+      var converted = await htmlDocx.asBlob(value);
+      entry.file(`${element.name}.docx`, converted);
     });
     const d = new jsPDF();
     const templateOptions =
@@ -401,6 +441,9 @@ function DataExport({ setDataExport }) {
           break;
         case "PDF":
           exportAsPDF();
+          break;
+        case "DOCX":
+          exportAsDOCX();
           break;
       }
       // if (selectedExport.value === "JSON") {

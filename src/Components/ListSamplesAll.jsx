@@ -216,6 +216,12 @@ function ListSamplesAll({
             <Box sx={{ height: "90%", width: "100%" }}>
               <DataGrid
                 slots={{ toolbar: GridToolbar }}
+                slotProps={{
+                  toolbar: {
+                    printOptions: { disableToolbarButton: true },
+                    csvOptions: { disableToolbarButton: false },
+                  },
+                }}
                 rows={samples.map(
                   ({
                     _id: _id,
