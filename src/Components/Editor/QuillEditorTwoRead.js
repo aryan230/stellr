@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import { v4 as uuid } from "uuid";
 import CustomEmbedBlot from "./Tools/CustomReactBlot";
-import Quill from "quill-react-commercial";
+import RichTextEditor from "quill-react-commercial";
 import URL from "./../../Data/data.json";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
@@ -593,7 +593,7 @@ function TextEditorTwoRead({
           )}
         </Disclosure>
 
-        <Quill
+        <RichTextEditor
           modules={{
             table: {},
             codeHighlight: true,

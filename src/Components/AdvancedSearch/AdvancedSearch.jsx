@@ -10,6 +10,7 @@ import ProtocolSearchResult from "./SearchResults/ProtocolSearchResult";
 import axios from "axios";
 import URL from "./../../Data/data.json";
 import SOPSearchResult from "./SearchResults/SOPSearchResutl";
+import { toast } from "sonner";
 function AdvancedSearch({
   setAdvancedSearch,
   samples,
@@ -204,6 +205,11 @@ function AdvancedSearch({
       console.log("data is ", data);
       console.log(data.choices[0].message);
     } else {
+      setLoading(true);
+      window.setTimeout(() => {
+        setLoading(false);
+        toast.error("Please provide more details");
+      }, 3000);
       console.log("No  result");
     }
   };

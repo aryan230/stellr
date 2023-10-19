@@ -56,7 +56,10 @@ import "highlight.js/styles/darcula.css";
 import "quill-mention";
 import { pdfExporter } from "quill-to-pdf";
 import { toast } from "sonner";
+import JSZip from "jszip";
+import { downloadObjectAsJson } from "../Functions/downloadJson";
 
+const zip = new JSZip();
 const BlockEmbed = Quill.import("blots/block/embed");
 
 class CustomBulletList extends BlockEmbed {
@@ -397,7 +400,7 @@ function TextEditorTwo({
           return `<span class="tribute-item">${item.original.key}</span>`;
         },
         selectTemplate: (item) => {
-          return `<p class="mention-here" contenteditable="false">@${item.original.key}</p>`;
+          return `<p>@${item.original.key}</p>`;
         },
       });
     }
@@ -669,6 +672,70 @@ function TextEditorTwo({
                                         delta
                                       );
                                       saveAs(pdfAsBlob, "pdf-export.pdf");
+                                    } else if (item.slug === "html") {
+                                      let html = `
+                                                                <html>
+                                                            <head>
+                                                            <link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css">
+                                                            <style>
+                                                            .mention {
+                                                              height: 24px;
+                                                              width: 65px;
+                                                              border-radius: 6px;
+                                                              background-color: #4655ff;
+                                                              color: white;
+                                                              padding: 3px 0;
+                                                              margin-right: 2px;
+                                                              user-select: all;
+                                                            }
+
+                                                            .mention > span {
+                                                              margin: 0 3px;
+                                                            }
+
+                                                            a#file-opener {
+                                                              &::after {
+                                                                content: attr(title);
+                                                              }
+
+                                                              &:hover {
+                                                                cursor: pointer;
+                                                              }
+                                                            }
+
+                                                            button#spreadsheet-opener {
+                                                              &::after {
+                                                                content: attr(dataName);
+                                                              }
+
+                                                              &:hover {
+                                                                cursor: pointer;
+                                                              }
+                                                            }
+                                                            </style>
+                                                            </head>
+                                                            <body>
+                                                            ${quill.current.root.innerHTML}
+                                                            </body>
+                                                            </html>
+                                                                `;
+                                      let entry = zip.folder("entry");
+                                      entry.file(`entry.html`, html);
+                                      zip
+                                        .generateAsync({ type: "blob" })
+                                        .then((content) => {
+                                          saveAs(content, `export.zip`);
+                                        });
+                                    } else if (item.slug === "json") {
+                                      const deltas = quill.current.getContents();
+
+                                      if (!deltas) {
+                                        return alert("Content not found");
+                                      }
+                                      downloadObjectAsJson(
+                                        deltas.ops,
+                                        "editor-text"
+                                      );
                                     }
                                   }}
                                   className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150"

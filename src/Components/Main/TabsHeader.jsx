@@ -9,8 +9,9 @@ function TabsHeader({ tab, active, setTabId, removeTab }) {
 
   const removeTabPannel = async () => {
     await dispatch(removeFromCart(tab._id));
-    if (tabDetails.length > 0) {
-      setTabId(tabDetails[0].doc.id);
+    const newTab = tabDetails.filter((x) => x.doc._id !== tab._id);
+    if (newTab.length > 0) {
+      setTabId(newTab[0].doc._id);
     }
   };
   return (

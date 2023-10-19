@@ -14,8 +14,15 @@ function TopDataReport({ data, pdfRef }) {
       </div>
       <div className="w-[80%] mx-auto pt-4">
         <button
-          onClick={() => generatePDF(pdfRef, { filename: "report.pdf" })}
+          onClick={async () => {
+            document.getElementById("download-btn-report").style.display =
+              "none";
+            await generatePDF(pdfRef, { filename: data.name });
+            document.getElementById("download-btn-report").style.display =
+              "inline-flex";
+          }}
           type="button"
+          id="download-btn-report"
           className="px-3 py-2 text-sm font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-blue-300"
         >
           Download

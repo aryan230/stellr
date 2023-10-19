@@ -928,8 +928,8 @@ function EditorComponent() {
                   <div className="main-inside-nothing-here">
                     <img src="./assets/6.svg" alt="" />
                     <span>
-                      Nothing opened yet. Browse through the explored to open
-                      entries
+                      Nothing is open. Browse through the explorer to open a
+                      record
                     </span>
                   </div>
                 ) : (

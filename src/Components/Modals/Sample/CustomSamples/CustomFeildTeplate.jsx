@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import Select from "react-select";
 import MainLoaderWithText from "../../../Loaders/MainLoaderWithText";
+import HelperText from "../../../../UI/Input/HelperText";
 
 function CustomFeildTeplate({
   setCustomFeild,
@@ -330,7 +331,7 @@ function CustomFeildTeplate({
                     }}
                   />
                 </div>
-                <div className="my-4">
+                <div className="mt-4">
                   <label
                     htmlFor="first_name"
                     className="block mb-2 text-sm font-medium text-gray-900"
@@ -348,6 +349,8 @@ function CustomFeildTeplate({
                     }}
                   />
                 </div>
+                <HelperText text="This field is used to hold your filed with a custom variable" />
+                <div className="margin-maker"></div>
                 {/* <div className="flex items-center my-4">
                   <input
                     id="default-checkbox"
