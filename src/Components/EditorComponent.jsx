@@ -52,6 +52,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { addToState } from "../redux/actions/stateActions";
 import TextEditorTwoRead from "./Editor/QuillEditorTwoRead";
 import MainToast from "./Toast/MainToast";
+import DefaultSlideOvers from "../UI/SlideOvers/DefaultSlideOvers";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();

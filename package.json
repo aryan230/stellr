@@ -64,6 +64,7 @@
     "quill-better-table": "^1.2.10",
     "quill-converter-xp": "^0.1.7",
     "quill-cursors": "^4.0.2",
+    "quill-delta": "^5.1.0",
     "quill-delta-to-html": "^0.12.1",
     "quill-image-resize": "^3.0.9",
     "quill-image-resize-module": "^3.0.0",

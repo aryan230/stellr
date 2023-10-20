@@ -15,14 +15,31 @@ import "highlight.js/styles/darcula.css";
 import Tribute from "tributejs";
 import "quill-mention";
 import { MentionBlot } from "./Tools/MentionBlot";
-import { SSBlot } from "./Tools/SpreadSheetContainer";
 import "tributejs/dist/tribute.css";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import ReactQuill, { Quill } from "react-quill";
-import { AlertTriangle, Book, Cloud, FileText } from "lucide-react";
+import {
+  AlertTriangle,
+  Book,
+  Cloud,
+  FileText,
+  LayoutPanelTop,
+} from "lucide-react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import {
+  ArchiveIcon,
+  ArrowCircleRightIcon,
+  BellIcon,
+  DocumentTextIcon,
+  DuplicateIcon,
+  HeartIcon,
+  MenuIcon,
+  PencilAltIcon,
+  TrashIcon,
+  UserAddIcon,
+  XIcon,
+} from "@heroicons/react/outline";
 import WarningModal from "../Modals/WarningModal";
 import Loader from "../../css/utils/Loader";
 import { Box, Drawer } from "@mui/material";
@@ -58,23 +75,25 @@ import { pdfExporter } from "quill-to-pdf";
 import { toast } from "sonner";
 import JSZip from "jszip";
 import { downloadObjectAsJson } from "../Functions/downloadJson";
+import DetailSlideOver from "../../UI/SlideOvers/DetailSlideOver";
+import Delta from "quill-delta";
+import EditNameEditor from "./EditorSettings/EditNameEditor";
 
 const zip = new JSZip();
-const BlockEmbed = Quill.import("blots/block/embed");
 
-class CustomBulletList extends BlockEmbed {
-  static blotName = "custom-bullet-list";
-  static className = "ql-custom-bullet-list";
-  static tagName = "ul";
+let Inline = Quill.import("blots/inline");
 
-  static create() {
-    const node = super.create();
-    node.innerHTML = "<li><br></li>"; // Initial list item with a line break
+class SpanBlock extends Inline {
+  static create(value) {
+    let node = super.create();
+    node.setAttribute("class", "spanblock");
     return node;
   }
 }
 
-Quill.register(CustomBulletList, true);
+SpanBlock.blotName = "spanblock";
+SpanBlock.tagName = "div";
+Quill.register(SpanBlock);
 
 const fileOptions = [
   {
@@ -92,6 +111,7 @@ const exportOptions = [
     name: "PDF Document (.pdf)",
     slug: "pdf",
   },
+
   {
     name: "Web Page (.html)",
     slug: "html",
@@ -211,6 +231,7 @@ function TextEditorTwo({
   const [originalContent, setOriginalContent] = useState();
   const [warningModal, setWarningModal] = useState(false);
   const [mainLoader, setMainLoader] = useState(true);
+  const [users, setUsers] = useState([]);
   const hashValues = [
     { id: 3, value: "Fredrik Sundqvist 2" },
     { id: 4, value: "Patrik Sjölin 2" },
@@ -322,8 +343,8 @@ function TextEditorTwo({
     if (socket == null || quill.current == null) return;
     const handler = (delta, oldDelta, source) => {
       if (source != "user") return;
+
       socket.emit("send-changes", delta);
-      console.log(delta);
     };
     quill.current.on("text-change", handler);
 
@@ -343,6 +364,27 @@ function TextEditorTwo({
       socket.off("receive-change", handler);
     };
   }, [socket, quill]);
+
+  useEffect(() => {
+    if (socket == null || quill.current == null) return;
+    socket.on("userJoined", (user) => {
+      console.log(user);
+      setUsers((prevUsers) => [...prevUsers, user]);
+    });
+
+    socket.on("userLeft", (user) => {
+      console.log(user);
+      setUsers((prevUsers) => prevUsers.filter((u) => u !== user));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket, quill]);
+
+  useEffect(() => {
+    console.log(users);
+  }, [users]);
 
   const projectDetails = useSelector((state) => state.projectDetails);
   const { project: mainProjectList } = projectDetails;
@@ -388,6 +430,13 @@ function TextEditorTwo({
 
   const commonUsers = _.unionBy(userCollabs, userOrgCollabs, "value");
 
+  const [editName, setEditName] = useState(false);
+
+  useEffect(() => {
+    if (quill == null) return;
+    quill.current.format("p", "customAttr", "custom-value");
+  }, [quill]);
+
   console.log(commonUsers && commonUsers);
   var tribute;
   useEffect(() => {
@@ -401,6 +450,16 @@ function TextEditorTwo({
         },
         selectTemplate: (item) => {
           return `<p>@${item.original.key}</p>`;
+          // const range = quill.current.getSelection(true).index;
+          // if (range) {
+          //   const delta = new Delta().retain(range).insert("@Hello world", {
+          //     id: "test-1234",
+          //   });
+          //   quill.current.updateContents(delta);
+          //   return;
+          // } else {
+          //   return;
+          // }
         },
       });
     }
@@ -446,7 +505,7 @@ function TextEditorTwo({
   useEffect(() => {
     if (socket == null || quill.current == null) return;
     socket.once("load-document", ({ document, user }) => {
-      socket.emit("send-user", userInfo);
+      socket.emit("joinLobby", userInfo);
       console.log(document);
       if (typeof document === "string") {
         setHtmlData(document);
@@ -485,6 +544,14 @@ function TextEditorTwo({
       )}
 
       {loader && <Loader />}
+
+      {/* <DrawerHistory
+        quill={quill}
+        tab={tab}
+        project={project}
+        open={isDrawerOpen}
+        setOpen={setIsDrawerOpen}
+      /> */}
 
       <Drawer
         anchor="right"
@@ -542,7 +609,15 @@ function TextEditorTwo({
           </Box>
         </Drawer>
       )}
-
+      <EditNameEditor
+        open={editName}
+        setOpen={setEditName}
+        quill={quill}
+        tab={tab}
+        project={project}
+        setEntryUpdate={setEntryUpdate}
+        setWhichTabisActive={setWhichTabisActive}
+      />
       <div
         className={`editor-holder-reactjs-new ${active && "active"}`}
         id={tab._id}
@@ -563,117 +638,292 @@ function TextEditorTwo({
               </Popover.Button>
             </div>
             <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
-              <Popover.Group as="nav" className="flex space-x-10">
-                <Popover className="relative">
-                  {({ open }) => (
-                    <>
-                      <Popover.Button
-                        className={classNames(
-                          open ? "text-gray-900" : "text-gray-500",
-                          "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-offset-2 focus:ring-indigo-500"
-                        )}
-                      >
-                        <span>File</span>
-                        <ChevronDownIcon
-                          className={classNames(
-                            open ? "text-gray-600" : "text-gray-400",
-                            "ml-2 h-5 w-5 group-hover:text-gray-500"
+              <Popover.Group as="nav" className="flex space-x-6">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                      File
+                      <ChevronDownIcon
+                        className="-mr-1 ml-2 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50">
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const editor = quill.current.editor;
+                                setEditName(true);
+                                //
+                                // const imageUrl =
+                                //   "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg";
+                                // editor.insertEmbed(
+                                //   quill.current.getSelection(),
+                                //   "image",
+                                //   imageUrl
+                                // );
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <PencilAltIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Edit Entry Name
+                            </a>
                           )}
-                          aria-hidden="true"
-                        />
-                      </Popover.Button>
-
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-200"
-                        enterFrom="opacity-0 translate-y-1"
-                        enterTo="opacity-100 translate-y-0"
-                        leave="transition ease-in duration-150"
-                        leaveFrom="opacity-100 translate-y-0"
-                        leaveTo="opacity-0 translate-y-1"
-                      >
-                        <Popover.Panel className="absolute z-10 mt-3 px-2 w-screen max-w-lg sm:px-0">
-                          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                            <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                              {fileOptions.map((item) => (
-                                <a
-                                  key={item.name}
-                                  href="#"
-                                  onClick={async (e) => {
-                                    e.preventDefault();
-                                    handleSaveTemplate();
-                                    // if (item.slug === "saveAsTemplate") {
-                                    //   console.log("clicked");
-
-                                    // }
-                                  }}
-                                  className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150"
-                                >
-                                  <p className="text-base font-medium text-gray-900">
-                                    {item.name}
-                                  </p>
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        </Popover.Panel>
-                      </Transition>
-                    </>
-                  )}
-                </Popover>
-                <Popover className="relative">
-                  {({ open }) => (
-                    <>
-                      <Popover.Button
-                        className={classNames(
-                          open ? "text-gray-900" : "text-gray-500",
-                          "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-offset-2 focus:ring-indigo-500"
-                        )}
-                      >
-                        <span>Export</span>
-                        <ChevronDownIcon
-                          className={classNames(
-                            open ? "text-gray-600" : "text-gray-400",
-                            "ml-2 h-5 w-5 group-hover:text-gray-500"
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleSaveTemplate();
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <DuplicateIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Save as Template
+                            </a>
                           )}
-                          aria-hidden="true"
-                        />
-                      </Popover.Button>
+                        </Menu.Item>
+                      </div>
+                      {/* <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-sm"
+                              )}
+                            >
+                              <ArchiveIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Archive
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-sm"
+                              )}
+                            >
+                              <ArrowCircleRightIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Move
+                            </a>
+                          )}
+                        </Menu.Item>
+                      </div>
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-sm"
+                              )}
+                            >
+                              <UserAddIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Share
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-sm"
+                              )}
+                            >
+                              <HeartIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Add to favorites
+                            </a>
+                          )}
+                        </Menu.Item>
+                      </div> */}
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsDrawerOpen(true);
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <DocumentTextIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              View Logs
+                            </a>
+                          )}
+                        </Menu.Item>
+                        {/* <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <TrashIcon
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Delete
+                            </a>
+                          )}
+                        </Menu.Item> */}
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                      Export
+                      <ChevronDownIcon
+                        className="-mr-1 ml-2 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
 
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-200"
-                        enterFrom="opacity-0 translate-y-1"
-                        enterTo="opacity-100 translate-y-0"
-                        leave="transition ease-in duration-150"
-                        leaveFrom="opacity-100 translate-y-0"
-                        leaveTo="opacity-0 translate-y-1"
-                      >
-                        <Popover.Panel className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-lg sm:px-0">
-                          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                            <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                              {exportOptions.map((item) => (
-                                <a
-                                  key={item.name}
-                                  href="#"
-                                  onClick={async (e) => {
-                                    e.preventDefault();
-                                    if (item.slug === "docx") {
-                                      const quillContents =
-                                        quill.current.root.innerHTML;
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="origin-top-right absolute left-0 mt-2 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50">
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const quillContents =
+                                  quill.current.root.innerHTML;
 
-                                      var converted = htmlDocx.asBlob(
-                                        quillContents
-                                      );
-                                      saveAs(converted, tab.name);
-                                    } else if (item.slug === "pdf") {
-                                      const delta = quill.current.getContents();
-                                      const pdfAsBlob = await pdfExporter.generatePdf(
-                                        delta
-                                      );
-                                      saveAs(pdfAsBlob, "pdf-export.pdf");
-                                    } else if (item.slug === "html") {
-                                      let html = `
+                                var converted = htmlDocx.asBlob(quillContents);
+                                saveAs(converted, tab.name);
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              Microsoft Word (.docx)
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                const delta = quill.current.getContents();
+                                const pdfAsBlob = await pdfExporter.generatePdf(
+                                  delta
+                                );
+                                saveAs(pdfAsBlob, "pdf-export.pdf");
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              PDF Document (.pdf)
+                            </a>
+                          )}
+                        </Menu.Item>
+                      </div>
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                let html = `
                                                                 <html>
                                                             <head>
                                                             <link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css">
@@ -719,42 +969,53 @@ function TextEditorTwo({
                                                             </body>
                                                             </html>
                                                                 `;
-                                      let entry = zip.folder("entry");
-                                      entry.file(`entry.html`, html);
-                                      zip
-                                        .generateAsync({ type: "blob" })
-                                        .then((content) => {
-                                          saveAs(content, `export.zip`);
-                                        });
-                                    } else if (item.slug === "json") {
-                                      const deltas = quill.current.getContents();
+                                let entry = zip.folder("entry");
+                                entry.file(`entry.html`, html);
+                                zip
+                                  .generateAsync({ type: "blob" })
+                                  .then((content) => {
+                                    saveAs(content, `export.zip`);
+                                  });
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              Web Page (.html)
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                const deltas = quill.current.getContents();
 
-                                      if (!deltas) {
-                                        return alert("Content not found");
-                                      }
-                                      downloadObjectAsJson(
-                                        deltas.ops,
-                                        "editor-text"
-                                      );
-                                    }
-                                  }}
-                                  className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150"
-                                >
-                                  <p className="text-base font-medium text-gray-900">
-                                    {item.name}
-                                  </p>
-                                  {/* <p className="mt-1 text-sm text-gray-500">
-                                    {item.description}
-                                  </p> */}
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        </Popover.Panel>
-                      </Transition>
-                    </>
-                  )}
-                </Popover>
+                                if (!deltas) {
+                                  return alert("Content not found");
+                                }
+                                downloadObjectAsJson(deltas.ops, "editor-text");
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              Javascript Object Notation (.json)
+                            </a>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
 
                 {/* <a
                   href="#"
@@ -841,6 +1102,21 @@ function TextEditorTwo({
                 </Popover> */}
               </Popover.Group>
               <div className="flex items-center md:ml-12">
+                {/* {users &&
+                  users.length > 0 &&
+                  users.map((u) => (
+                    <Tooltip title={u.email}>
+                      <span className="inline-block relative hover:cursor-pointer">
+                        <img
+                          className="h-10 w-10 rounded-full"
+                          src={`https://ui-avatars.com/api/?background=random&name=${u.name}`}
+                          alt=""
+                        />
+                        <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-green-400" />
+                      </span>
+                    </Tooltip>
+                  ))} */}
+
                 {/* <a
                   href="#"
                   className="ml-8 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
@@ -862,18 +1138,12 @@ function TextEditorTwo({
           >
             <Popover.Panel
               focus
-              className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden"
+              className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden z-[999999]"
             >
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
                 <div className="pt-5 pb-6 px-5">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <img
-                        className="h-8 w-auto"
-                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                        alt="Workflow"
-                      />
-                    </div>
+                    <div>{tab.name}</div>
                     <div className="-mr-2">
                       <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                         <span className="sr-only">Close menu</span>
@@ -881,39 +1151,29 @@ function TextEditorTwo({
                       </Popover.Button>
                     </div>
                   </div>
-                  <div className="mt-6">
-                    <nav className="grid gap-6">
-                      {solutions.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50"
-                        >
-                          <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white">
-                            <item.icon className="h-6 w-6" aria-hidden="true" />
-                          </div>
-                          <div className="ml-4 text-base font-medium text-gray-900">
-                            {item.name}
-                          </div>
-                        </a>
-                      ))}
-                    </nav>
-                  </div>
                 </div>
                 <div className="py-6 px-5">
                   <div className="grid grid-cols-2 gap-4">
                     <a
                       href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setEditName(true);
+                      }}
                       className="text-base font-medium text-gray-900 hover:text-gray-700"
                     >
-                      Pricing
+                      Edit Entry Name
                     </a>
 
                     <a
                       href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSaveTemplate();
+                      }}
                       className="text-base font-medium text-gray-900 hover:text-gray-700"
                     >
-                      Docs
+                      Save as Template
                     </a>
 
                     <a
@@ -922,17 +1182,8 @@ function TextEditorTwo({
                     >
                       Enterprise
                     </a>
-                    {resources.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className="text-base font-medium text-gray-900 hover:text-gray-700"
-                      >
-                        {item.name}
-                      </a>
-                    ))}
                   </div>
-                  <div className="mt-6">
+                  {/* <div className="mt-6">
                     <a
                       href="#"
                       className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
@@ -948,7 +1199,7 @@ function TextEditorTwo({
                         Sign in
                       </a>
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </Popover.Panel>

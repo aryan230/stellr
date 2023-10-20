@@ -3,8 +3,9 @@ import ProjectLog from "../../ProjectSettings/ProjectLog";
 import EntryLog from "./EntryLog";
 import { useDispatch, useSelector } from "react-redux";
 import { listMyEntries } from "../../../redux/actions/entryActions";
+import EmptySlideOvers from "../../../UI/SlideOvers/EmptySlideOvers";
 
-function DrawerHistory({ quill, tab, project }) {
+function DrawerHistory({ quill, tab, project, open, setOpen }) {
   const dispatch = useDispatch();
   const entriesListMy = useSelector((state) => state.entriesListMy);
   const {
@@ -18,6 +19,41 @@ function DrawerHistory({ quill, tab, project }) {
   }, [dispatch]);
 
   return (
+    // <EmptySlideOvers open={open} setOpen={setOpen} title="Logs">
+    //   <div className="drawer-info">
+    //     <div className="drawer-info-inside">
+    //       {" "}
+    //       <form
+    //         action="
+    //   "
+    //       >
+    //         <label htmlFor="">Name</label>
+    //         <input
+    //           value={tab.name}
+    //           type="text"
+    //           placeholder="Enter a name for your entry"
+    //           disabled
+    //         />
+    //         <div className="view-logs-inside">
+    //           <div className="header-logs-inside main">
+    //             <h2>User</h2>
+    //             <h2 className="log-message-h2">Log Message</h2>
+    //             <h2>Time</h2>
+    //           </div>
+    //           {entries &&
+    //             entries.find((e) => e._id == tab._id) &&
+    //             entries.find((e) => e._id == tab._id).logs &&
+    //             entries
+    //               .find((e) => e._id == tab._id)
+    //               .logs.sort(function(a, b) {
+    //                 return new Date(b.date) - new Date(a.date);
+    //               })
+    //               .map((d) => <EntryLog d={d} />)}
+    //         </div>
+    //       </form>
+    //     </div>
+    //   </div>
+    // </EmptySlideOvers>
     <div className="drawer-info">
       <div className="drawer-info-inside">
         <div className="drawer-info-top">
