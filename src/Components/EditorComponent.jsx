@@ -1068,6 +1068,7 @@ function EditorComponent() {
                 CDUpdate={CDUpdate}
                 setCDUpdate={setCDUpdate}
                 newSample={newSample}
+                setCreateDrawingModal={setCreateDrawingModal}
                 setNewSample={setNewSample}
                 setCreateNewSampleModal={setCreateNewSampleModal}
                 setSampleUpdate={setSampleUpdate}
