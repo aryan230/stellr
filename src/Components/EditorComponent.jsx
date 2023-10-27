@@ -53,6 +53,20 @@ import { addToState } from "../redux/actions/stateActions";
 import TextEditorTwoRead from "./Editor/QuillEditorTwoRead";
 import MainToast from "./Toast/MainToast";
 import DefaultSlideOvers from "../UI/SlideOvers/DefaultSlideOvers";
+import ListChemicalDrawingAll from "./ListChemicalDrawingAll";
+import CDEntries from "./Entries/CDEntries";
+import {
+  Calendar,
+  CheckCheck,
+  File,
+  Folders,
+  HomeIcon,
+  LayoutGrid,
+  MoreVertical,
+  Plus,
+  Settings,
+  User2,
+} from "lucide-react";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -282,11 +296,21 @@ function EditorComponent() {
   //checmical Drawing
 
   const [createDrawingModal, setCreateDrawingModal] = useState(false);
-
+  const [CDModal, setCDModal] = useState(false);
+  const [CDModalContent, setCDModalContent] = useState();
+  const [CDUpdate, setCDUpdate] = useState(false);
   return (
     <div className="main-container">
       <MainToast />
       <Toaster position="top-center" reverseOrder={true} />
+      {CDModal && (
+        <CDEntries
+          setOpen={setCDModal}
+          open={CDModal}
+          doc={CDModalContent}
+          setCDUpdate={setCDUpdate}
+        />
+      )}
       {taskModal && (
         <TaskModal
           setTaskModal={setTaskModal}
@@ -365,6 +389,10 @@ function EditorComponent() {
         setNewSop={setNewSop}
         createDrawingModal={createDrawingModal}
         setCreateDrawingModal={setCreateDrawingModal}
+        setCDModal={setCDModal}
+        setCDModalContent={setCDModalContent}
+        CDUpdate={CDUpdate}
+        setCDUpdate={setCDUpdate}
       />
       <div className="main-content">
         {showBanner && <Banner setShowBanner={setShowBanner} />}
@@ -385,6 +413,155 @@ function EditorComponent() {
             }}
           />
         </div>
+        {/* <div className="custom-mobile-navbar">
+          <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-indigo-700 dark:border-indigo-600">
+            <div className="grid h-full max-w-lg grid-cols-7 mx-auto">
+              <button
+                data-tooltip-target="tooltip-home"
+                type="button"
+                className="inline-flex flex-col items-center justify-center px-5 rounded-l-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <HomeIcon color="#ffffff" size={16} />
+                <span className="sr-only">Home</span>
+              </button>
+              <div
+                id="tooltip-home"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Home
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+              <button
+                data-tooltip-target="tooltip-wallet"
+                type="button"
+                className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <Folders color="#ffffff" size={16} />
+                <span className="sr-only">Wallet</span>
+              </button>
+              <div
+                id="tooltip-wallet"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Wallet
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+              <button
+                data-tooltip-target="tooltip-wallet"
+                type="button"
+                className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <LayoutGrid color="#ffffff" size={16} />
+                <span className="sr-only">Wallet</span>
+              </button>
+              <div
+                id="tooltip-wallet"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Wallet
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+              <div className="flex items-center justify-center relative">
+                <button
+                  data-tooltip-target="tooltip-new"
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("clicked");
+                    const ele = document.getElementById("drop-mob-one");
+                    if (ele.style.bottom == "-2000px") {
+                      ele.style.bottom = "20px";
+                    } else {
+                      ele.style.bottom = "-2000px";
+                    }
+                  }}
+                  className="inline-flex items-center justify-center w-10 h-10 font-medium bg-white rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  <Plus color="black" size={16} />
+                  <span className="sr-only">New item</span>
+                </button>
+              </div>
+              <div
+                id="tooltip-new"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Create new item
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+
+              <button
+                data-tooltip-target="tooltip-settings"
+                type="button"
+                className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <Calendar color="#ffffff" size={16} />
+                <span className="sr-only">Settings</span>
+              </button>
+
+              <div
+                id="tooltip-settings"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Settings
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+              <button
+                data-tooltip-target="tooltip-profile"
+                type="button"
+                className="inline-flex flex-col items-center justify-center px-5 rounded-r-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <User2 color="#ffffff" size={16} />
+                <span className="sr-only">Profile</span>
+              </button>
+              <div
+                id="tooltip-profile"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Profile
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+              <button
+                data-tooltip-target="tooltip-profile"
+                type="button"
+                className="inline-flex flex-col items-center justify-center px-5 rounded-r-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <MoreVertical color="#ffffff" size={16} />
+                <span className="sr-only">Profile</span>
+              </button>
+              <div
+                id="tooltip-profile"
+                role="tooltip"
+                className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Profile
+                <div className="tooltip-arrow" data-popper-arrow="" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="drop-mob-one" className="drop-down-content-mobile-new">
+          <div className="dpp-inside">
+            {" "}
+            <div className="mob-elements">
+              <Folders size={18} />
+              <p>Project</p>
+            </div>
+            <div className="mob-elements">
+              <File size={18} />
+              <p>Entry</p>
+            </div>
+            <div className="mob-elements">
+              <CheckCheck size={18} />
+              <p>Task</p>
+            </div>
+          </div>
+        </div> */}
         <div
           className="mobile-navbar"
           ref={mobileRef}
@@ -882,6 +1059,19 @@ function EditorComponent() {
                 setTaskUpdateController={setTaskUpdateController}
                 setEntryUpdate={setEntryUpdate}
                 setModal={setModal}
+              />
+            )}
+            {whichTabisActive === "chemicalList" && (
+              <ListChemicalDrawingAll
+                setCDModal={setCDModal}
+                setCDModalContent={setCDModalContent}
+                CDUpdate={CDUpdate}
+                setCDUpdate={setCDUpdate}
+                newSample={newSample}
+                setNewSample={setNewSample}
+                setCreateNewSampleModal={setCreateNewSampleModal}
+                setSampleUpdate={setSampleUpdate}
+                sampleUpdate={sampleUpdate}
               />
             )}
             {whichTabisActive === "sampleList" && (

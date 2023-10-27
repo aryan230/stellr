@@ -17,13 +17,15 @@ import "quill-mention";
 import { MentionBlot } from "./Tools/MentionBlot";
 import "tributejs/dist/tribute.css";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
-import ReactQuill, { Quill } from "react-quill";
+import ReactQuill from "react-quill";
 import {
   AlertTriangle,
+  Biohazard,
   Book,
   Cloud,
   FileText,
   LayoutPanelTop,
+  Table2,
 } from "lucide-react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
@@ -78,22 +80,10 @@ import { downloadObjectAsJson } from "../Functions/downloadJson";
 import DetailSlideOver from "../../UI/SlideOvers/DetailSlideOver";
 import Delta from "quill-delta";
 import EditNameEditor from "./EditorSettings/EditNameEditor";
+import ChemicalDrawingEntry from "./EditorSettings/ChemicalDrawingEntry";
+import Quill from "quill";
 
 const zip = new JSZip();
-
-let Inline = Quill.import("blots/inline");
-
-class SpanBlock extends Inline {
-  static create(value) {
-    let node = super.create();
-    node.setAttribute("class", "spanblock");
-    return node;
-  }
-}
-
-SpanBlock.blotName = "spanblock";
-SpanBlock.tagName = "div";
-Quill.register(SpanBlock);
 
 const fileOptions = [
   {
@@ -232,6 +222,15 @@ function TextEditorTwo({
   const [warningModal, setWarningModal] = useState(false);
   const [mainLoader, setMainLoader] = useState(true);
   const [users, setUsers] = useState([]);
+  const [chemicalDrawing, setChemicalDrawing] = useState(false);
+
+  const entriesListMy = useSelector((state) => state.entriesListMy);
+  const {
+    entries,
+    loading: loadingEntries,
+    error: errorEntries,
+  } = entriesListMy;
+
   const hashValues = [
     { id: 3, value: "Fredrik Sundqvist 2" },
     { id: 4, value: "Patrik Sjölin 2" },
@@ -408,6 +407,8 @@ function TextEditorTwo({
     dispatch(listMySops(userInfo._id));
   }, [dispatch, tab]);
 
+  console.log(entries);
+
   const [userCollabs, setUserCollabs] = useState(
     mainProjectList &&
       mainProjectList.collaborators &&
@@ -415,6 +416,7 @@ function TextEditorTwo({
       ? mainProjectList.collaborators.map(({ userName: key, user: value }) => ({
           key,
           value,
+          mainType: "User",
         }))
       : []
   );
@@ -424,11 +426,28 @@ function TextEditorTwo({
       ? findOrg.collaborators.map(({ userName: key, user: value }) => ({
           key,
           value,
+          mainType: "User",
         }))
       : []
   );
 
-  const commonUsers = _.unionBy(userCollabs, userOrgCollabs, "value");
+  const [entryOptions, setEntryOptions] = useState(
+    entries
+      ? entries.map(({ name: key, _id: value, type: type }) => ({
+          key,
+          value,
+          type,
+          mainType: "Entry",
+        }))
+      : []
+  );
+
+  const commonUsers = _.unionBy(
+    userCollabs,
+    userOrgCollabs,
+    entryOptions,
+    "value"
+  );
 
   const [editName, setEditName] = useState(false);
 
@@ -437,8 +456,25 @@ function TextEditorTwo({
     quill.current.format("p", "customAttr", "custom-value");
   }, [quill]);
 
+  useEffect(() => {
+    if (document.querySelectorAll('a[href*="custom"]')) {
+      let elements = document.querySelectorAll('a[href*="custom"]');
+      if (elements) {
+        elements.forEach((e) => {
+          e.setAttribute("contenteditable", "false");
+          e.setAttribute("class", "custom-element-mention");
+          e.addEventListener("click", (el) => {
+            el.preventDefault();
+          });
+        });
+      }
+    }
+  }, [document.querySelectorAll('a[href*="custom"]'), quill]);
+
   console.log(commonUsers && commonUsers);
   var tribute;
+
+  const getMenuTemplate = async (item) => {};
   useEffect(() => {
     if (commonUsers) {
       tribute = new Tribute({
@@ -446,20 +482,24 @@ function TextEditorTwo({
         lookup: "key",
         fillAttr: "value",
         menuItemTemplate: (item) => {
-          return `<span class="tribute-item">${item.original.key}</span>`;
+          if (item.original.type === "Lab Notebook") {
+            return `<span class="tribute-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+              ${item.original.key}</span>`;
+          } else if (item.original.type === "Lab Sheet") {
+            return `<span class="tribute-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+            ${item.original.key}</span>`;
+          } else {
+            return `<span class="tribute-item">
+                
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5d00d2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+         
+       ${item.original.key}</span>`;
+          }
         },
         selectTemplate: (item) => {
-          return `<p>@${item.original.key}</p>`;
-          // const range = quill.current.getSelection(true).index;
-          // if (range) {
-          //   const delta = new Delta().retain(range).insert("@Hello world", {
-          //     id: "test-1234",
-          //   });
-          //   quill.current.updateContents(delta);
-          //   return;
-          // } else {
-          //   return;
-          // }
+          return `<a href='#custom#${item.original.mainType}#${item.original.value}' contenteditable="false" class="custom-element-mention">@${item.original.key}</a>`;
         },
       });
     }
@@ -617,6 +657,13 @@ function TextEditorTwo({
         project={project}
         setEntryUpdate={setEntryUpdate}
         setWhichTabisActive={setWhichTabisActive}
+      />
+      <ChemicalDrawingEntry
+        open={chemicalDrawing}
+        setOpen={setChemicalDrawing}
+        quill={quill}
+        tab={tab}
+        project={project}
       />
       <div
         className={`editor-holder-reactjs-new ${active && "active"}`}
@@ -840,6 +887,89 @@ function TextEditorTwo({
                                 aria-hidden="true"
                               />
                               Delete
+                            </a>
+                          )}
+                        </Menu.Item> */}
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                      Insert
+                      <ChevronDownIcon
+                        className="-mr-1 ml-2 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50">
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const editor = quill.current.editor;
+                                setChemicalDrawing(true);
+                                //
+                                // const imageUrl =
+                                //   "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg";
+                                // editor.insertEmbed(
+                                //   quill.current.getSelection(),
+                                //   "image",
+                                //   imageUrl
+                                // );
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <Biohazard
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Chemical Drawing
+                            </a>
+                          )}
+                        </Menu.Item>
+                        {/* <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const editor = quill.current.editor;
+                                setChemicalDrawing(true);
+                                
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <Table2
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Lab Sheet
                             </a>
                           )}
                         </Menu.Item> */}

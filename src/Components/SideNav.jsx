@@ -62,6 +62,10 @@ function SideNav({
   setNewSop,
   createDrawingModal,
   setCreateDrawingModal,
+  setCDModal,
+  setCDModalContent,
+  CDUpdate,
+  setCDUpdate,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -154,7 +158,11 @@ function SideNav({
         />
       )}
       {createDrawingModal && (
-        <CreateKetcher setCreateDrawingModal={setCreateDrawingModal} />
+        <CreateKetcher
+          setCreateDrawingModal={setCreateDrawingModal}
+          setWhichTabisActive={setWhichTabisActive}
+          setCDUpdate={setCDUpdate}
+        />
       )}
       {dataExport && <DataExport setDataExport={setDataExport} />}
       {entryModal && (
@@ -386,7 +394,7 @@ function SideNav({
                     </div>
                   </div>
                 </button>
-                {/* <button
+                <button
                   onClick={() => {
                     setLoader(true);
                     window.setTimeout(() => {
@@ -402,7 +410,7 @@ function SideNav({
                       <p>Chemical Drawing</p>
                     </div>
                   </div>
-                </button> */}
+                </button>
                 <button
                   onClick={() => {
                     setLoader(true);
@@ -532,6 +540,21 @@ function SideNav({
             </a>
             <div className="drop-down-content">
               <div className="middle-navbar-container">
+                <button
+                  onClick={async () => {
+                    setMiddleNav(false);
+                    await dispatch(addToState("chemicalList"));
+                    setWhichTabisActive("chemicalList");
+                  }}
+                  className="mnc-element"
+                >
+                  <div className="mnc-element-inside">
+                    <div className="mnc-element-left">
+                      <Biohazard size={16} />
+                      <p>Chemical Drawing</p>
+                    </div>
+                  </div>
+                </button>
                 <button
                   onClick={async () => {
                     setMiddleNav(false);

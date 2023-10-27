@@ -286,16 +286,72 @@ body {
 }
 
 .mention_tool_at,
-.mention-here {
+.mention-here,
+.custom-element-mention {
   width: fit-content;
+  font-family: karla;
   background-color: #0a80f3;
-  padding: 0.2rem 2rem !important;
-  color: white;
+  padding: 0.5rem 2rem !important;
+  color: white !important;
+  text-decoration: none !important;
   border-radius: 999px;
   &:hover {
     cursor: pointer;
   }
 }
+.tribute-container {
+  width: 50%;
+  background-color: white !important;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  max-height: 200px !important;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+.tribute-container ul {
+  li {
+    background-color: white !important;
+    border-bottom: 1px solid rgb(218, 218, 218);
+    font-family: karla;
+    font-weight: 400;
+    &:hover {
+      background-color: #cfcfcf18 !important;
+    }
+    transition: 0.2s all;
+    .tribute-item {
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 100px;
+        margin-right: 5px;
+      }
+      svg {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
 .tribute-active {
   outline: none !important;
   /* Add any other styles as needed */
