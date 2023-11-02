@@ -72,9 +72,8 @@ function ListOrganizations({
 
   const columns = [
     { id: "name", label: "Entity Name", minWidth: 100 },
-    { id: "type", label: "Entity Type", minWidth: 170 },
-    { id: "status", label: "Entity Status", minWidth: 170 },
-    { id: "createdBy", label: "Created By", minWidth: 170 },
+    { id: "type", label: "Entity Type", minWidth: 100 },
+    { id: "status", label: "Entity Status", minWidth: 100 },
     { id: "statusBy", label: "Approved/Declined by", minWidth: 170 },
     {
       id: "view",
@@ -139,7 +138,8 @@ function ListOrganizations({
       ? orgs[0].user == userInfo._id && "Owner"
       : orgsCollab && orgsCollab.length > 0
       ? orgsCollab[0].collaborators.find((e) => e.user == userInfo._id) &&
-        orgsCollab[0].collaborators.find((e) => e.user == userInfo._id).userType
+        orgsCollab[0].collaborators.find((e) => e.user == userInfo._id)
+          .permissions
       : null;
 
   console.log(findOrgRole);
@@ -246,6 +246,15 @@ function ListOrganizations({
       })
       .reduce((partialSum, a) => partialSum + a, 0);
 
+  let finalCountSOP =
+    orgContent &&
+    orgContent.orgData &&
+    orgContent.orgData
+      .map((u) => {
+        return u.sops.length;
+      })
+      .reduce((partialSum, a) => partialSum + a, 0);
+
   return (
     <div className="project-component">
       <Helmet>
@@ -276,572 +285,1053 @@ function ListOrganizations({
         )}
         {orgs && (
           <div className="project-component-inside">
-            {/* <div className="project-c-header">
-              <div className="project-c-header-left">
-                <h1>Browse Organizations </h1>
-                <input
-                  type="text"
-                  placeholder={`Search Organizations`}
-                  onChange={(e) => setInputSearch(e.target.value)}
-                />
-              </div>
-            </div> */}
-            <nav className="bg-white border-gray-200 py-10">
-              <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="#" className="flex items-center">
-                  <img
-                    src={`https://ui-avatars.com/api/?background=random&name=${findOrg &&
-                      findOrg.name}`}
-                    className="h-8 mr-3"
-                    alt="Organization Logo"
-                  />
-                  <span className="self-center text-2xl font-semibold whitespace-nowrap">
-                    {findOrg && findOrg.name}
-                  </span>
-                </a>
-                <button
-                  data-collapse-toggle="navbar-default"
-                  type="button"
-                  className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-                  aria-controls="navbar-default"
-                  aria-expanded="false"
-                >
-                  <span className="sr-only">Open main menu</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 17 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M1 1h15M1 7h15M1 13h15"
+            <div className="md:flex md:items-center md:justify-between md:space-x-5 py-10 mx-auto w-[80%] font-inter">
+              <div className="flex items-start space-x-5">
+                <div className="flex-shrink-0">
+                  <div className="relative">
+                    <img
+                      className="h-16 w-16 rounded-full"
+                      src={`https://ui-avatars.com/api/?background=random&name=${findOrg &&
+                        findOrg.name}`}
+                      alt=""
                     />
-                  </svg>
-                </button>
-                <div
-                  className="hidden w-full md:block md:w-auto"
-                  id="navbar-default"
-                >
-                  <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
-                    <li>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          if (findOrg) {
-                            e.preventDefault();
-                            setOrgContentSettings(findOrg);
-                            setOrgSettings(true);
-                          }
-                        }}
-                        className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0"
-                        aria-current="page"
-                      >
-                        View Settings
-                      </a>
-                    </li>
-                  </ul>
+                    <span
+                      className="absolute inset-0 shadow-inner rounded-full"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+                {/*
+          Use vertical padding to simulate center alignment when both lines of text are one line,
+          but preserve the same layout if the text wraps without making the image jump around.
+        */}
+                <div className="pt-1.5">
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {findOrg && findOrg.name}
+                  </h1>
+                  <p className="text-sm font-medium text-gray-500">
+                    This organization was created on{" "}
+                    <time dateTime="2020-08-25">
+                      {findOrg && new Date(findOrg.createdAt).toUTCString()}
+                    </time>
+                  </p>
                 </div>
               </div>
-            </nav>
-
-            <div className="project-c-bottom">
-              <div className="relative overflow-x-auto">
-                <TableContainer sx={{ maxHeight: "100%" }}>
-                  <Table
-                    stickyHeader
-                    aria-label="sticky table"
-                    className="custom-font-mui"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        {columns.map((column) => (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            style={{ minWidth: column.minWidth }}
-                          >
-                            {column.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {orgContent &&
-                        orgContent.orgData.map((u) =>
-                          u.protocols
-                            .map(
-                              ({
-                                title: name,
-                                createdAt: createdAt,
-                                _id,
-                                status,
-                                statusBy,
-                              }) => ({
-                                _id,
-                                name,
-                                type: "Protocol",
-                                status,
-                                statusBy,
-                                createdBy: u.name,
-                                createdAt: new Date(createdAt).toLocaleString(),
-                              })
-                            )
-                            .slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
-                            .map((row) => {
-                              return (
-                                <TableRow
-                                  hover
-                                  role="checkbox"
-                                  tabIndex={-1}
-                                  key={row.code}
-                                >
-                                  {columns.map((column) => {
-                                    if (column.id === "edit") {
-                                      if (findOrgRole) {
-                                        if (findOrgRole === "Owner") {
-                                          return (
-                                            <TableCell
-                                              key={column.id}
-                                              align={column.align}
-                                            >
-                                              <button
-                                                type="button"
-                                                onClick={() => {
-                                                  let content = u.protocols.find(
-                                                    (e) => e._id === row._id
-                                                  );
-                                                  setEType("Protocol");
-                                                  setOrgStatusContent(content);
-                                                  setOrgStatus(true);
-                                                }}
-                                                className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-                                              >
-                                                Edit Status
-                                              </button>
-                                            </TableCell>
-                                          );
-                                        } else {
-                                          return (
-                                            <TableCell
-                                              key={column.id}
-                                              align={column.align}
-                                            ></TableCell>
-                                          );
-                                        }
-                                      }
-                                    } else if (column.id === "status") {
-                                      return (
-                                        <TableCell
-                                          key={column.id}
-                                          align={column.align}
-                                        >
-                                          {row.status === "Draft" && (
-                                            <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              Draft
-                                            </span>
-                                          )}
-                                          {row.status === "In Progress" && (
-                                            <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              In Progress
-                                            </span>
-                                          )}
-                                          {row.status === "Approved" && (
-                                            <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              Approved
-                                            </span>
-                                          )}
-                                          {row.status === "Rejected" && (
-                                            <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              Rejected
-                                            </span>
-                                          )}
-                                        </TableCell>
-                                      );
-                                    } else if (column.id === "view") {
-                                      const value = row[column.id];
-                                      return (
-                                        <TableCell
-                                          key={column.id}
-                                          align={column.align}
-                                        >
-                                          <a
-                                            href="#"
-                                            className="font-medium text-blue-600 hover:underline"
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                              let content = u.protocols.find(
-                                                (e) => e._id === row._id
-                                              );
-                                              setProtocolContent(content);
-                                              setProtocolModal(true);
-                                            }}
-                                          >
-                                            View
-                                          </a>
-                                        </TableCell>
-                                      );
-                                    } else {
-                                      const value = row[column.id];
-                                      return (
-                                        <TableCell
-                                          key={column.id}
-                                          align={column.align}
-                                        >
-                                          {column.format &&
-                                          typeof value === "number"
-                                            ? column.format(value)
-                                            : value}
-                                        </TableCell>
-                                      );
-                                    }
-                                  })}
-                                </TableRow>
-                              );
-                            })
-                        )}
-                      {orgContent &&
-                        orgContent.orgData.map((u) =>
-                          u.sops
-                            .map(
-                              ({
-                                title: name,
-                                createdAt: createdAt,
-                                _id,
-                                status,
-                                statusBy,
-                              }) => ({
-                                _id,
-                                name,
-                                type: "SOP",
-                                status,
-                                statusBy,
-                                createdBy: u.name,
-                                createdAt: new Date(createdAt).toLocaleString(),
-                              })
-                            )
-                            .slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
-                            .map((row) => {
-                              return (
-                                <TableRow
-                                  hover
-                                  role="checkbox"
-                                  tabIndex={-1}
-                                  key={row.code}
-                                >
-                                  {columns.map((column) => {
-                                    if (column.id === "edit") {
-                                      if (findOrgRole) {
-                                        if (findOrgRole === "Owner") {
-                                          return (
-                                            <TableCell
-                                              key={column.id}
-                                              align={column.align}
-                                            >
-                                              <button
-                                                type="button"
-                                                onClick={() => {
-                                                  let content = u.sops.find(
-                                                    (e) => e._id === row._id
-                                                  );
-                                                  setEType("SOP");
-                                                  setOrgStatusContent(content);
-                                                  setOrgStatus(true);
-                                                }}
-                                                className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-                                              >
-                                                Edit Status
-                                              </button>
-                                            </TableCell>
-                                          );
-                                        } else {
-                                          return (
-                                            <TableCell
-                                              key={column.id}
-                                              align={column.align}
-                                            ></TableCell>
-                                          );
-                                        }
-                                      }
-                                    } else if (column.id === "status") {
-                                      return (
-                                        <TableCell
-                                          key={column.id}
-                                          align={column.align}
-                                        >
-                                          {row.status === "Draft" && (
-                                            <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              Draft
-                                            </span>
-                                          )}
-                                          {row.status === "In Progress" && (
-                                            <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              In Progress
-                                            </span>
-                                          )}
-                                          {row.status === "Approved" && (
-                                            <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              Approved
-                                            </span>
-                                          )}
-                                          {row.status === "Rejected" && (
-                                            <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                              Rejected
-                                            </span>
-                                          )}
-                                        </TableCell>
-                                      );
-                                    } else if (column.id === "view") {
-                                      const value = row[column.id];
-                                      return (
-                                        <TableCell
-                                          key={column.id}
-                                          align={column.align}
-                                        >
-                                          <a
-                                            href="#"
-                                            className="font-medium text-blue-600 hover:underline"
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                              let content = u.sops.find(
-                                                (e) => e._id === row._id
-                                              );
-                                              setSopContent(content);
-                                              setSopModal(true);
-                                            }}
-                                          >
-                                            View
-                                          </a>
-                                        </TableCell>
-                                      );
-                                    } else {
-                                      const value = row[column.id];
-                                      return (
-                                        <TableCell
-                                          key={column.id}
-                                          align={column.align}
-                                        >
-                                          {column.format &&
-                                          typeof value === "number"
-                                            ? column.format(value)
-                                            : value}
-                                        </TableCell>
-                                      );
-                                    }
-                                  })}
-                                </TableRow>
-                              );
-                            })
-                        )}
-                      {/* {data &&
-                        data.length > 0 &&
-                        data
-                          .map(
-                            ({
-                              name: name,
-                              description,
-                              createdAt: createdAt,
-                              _id,
-                            }) => ({
-                              _id,
-                              name,
-                              description,
-                              createdAt: new Date(createdAt).toLocaleString(),
-                            })
-                          )
-                          .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                          .map((row) => {
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={row.code}
-                              >
-                                {columns.map((column) => {
-                                  if (column.id === "download") {
-                                    const value = row[column.id];
-                                    return (
-                                      <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                      >
-                                        <button
-                                          type="button"
-                                          onClick={() => {}}
-                                          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-                                        >
-                                          Download
-                                        </button>
-                                      </TableCell>
-                                    );
-                                  } else if (column.id === "view") {
-                                    const value = row[column.id];
-                                    return (
-                                      <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                      >
-                                        <a
-                                          href="#"
-                                          className="font-medium text-blue-600 hover:underline"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            let content = data.find(
-                                              (e) => e._id === row._id
-                                            );
-                                            setViewReportContent(content);
-                                            setViewReport(true);
-                                          }}
-                                        >
-                                          View
-                                        </a>
-                                      </TableCell>
-                                    );
-                                  } else {
-                                    const value = row[column.id];
-                                    return (
-                                      <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                      >
-                                        {column.format &&
-                                        typeof value === "number"
-                                          ? column.format(value)
-                                          : value}
-                                      </TableCell>
-                                    );
-                                  }
-                                })}
-                              </TableRow>
-                            );
-                          })} */}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[8, 16, 100]}
-                  component="div"
-                  count={finalCount && finalCount}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-                {/* <table className="w-full text-sm text-left text-gray-500">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        Entity Name
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Entity Type
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Entity Status
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Entity Created by
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Approved/Declined by
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        View
-                      </th>
-                      {findOrgRole === "Owner" && (
-                        <th scope="col" className="px-6 py-3">
-                          Edit
-                        </th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orgContent &&
-                      orgContent.orgData.map((u) =>
-                        u.protocols.map((p) => (
-                          <tr className="bg-white border-b">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              {p.title}
-                            </th>
-                            <td className="px-6 py-4">Protocol</td>
-                            <td className="px-6 py-4">
-                              {p.status === "Draft" && (
-                                <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                  Draft
-                                </span>
-                              )}
-                              {p.status === "In Progress" && (
-                                <span className="bg-yellow-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                  In Progress
-                                </span>
-                              )}
-                              {p.status === "Approved" && (
-                                <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                  Approved
-                                </span>
-                              )}
-                              {p.status === "Rejected" && (
-                                <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                  Rejected
-                                </span>
-                              )}
-                            </td>
-
-                            <td className="px-6 py-4">{u.name}</td>
-                            <td className="px-6 py-4">
-                              {p.statusBy ? p.statusBy : "N/A"}
-                            </td>
-                            <td className="px-6 py-4">
-                              {" "}
-                              <a
-                                href="#"
-                                onClick={(e) => {
-                                  setProtocolContent(p);
-                                  setProtocolModal(true);
-                                }}
-                                className="font-medium text-blue-600 hover:underline"
-                              >
-                                View
-                              </a>
-                            </td>
-                            {findOrgRole === "Owner" && (
-                              <td className="px-6 py-4">
-                                {" "}
-                                <a
-                                  href="#"
-                                  onClick={(e) => {
-                                    setOrgStatusContent(p);
-                                    setOrgStatus(true);
-                                  }}
-                                  className="font-medium text-blue-600 hover:underline"
-                                >
-                                  Edit Status
-                                </a>
-                              </td>
-                            )}
-                          </tr>
-                        ))
-                      )}
-                  </tbody>
-                </table> */}
+              <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
+                {/* <button
+                  type="button"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                >
+                  Disqualify
+                </button> */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    if (findOrg) {
+                      e.preventDefault();
+                      setOrgContentSettings(findOrg);
+                      setOrgSettings(true);
+                    }
+                  }}
+                  className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                >
+                  Settings
+                </button>
               </div>
+            </div>
+            <div className="w-[80%] font-sans mx-auto border-t border-gray-200 bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
+              <div className="px-6 py-5 text-sm font-medium text-center">
+                <span className="text-gray-900">
+                  {findOrg && findOrg.collaborators.length}
+                </span>{" "}
+                <span className="text-gray-600">Members</span>
+              </div>
+              <div className="px-6 py-5 text-sm font-medium text-center">
+                <span className="text-gray-900">
+                  {finalCount && finalCount}
+                </span>{" "}
+                <span className="text-gray-600">Protocols</span>
+              </div>
+              <div className="px-6 py-5 text-sm font-medium text-center">
+                <span className="text-gray-900">
+                  {finalCountSOP && finalCountSOP}
+                </span>{" "}
+                <span className="text-gray-600">SOPs</span>
+              </div>
+            </div>
+            <div className="project-c-bottom">
+              {findOrgRole === "Admin" ? (
+                <div className="relative overflow-x-auto">
+                  <TableContainer sx={{ maxHeight: "100%" }}>
+                    <Table
+                      stickyHeader
+                      aria-label="sticky table"
+                      className="custom-font-mui"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              style={{ minWidth: column.minWidth }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {orgContent &&
+                          orgContent.orgData.map((u) =>
+                            u.protocols
+                              .map(
+                                ({
+                                  title: name,
+                                  createdAt: createdAt,
+                                  _id,
+                                  status,
+                                  statusBy,
+                                }) => ({
+                                  _id,
+                                  name,
+                                  type: "Protocol",
+                                  status,
+                                  statusBy: statusBy ? statusBy : "-",
+                                  createdBy: u.name,
+                                  createdAt: new Date(
+                                    createdAt
+                                  ).toLocaleString(),
+                                })
+                              )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((row) => {
+                                return (
+                                  <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={row.code}
+                                  >
+                                    {columns.map((column) => {
+                                      if (column.id === "edit") {
+                                        if (findOrgRole) {
+                                          if (findOrgRole === "Owner") {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    let content = u.protocols.find(
+                                                      (e) => e._id === row._id
+                                                    );
+                                                    setEType("Protocol");
+                                                    setOrgStatusContent(
+                                                      content
+                                                    );
+                                                    setOrgStatus(true);
+                                                  }}
+                                                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                                >
+                                                  Edit Status
+                                                </button>
+                                              </TableCell>
+                                            );
+                                          } else {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              ></TableCell>
+                                            );
+                                          }
+                                        }
+                                      } else if (column.id === "status") {
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {row.status === "Draft" && (
+                                              <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Draft
+                                              </span>
+                                            )}
+                                            {row.status === "In Progress" && (
+                                              <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                In Progress
+                                              </span>
+                                            )}
+                                            {row.status === "Approved" && (
+                                              <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Approved
+                                              </span>
+                                            )}
+                                            {row.status === "Rejected" && (
+                                              <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Rejected
+                                              </span>
+                                            )}
+                                          </TableCell>
+                                        );
+                                      } else if (column.id === "view") {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            <a
+                                              href="#"
+                                              className="font-medium text-blue-600 hover:underline"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let content = u.protocols.find(
+                                                  (e) => e._id === row._id
+                                                );
+                                                setProtocolContent(content);
+                                                setProtocolModal(true);
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                          </TableCell>
+                                        );
+                                      } else {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {column.format &&
+                                            typeof value === "number"
+                                              ? column.format(value)
+                                              : value}
+                                          </TableCell>
+                                        );
+                                      }
+                                    })}
+                                  </TableRow>
+                                );
+                              })
+                          )}
+                        {orgContent &&
+                          orgContent.orgData.map((u) =>
+                            u.sops
+                              .map(
+                                ({
+                                  title: name,
+                                  createdAt: createdAt,
+                                  _id,
+                                  status,
+                                  statusBy,
+                                }) => ({
+                                  _id,
+                                  name,
+                                  type: "SOP",
+                                  status,
+                                  statusBy: statusBy ? statusBy : "-",
+                                  createdBy: u.name,
+                                  createdAt: new Date(
+                                    createdAt
+                                  ).toLocaleString(),
+                                })
+                              )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((row) => {
+                                return (
+                                  <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={row.code}
+                                  >
+                                    {columns.map((column) => {
+                                      if (column.id === "edit") {
+                                        if (findOrgRole) {
+                                          if (findOrgRole === "Owner") {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    let content = u.sops.find(
+                                                      (e) => e._id === row._id
+                                                    );
+                                                    setEType("SOP");
+                                                    setOrgStatusContent(
+                                                      content
+                                                    );
+                                                    setOrgStatus(true);
+                                                  }}
+                                                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                                >
+                                                  Edit Status
+                                                </button>
+                                              </TableCell>
+                                            );
+                                          } else {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              ></TableCell>
+                                            );
+                                          }
+                                        }
+                                      } else if (column.id === "status") {
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {row.status === "Draft" && (
+                                              <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Draft
+                                              </span>
+                                            )}
+                                            {row.status === "In Progress" && (
+                                              <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                In Progress
+                                              </span>
+                                            )}
+                                            {row.status === "Approved" && (
+                                              <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Approved
+                                              </span>
+                                            )}
+                                            {row.status === "Rejected" && (
+                                              <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Rejected
+                                              </span>
+                                            )}
+                                          </TableCell>
+                                        );
+                                      } else if (column.id === "view") {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            <a
+                                              href="#"
+                                              className="font-medium text-blue-600 hover:underline"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let content = u.sops.find(
+                                                  (e) => e._id === row._id
+                                                );
+                                                setSopContent(content);
+                                                setSopModal(true);
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                          </TableCell>
+                                        );
+                                      } else {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {column.format &&
+                                            typeof value === "number"
+                                              ? column.format(value)
+                                              : value}
+                                          </TableCell>
+                                        );
+                                      }
+                                    })}
+                                  </TableRow>
+                                );
+                              })
+                          )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[8, 16, 100]}
+                    component="div"
+                    count={finalCount && finalCount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </div>
+              ) : findOrgRole === "Write" ? (
+                <div className="relative overflow-x-auto">
+                  <TableContainer sx={{ maxHeight: "100%" }}>
+                    <Table
+                      stickyHeader
+                      aria-label="sticky table"
+                      className="custom-font-mui"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              style={{ minWidth: column.minWidth }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {orgContent &&
+                          orgContent.orgData.map((u) =>
+                            u.protocols
+                              .map(
+                                ({
+                                  title: name,
+                                  createdAt: createdAt,
+                                  _id,
+                                  status,
+                                  statusBy,
+                                }) => ({
+                                  _id,
+                                  name,
+                                  type: "Protocol",
+                                  status,
+                                  statusBy: statusBy ? statusBy : "-",
+                                  createdBy: u.name,
+                                  createdAt: new Date(
+                                    createdAt
+                                  ).toLocaleString(),
+                                })
+                              )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((row) => {
+                                return (
+                                  <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={row.code}
+                                  >
+                                    {columns.map((column) => {
+                                      if (column.id === "edit") {
+                                        if (findOrgRole) {
+                                          if (findOrgRole === "Owner") {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    let content = u.protocols.find(
+                                                      (e) => e._id === row._id
+                                                    );
+                                                    setEType("Protocol");
+                                                    setOrgStatusContent(
+                                                      content
+                                                    );
+                                                    setOrgStatus(true);
+                                                  }}
+                                                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                                >
+                                                  Edit Status
+                                                </button>
+                                              </TableCell>
+                                            );
+                                          } else {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              ></TableCell>
+                                            );
+                                          }
+                                        }
+                                      } else if (column.id === "status") {
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {row.status === "Draft" && (
+                                              <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Draft
+                                              </span>
+                                            )}
+                                            {row.status === "In Progress" && (
+                                              <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                In Progress
+                                              </span>
+                                            )}
+                                            {row.status === "Approved" && (
+                                              <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Approved
+                                              </span>
+                                            )}
+                                            {row.status === "Rejected" && (
+                                              <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Rejected
+                                              </span>
+                                            )}
+                                          </TableCell>
+                                        );
+                                      } else if (column.id === "view") {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            <a
+                                              href="#"
+                                              className="font-medium text-blue-600 hover:underline"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let content = u.protocols.find(
+                                                  (e) => e._id === row._id
+                                                );
+                                                setProtocolContent(content);
+                                                setProtocolModal(true);
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                          </TableCell>
+                                        );
+                                      } else {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {column.format &&
+                                            typeof value === "number"
+                                              ? column.format(value)
+                                              : value}
+                                          </TableCell>
+                                        );
+                                      }
+                                    })}
+                                  </TableRow>
+                                );
+                              })
+                          )}
+                        {orgContent &&
+                          orgContent.orgData.map((u) =>
+                            u.sops
+                              .map(
+                                ({
+                                  title: name,
+                                  createdAt: createdAt,
+                                  _id,
+                                  status,
+                                  statusBy,
+                                }) => ({
+                                  _id,
+                                  name,
+                                  type: "SOP",
+                                  status,
+                                  statusBy: statusBy ? statusBy : "-",
+                                  createdBy: u.name,
+                                  createdAt: new Date(
+                                    createdAt
+                                  ).toLocaleString(),
+                                })
+                              )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((row) => {
+                                return (
+                                  <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={row.code}
+                                  >
+                                    {columns.map((column) => {
+                                      if (column.id === "edit") {
+                                        if (findOrgRole) {
+                                          if (findOrgRole === "Owner") {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    let content = u.sops.find(
+                                                      (e) => e._id === row._id
+                                                    );
+                                                    setEType("SOP");
+                                                    setOrgStatusContent(
+                                                      content
+                                                    );
+                                                    setOrgStatus(true);
+                                                  }}
+                                                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                                >
+                                                  Edit Status
+                                                </button>
+                                              </TableCell>
+                                            );
+                                          } else {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              ></TableCell>
+                                            );
+                                          }
+                                        }
+                                      } else if (column.id === "status") {
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {row.status === "Draft" && (
+                                              <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Draft
+                                              </span>
+                                            )}
+                                            {row.status === "In Progress" && (
+                                              <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                In Progress
+                                              </span>
+                                            )}
+                                            {row.status === "Approved" && (
+                                              <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Approved
+                                              </span>
+                                            )}
+                                            {row.status === "Rejected" && (
+                                              <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Rejected
+                                              </span>
+                                            )}
+                                          </TableCell>
+                                        );
+                                      } else if (column.id === "view") {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            <a
+                                              href="#"
+                                              className="font-medium text-blue-600 hover:underline"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let content = u.sops.find(
+                                                  (e) => e._id === row._id
+                                                );
+                                                setSopContent(content);
+                                                setSopModal(true);
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                          </TableCell>
+                                        );
+                                      } else {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {column.format &&
+                                            typeof value === "number"
+                                              ? column.format(value)
+                                              : value}
+                                          </TableCell>
+                                        );
+                                      }
+                                    })}
+                                  </TableRow>
+                                );
+                              })
+                          )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[8, 16, 100]}
+                    component="div"
+                    count={finalCount && finalCount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </div>
+              ) : findOrgRole === "Owner" ? (
+                <div className="relative overflow-x-auto">
+                  <TableContainer sx={{ maxHeight: "100%" }}>
+                    <Table
+                      stickyHeader
+                      aria-label="sticky table"
+                      className="custom-font-mui"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              style={{ minWidth: column.minWidth }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {orgContent &&
+                          orgContent.orgData.map((u) =>
+                            u.protocols
+                              .map(
+                                ({
+                                  title: name,
+                                  createdAt: createdAt,
+                                  _id,
+                                  status,
+                                  statusBy,
+                                }) => ({
+                                  _id,
+                                  name,
+                                  type: "Protocol",
+                                  status,
+                                  statusBy: statusBy ? statusBy : "-",
+                                  createdBy: u.name,
+                                  createdAt: new Date(
+                                    createdAt
+                                  ).toLocaleString(),
+                                })
+                              )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((row) => {
+                                return (
+                                  <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={row.code}
+                                  >
+                                    {columns.map((column) => {
+                                      if (column.id === "edit") {
+                                        if (findOrgRole) {
+                                          if (findOrgRole === "Owner") {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    let content = u.protocols.find(
+                                                      (e) => e._id === row._id
+                                                    );
+                                                    setEType("Protocol");
+                                                    setOrgStatusContent(
+                                                      content
+                                                    );
+                                                    setOrgStatus(true);
+                                                  }}
+                                                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                                >
+                                                  Edit Status
+                                                </button>
+                                              </TableCell>
+                                            );
+                                          } else {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              ></TableCell>
+                                            );
+                                          }
+                                        }
+                                      } else if (column.id === "status") {
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {row.status === "Draft" && (
+                                              <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Draft
+                                              </span>
+                                            )}
+                                            {row.status === "In Progress" && (
+                                              <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                In Progress
+                                              </span>
+                                            )}
+                                            {row.status === "Approved" && (
+                                              <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Approved
+                                              </span>
+                                            )}
+                                            {row.status === "Rejected" && (
+                                              <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Rejected
+                                              </span>
+                                            )}
+                                          </TableCell>
+                                        );
+                                      } else if (column.id === "view") {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            <a
+                                              href="#"
+                                              className="font-medium text-blue-600 hover:underline"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let content = u.protocols.find(
+                                                  (e) => e._id === row._id
+                                                );
+                                                setProtocolContent(content);
+                                                setProtocolModal(true);
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                          </TableCell>
+                                        );
+                                      } else {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {column.format &&
+                                            typeof value === "number"
+                                              ? column.format(value)
+                                              : value}
+                                          </TableCell>
+                                        );
+                                      }
+                                    })}
+                                  </TableRow>
+                                );
+                              })
+                          )}
+                        {orgContent &&
+                          orgContent.orgData.map((u) =>
+                            u.sops
+                              .map(
+                                ({
+                                  title: name,
+                                  createdAt: createdAt,
+                                  _id,
+                                  status,
+                                  statusBy,
+                                }) => ({
+                                  _id,
+                                  name,
+                                  type: "SOP",
+                                  status,
+                                  statusBy: statusBy ? statusBy : "-",
+                                  createdBy: u.name,
+                                  createdAt: new Date(
+                                    createdAt
+                                  ).toLocaleString(),
+                                })
+                              )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((row) => {
+                                return (
+                                  <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={row.code}
+                                  >
+                                    {columns.map((column) => {
+                                      if (column.id === "edit") {
+                                        if (findOrgRole) {
+                                          if (findOrgRole === "Owner") {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    let content = u.sops.find(
+                                                      (e) => e._id === row._id
+                                                    );
+                                                    setEType("SOP");
+                                                    setOrgStatusContent(
+                                                      content
+                                                    );
+                                                    setOrgStatus(true);
+                                                  }}
+                                                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                                                >
+                                                  Edit Status
+                                                </button>
+                                              </TableCell>
+                                            );
+                                          } else {
+                                            return (
+                                              <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                              ></TableCell>
+                                            );
+                                          }
+                                        }
+                                      } else if (column.id === "status") {
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {row.status === "Draft" && (
+                                              <span className="bg-gray-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Draft
+                                              </span>
+                                            )}
+                                            {row.status === "In Progress" && (
+                                              <span className="bg-indigo-600 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                In Progress
+                                              </span>
+                                            )}
+                                            {row.status === "Approved" && (
+                                              <span className="bg-emerald-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Approved
+                                              </span>
+                                            )}
+                                            {row.status === "Rejected" && (
+                                              <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                Rejected
+                                              </span>
+                                            )}
+                                          </TableCell>
+                                        );
+                                      } else if (column.id === "view") {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            <a
+                                              href="#"
+                                              className="font-medium text-blue-600 hover:underline"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let content = u.sops.find(
+                                                  (e) => e._id === row._id
+                                                );
+                                                setSopContent(content);
+                                                setSopModal(true);
+                                              }}
+                                            >
+                                              View
+                                            </a>
+                                          </TableCell>
+                                        );
+                                      } else {
+                                        const value = row[column.id];
+                                        return (
+                                          <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                          >
+                                            {column.format &&
+                                            typeof value === "number"
+                                              ? column.format(value)
+                                              : value}
+                                          </TableCell>
+                                        );
+                                      }
+                                    })}
+                                  </TableRow>
+                                );
+                              })
+                          )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[8, 16, 100]}
+                    component="div"
+                    count={finalCount && finalCount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </div>
+              ) : (
+                <div className="w-[30%] mx-auto h-full flex items-center justify-center">
+                  <div
+                    type="button"
+                    className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <svg
+                      className="mx-auto h-12 w-12 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 48 48"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6"
+                      />
+                    </svg>
+                    <span className="mt-2 block text-sm font-medium text-gray-900">
+                      No Access
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* {orgs &&
                 orgs.length > 0 &&

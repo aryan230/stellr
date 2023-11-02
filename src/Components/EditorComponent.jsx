@@ -351,6 +351,7 @@ function EditorComponent() {
           setShowBannerOrg={setShowBannerOrg}
         />
       )}
+
       <SideNav
         modal={modal}
         setModal={setModal}

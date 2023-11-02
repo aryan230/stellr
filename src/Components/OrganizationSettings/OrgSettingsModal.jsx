@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import URL from "../../Data/data.json";
 import axios from "axios";
+import { ArrowLeftSquare, PlusCircle } from "lucide-react";
+import InputWithLabel from "../../UI/Input/InputWithLabel";
 function OrgSettingsModal({
   project,
   id,
@@ -13,48 +15,107 @@ function OrgSettingsModal({
 }) {
   const dispatch = useDispatch();
   const [selectedRole, setSelectedRole] = useState("");
-
+  const [customRole, setCustomRole] = useState(false);
+  const [newRoleName, setNewRoleName] = useState();
+  const [newRoleType, setNewRoleType] = useState();
+  const [alreadyMadeRoles, setAlreadyMadeRoles] = useState();
   // const projectUpdateCollab = useSelector((state) => state.projectUpdateCollab);
   // const { project: newProject, loading, error, sucess } = projectUpdateCollab;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const accessOptions = [
+    {
+      value: "Admin",
+      label: "Admin",
+    },
+    {
+      value: "Write",
+      label: "Write",
+    },
+    {
+      value: "Read",
+      label: "Read",
+    },
+  ];
   const roleOptions = [
     {
       value: "Lab Member",
       label: "Lab Member",
+      permissions: "Read",
     },
     {
       value: "Lab Manager",
       label: "Lab Manager",
+      permissions: "Admin",
     },
     {
       value: "Data Analyst",
       label: "Data Analyst",
+      permissions: "Admin",
     },
     {
       value: "Data Scientist",
       label: "Data Scientist",
+      permissions: "Admin",
     },
     {
       value: "Compliance Officer",
       label: "Compliance Officer",
+      permissions: "Admin",
     },
-    { value: "Project Lead", label: "Project Lead" },
-    { value: "Researcher", label: "Researcher" },
-    { value: "Scientist", label: "Scientist" },
-    { value: "IT Specialist", label: "IT Specialist" },
-    { value: "Safety Officer", label: "Safety Officer" },
-    { value: "Chemist", label: "Chemist" },
-    { value: "Field Researcher", label: "Field Researcher" },
-    { value: "Quality Control Officer", label: "Quality Control Officer" },
+    { value: "Project Lead", label: "Project Lead", permissions: "Admin" },
+    { value: "Researcher", label: "Researcher", permissions: "Admin" },
+    { value: "Scientist", label: "Scientist", permissions: "Admin" },
+    { value: "IT Specialist", label: "IT Specialist", permissions: "Admin" },
+    { value: "Safety Officer", label: "Safety Officer", permissions: "Admin" },
+    { value: "Chemist", label: "Chemist", permissions: "Write" },
+    {
+      value: "Field Researcher",
+      label: "Field Researcher",
+      permissions: "Write",
+    },
+    {
+      value: "Quality Control Officer",
+      label: "Quality Control Officer",
+      permissions: "Admin",
+    },
   ];
+
+  const handleSubmitRoleMaker = async (e) => {
+    e.preventDefault();
+    const data = {
+      orgId: project._id,
+      name: newRoleName,
+      permissions: newRoleType.label,
+    };
+    var config = {
+      method: "post",
+      url: `${URL}api/orgRole`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function(response) {
+        setUpdateCollabRole(true);
+        setSettingsModal(false);
+        setOrgSettings(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       projectId: project._id,
       role: selectedRole.label,
       id: id,
+      permissions: selectedRole.permissions,
     };
     var config = {
       method: "post",
@@ -76,6 +137,36 @@ function OrgSettingsModal({
         console.log(error);
       });
   };
+  const fetchallRoles = async () => {
+    var config = {
+      method: "get",
+      url: `${URL}api/orgRole/${project._id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(config)
+      .then(function(response) {
+        setAlreadyMadeRoles(
+          response.data.map(
+            ({ name: label, name: value, permissions: permissions }) => ({
+              label,
+              value,
+              permissions,
+            })
+          )
+        );
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    if (!alreadyMadeRoles) {
+      fetchallRoles();
+    }
+  }, [alreadyMadeRoles]);
   // useEffect(() => {
   //   if (sucess) {
   //     setUpdatedUserCollabRoleOrg(true);
@@ -153,17 +244,123 @@ function OrgSettingsModal({
           <div className="setting-main-div-modal">
             <div className="settings-main-div-modal-inside">
               <div className="s-m-d-i-right">
-                <form onSubmit={handleSubmit}>
-                  {" "}
-                  <Select
-                    options={roleOptions}
-                    onChange={(e) => setSelectedRole(e)}
-                    placeholder="Select Role"
-                    required
-                  />
-                  <div className="margin-maker"></div>
-                  <button type="submit">Save</button>
-                </form>
+                {customRole ? (
+                  <form onSubmit={handleSubmitRoleMaker}>
+                    {" "}
+                    <InputWithLabel
+                      label="Enter Name for Role"
+                      onChange={(e) => setNewRoleName(e.target.value)}
+                    />
+                    <Select
+                      options={accessOptions}
+                      onChange={(e) => setNewRoleType(e)}
+                      placeholder="Select Access Level"
+                      required
+                    />
+                    <a
+                      href=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCustomRole(false);
+                      }}
+                      className="text-indigo-600 font-karla flex items-center justify-left ml-2 mt-2"
+                    >
+                      <ArrowLeftSquare className="mr-2" size={16} />
+                      or use default roles
+                    </a>
+                    <div className="margin-maker"></div>
+                    <button type="submit">Save</button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleSubmit}>
+                    {" "}
+                    <Select
+                      options={
+                        alreadyMadeRoles
+                          ? roleOptions.concat(alreadyMadeRoles)
+                          : roleOptions
+                      }
+                      onChange={(e) => setSelectedRole(e)}
+                      placeholder="Select Role"
+                      required
+                    />
+                    <a
+                      href=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCustomRole(true);
+                      }}
+                      className="text-indigo-600 font-karla flex items-center justify-left ml-2 mt-2"
+                    >
+                      <PlusCircle className="mr-2" size={16} />
+                      or create custom Role
+                    </a>
+                    {selectedRole && (
+                      <>
+                        <div className="margin-maker"></div>
+                        <ul className="max-w-md space-y-1 text-gray-500 list-inside">
+                          {selectedRole.permissions === "Admin" && (
+                            <li className="flex items-center">
+                              <svg
+                                className="w-3.5 h-3.5 mr-2 text-green-500 flex-shrink-0"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                              </svg>
+                              Admin
+                            </li>
+                          )}
+                          {selectedRole.permissions == "Admin" && (
+                            <li className="flex items-center">
+                              <svg
+                                className="w-3.5 h-3.5 mr-2 text-green-500 flex-shrink-0"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                              </svg>
+                              Write
+                            </li>
+                          )}
+                          {selectedRole.permissions == "Write" && (
+                            <li className="flex items-center">
+                              <svg
+                                className="w-3.5 h-3.5 mr-2 text-green-500 flex-shrink-0"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                              </svg>
+                              Write
+                            </li>
+                          )}
+
+                          <li className="flex items-center">
+                            <svg
+                              className="w-3.5 h-3.5 mr-2 text-green-500 flex-shrink-0"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                            </svg>
+                            Read
+                          </li>
+                        </ul>
+                      </>
+                    )}
+                    <div className="margin-maker"></div>
+                    <button type="submit">Save</button>
+                  </form>
+                )}
               </div>
             </div>
           </div>

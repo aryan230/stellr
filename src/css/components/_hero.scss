@@ -19,39 +19,33 @@
 
   .top-navbar {
     width: 100%;
-    height: 65%;
+    height: 75%;
     ul {
       width: 100%;
       height: 100%;
       li {
         width: 100%;
-        height: 15%;
-        text-align: center;
+        height: fit-content;
+        padding: 1rem 0;
         a {
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          color: #fff;
-          font-family: Poppins;
-          font-size: 0.8rem;
-          font-style: normal;
-          font-weight: 400;
-          line-height: normal;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
+          flex-direction: column;
+          color: white;
           text-align: center;
+          font-size: 0.8rem;
+          padding: 0 0.1rem;
           svg {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
           }
         }
         transition: 0.2s all;
         &:hover {
-          background: #4d00aa;
+          cursor: pointer;
+          background-color: #00000038;
         }
       }
-
       li.create {
         position: relative;
         width: 100%;
@@ -110,11 +104,12 @@
                   p {
                     color: #000;
                     font-family: Poppins;
-                    font-size: 1rem;
+                    font-size: 0.9rem;
                     font-style: normal;
                     font-weight: 400;
                     line-height: normal;
                     padding: 0 1rem;
+                    text-align: left;
                   }
                 }
                 span {
@@ -239,7 +234,7 @@
   }
   .bottom-navbar {
     width: 100%;
-    height: 35%;
+    height: 25%;
 
     ul {
       width: 100%;
@@ -247,27 +242,20 @@
       display: flex;
       flex-direction: column;
       justify-content: end;
-
-      padding-bottom: 2rem;
       li {
         width: 100%;
-        height: 30%;
+        height: fit-content;
+        padding: 1rem 0;
         a {
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          color: #fff;
-          font-family: Poppins;
-          font-size: 0.9rem;
-          font-style: normal;
-          font-weight: 400;
-          line-height: normal;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
+          flex-direction: column;
+          color: white;
+          text-align: center;
+          font-size: 0.8rem;
           svg {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
           }
         }
         transition: 0.2s all;
