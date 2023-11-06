@@ -1754,6 +1754,7 @@ div.ql-tooltip {
   width: 100%;
   height: 25%;
   padding-bottom: 1rem;
+  z-index: 55;
 }
 .navbar .bottom-navbar ul {
   width: 100%;
@@ -6702,6 +6703,19 @@ div.ql-tooltip {
   font-weight: 400;
   line-height: normal;
   margin-left: 1rem;
+}
+
+.notification-box {
+  position: absolute;
+  top: 10;
+  right: 0;
+  min-width: 30vw;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  height: 60vh;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .multi-button {

@@ -11,6 +11,7 @@ function Notification() {
         </p>
         <Bell size={18} />
       </div>
+      <div className="notification-box"></div>
     </div>
   );
 }

@@ -1,0 +1,11 @@
+.notification-box {
+  position: absolute;
+  top: 10;
+  right: 0;
+  min-width: 30vw;
+  max-width: fit-content;
+  height: 60vh;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
