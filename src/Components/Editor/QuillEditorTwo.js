@@ -196,6 +196,7 @@ function TextEditorTwo({
   setWhichTabisActive,
   setSampleContent,
   setSampleModal,
+  setCreateDrawingModal,
 }) {
   const [text, setText] = useState("");
   const quill = useRef(null);
@@ -664,6 +665,7 @@ function TextEditorTwo({
         quill={quill}
         tab={tab}
         project={project}
+        setCreateDrawingModal={setCreateDrawingModal}
       />
       <div
         className={`editor-holder-reactjs-new ${active && "active"}`}

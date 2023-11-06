@@ -67,6 +67,8 @@ import {
   Settings,
   User2,
 } from "lucide-react";
+import Notification from "./Notifications/Notification";
+import TopHeaderMenu from "./TopHeaderMenu";
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -395,6 +397,7 @@ function EditorComponent() {
         CDUpdate={CDUpdate}
         setCDUpdate={setCDUpdate}
       />
+      <Notification />
       <div className="main-content">
         {showBanner && <Banner setShowBanner={setShowBanner} />}
         {showBannerOrg && (
@@ -1163,6 +1166,7 @@ function EditorComponent() {
                                 setWhichTabisActive={setWhichTabisActive}
                                 setSampleContent={setSampleContent}
                                 setSampleModal={setSampleModal}
+                                setCreateDrawingModal={setCreateDrawingModal}
                               />
                             ) : (
                               <TextEditorTwoRead

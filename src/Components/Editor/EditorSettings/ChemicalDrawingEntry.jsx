@@ -8,7 +8,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import URL from "./../../../Data/data.json";
 
-function ChemicalDrawingEntry({ open, setOpen, quill }) {
+function ChemicalDrawingEntry({ open, setOpen, quill, setCreateDrawingModal }) {
   const [loader, setLoader] = useState(false);
   const [cd, setCD] = useState();
   const [data, setData] = useState();
@@ -70,7 +70,7 @@ function ChemicalDrawingEntry({ open, setOpen, quill }) {
   return (
     <BasicModalTailwind open={open} setOpen={setOpen}>
       {loader && <MainLoaderWithText text="Saving" />}
-      {data && (
+      {data && data.length > 0 ? (
         <form onSubmit={submitHandler} className="w-full pt-5">
           <h2 className="text-xl font-extrabold">Add Chemical Drawing</h2>
           <div className="margin-maker"></div>
@@ -88,6 +88,21 @@ function ChemicalDrawingEntry({ open, setOpen, quill }) {
 
           <DefaultButton label="Add" />
         </form>
+      ) : (
+        <>
+          No Chemical Drawings Found <br />{" "}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              setOpen(false);
+              setCreateDrawingModal(true);
+            }}
+            className="text-indigo-700"
+          >
+            Create new drawing
+          </a>
+        </>
       )}
     </BasicModalTailwind>
   );
