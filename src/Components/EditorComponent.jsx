@@ -397,7 +397,7 @@ function EditorComponent() {
         CDUpdate={CDUpdate}
         setCDUpdate={setCDUpdate}
       />
-      <Notification />
+      {/* <Notification /> */}
       <div className="main-content">
         {showBanner && <Banner setShowBanner={setShowBanner} />}
         {showBannerOrg && (
