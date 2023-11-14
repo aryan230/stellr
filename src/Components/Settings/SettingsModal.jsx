@@ -5,6 +5,7 @@ import Select from "react-select";
 import { updateCollabProject } from "../../redux/actions/projectActions";
 import { PROJECT_UPDATE_COLLAB_RESET } from "../../redux/constants/projectConstants";
 import { addProjectLogs } from "../Functions/addProjectLogs";
+import { addNotification } from "../Functions/addNotification";
 
 function SettingsModal({
   setSettingsModal,
@@ -51,6 +52,21 @@ function SettingsModal({
       userEmail: userInfo.email,
       message: `Changed the role of the user With  ${email} to ${selectedRole.label}`,
     };
+    await addNotification({
+      id: id,
+      type: "Not read",
+      value: JSON.stringify({
+        subject:
+          "Your role has been changed to " +
+          selectedRole.label +
+          " in project " +
+          project.name +
+          " by " +
+          userInfo.name,
+        date: new Date(),
+      }),
+      token: userInfo.token,
+    });
     await addProjectLogs(logObject);
     await dispatch(updateCollabProject(data));
     await dispatch({ type: PROJECT_UPDATE_COLLAB_RESET });

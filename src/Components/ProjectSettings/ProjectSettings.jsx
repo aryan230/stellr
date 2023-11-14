@@ -28,6 +28,7 @@ import InsideLoader from "../Loader/InsideLoader";
 import { userRoleExtract } from "../Functions/userRoleFunction";
 import { addProjectLogs } from "../Functions/addProjectLogs";
 import LoaderInside from "../../css/utils/LoaderInside";
+import { addNotification } from "../Functions/addNotification";
 
 function ProjectSettings({
   setProjectSettings,
@@ -189,6 +190,19 @@ function ProjectSettings({
               message: `Added the user With  ${email}`,
             };
             await addProjectLogs(logObject);
+            await addNotification({
+              id: response.data[0]._id,
+              type: "Not read",
+              value: JSON.stringify({
+                subject:
+                  "You have been added to a new project with name" +
+                  project.name +
+                  " by " +
+                  userInfo.name,
+                date: new Date(),
+              }),
+              token: userInfo.token,
+            });
             await dispatch(
               createCollabProject({
                 projectId: project._id,
@@ -244,6 +258,19 @@ function ProjectSettings({
             userEmail: userInfo.email,
             message: `Removed the user With  ${email}  and id ${id}`,
           };
+          await addNotification({
+            id: id,
+            type: "Not read",
+            value: JSON.stringify({
+              subject:
+                "You have been removed from the project with name " +
+                project.name +
+                " by " +
+                userInfo.name,
+              date: new Date(),
+            }),
+            token: userInfo.token,
+          });
           await addProjectLogs(logObject);
           setNewCollab(true);
           setProjectSettings(false);

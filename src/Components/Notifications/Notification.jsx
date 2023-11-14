@@ -101,7 +101,7 @@ function Notification() {
         playAudio();
         toast.custom((t) => (
           <div
-            className="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50"
+            className="flex items-center p-4 mb-4 text-lg text-blue-800 rounded-lg bg-blue-50"
             role="alert"
           >
             <svg
