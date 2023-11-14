@@ -82,6 +82,7 @@ import Delta from "quill-delta";
 import EditNameEditor from "./EditorSettings/EditNameEditor";
 import ChemicalDrawingEntry from "./EditorSettings/ChemicalDrawingEntry";
 import Quill from "quill";
+import LogsModal from "../Logs/LogsModal";
 
 const zip = new JSZip();
 
@@ -224,7 +225,7 @@ function TextEditorTwo({
   const [mainLoader, setMainLoader] = useState(true);
   const [users, setUsers] = useState([]);
   const [chemicalDrawing, setChemicalDrawing] = useState(false);
-
+  const [logs, setLogs] = useState(false);
   const entriesListMy = useSelector((state) => state.entriesListMy);
   const {
     entries,
@@ -593,7 +594,7 @@ function TextEditorTwo({
         open={isDrawerOpen}
         setOpen={setIsDrawerOpen}
       /> */}
-
+  {/* <LogsModal setOpen={setLogs} open={logs}/> */}
       <Drawer
         anchor="right"
         open={isDrawerOpen}

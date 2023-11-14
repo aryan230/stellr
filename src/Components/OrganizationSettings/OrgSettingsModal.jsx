@@ -5,6 +5,10 @@ import URL from "../../Data/data.json";
 import axios from "axios";
 import { ArrowLeftSquare, PlusCircle } from "lucide-react";
 import InputWithLabel from "../../UI/Input/InputWithLabel";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import { addNotification } from "../Functions/addNotification";
+
 function OrgSettingsModal({
   project,
   id,
@@ -111,6 +115,20 @@ function OrgSettingsModal({
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    await addNotification({
+      id: id,
+      type: "Not read",
+      value: JSON.stringify({
+        subject:
+          "Your role has been updated to " +
+          selectedRole.label +
+          " by " +
+          userInfo.name,
+        date: new Date(),
+      }),
+      token: userInfo.token,
+    });
     const data = {
       projectId: project._id,
       role: selectedRole.label,

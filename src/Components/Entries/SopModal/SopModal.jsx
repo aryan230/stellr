@@ -1,6 +1,6 @@
 import { Drawer } from "@mui/material";
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import DrawerSopLogs from "./DrawerSopLogs";
@@ -10,6 +10,13 @@ import { Box } from "@mui/material";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
+import { Menu, Transition } from "@headlessui/react";
+import { Eye, MoreHorizontalIcon } from "lucide-react";
+import ShareSopModal from "./ShareSopModal";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 function SopModal({ setSopModal, doc, setWhichTabisActive }) {
   const [isDrawerOpenLogs, setIsDrawerOpenLogs] = useState(false);
@@ -19,7 +26,7 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
   );
   const [images, setImages] = useState(doc.image && JSON.parse(doc.image));
   const [files, setFiles] = useState(doc.image && JSON.parse(doc.file));
-
+  const [share, setShare] = useState(false);
   const actions = [
     {
       icon: <ShieldIcon />,
@@ -39,6 +46,14 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
 
   return (
     <div className="modal">
+      {share && (
+        <ShareSopModal
+          open={share}
+          setOpen={setShare}
+          setModal={setSopModal}
+          doc={doc}
+        />
+      )}
       <Drawer
         anchor="right"
         open={isDrawerOpenLogs}
@@ -50,44 +65,117 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
       </Drawer>
       <div className="modal-inside-protocol">
         <div className="relative w-full max-w-7xl max-h-full">
-          <Box
-            sx={{
-              position: "absolute",
-              height: 320,
-              bottom: 10,
-              right: 10,
-              flexGrow: 1,
-            }}
-          >
-            <SpeedDial
-              ariaLabel="SpeedDial basic example"
-              sx={{
-                position: "absolute",
-                bottom: 16,
-                right: 16,
-              }}
-              icon={<SpeedDialIcon />}
-              FabProps={{
-                sx: {
-                  bgcolor: "#6200d2",
-                  "&:hover": {
-                    bgcolor: "#6200d2",
-                  },
-                },
-              }}
-            >
-              {actions.map((action) => (
-                <SpeedDialAction
-                  key={action.name}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  onClick={(e) => {
-                    handleClick(e, action.operation);
-                  }}
-                />
-              ))}
-            </SpeedDial>
-          </Box>
+          {doc.access && doc.access === "view" ? (
+            <div className="absolute bottom-10 right-10 z-[9999999]">
+              <Menu as="div" className="relative inline-block text-left">
+                <div>
+                  <Menu.Button className="flex items-center justify-center w-full rounded-full p-3 border border-gray-300 shadow-sm bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Eye size={16} className="mr-2" />
+                    View Only
+                  </Menu.Button>
+                </div>
+              </Menu>
+            </div>
+          ) : (
+            <div className="absolute bottom-10 right-10 z-[9999999]">
+              <Menu as="div" className="relative inline-block text-left">
+                <div>
+                  <Menu.Button className="inline-flex justify-center w-full rounded-full p-3 border border-gray-300 shadow-sm bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <MoreHorizontalIcon size={20} />
+                  </Menu.Button>
+                </div>
+
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="origin-bottom-right absolute right-[100%] bottom-0 mt-2 mr-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsDrawerOpenLogs(true);
+                              // setLogs(true);
+                            }}
+                            className={classNames(
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            View Logs
+                          </a>
+                        )}
+                      </Menu.Item>
+                      {/* <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setUpdateProtocolModal(true);
+                            }}
+                            className={classNames(
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Edit
+                          </a>
+                        )}
+                      </Menu.Item> */}
+                      {/* <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          License
+                        </a>
+                      )}
+                    </Menu.Item> */}
+
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setShare(true);
+                            }}
+                            type="submit"
+                            className={classNames(
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block w-full text-left px-4 py-2 text-sm"
+                            )}
+                          >
+                            Share
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </div>
+          )}
           {/* Modal content */}
           {/* border-2 border-slate-700 */}
           <div className="relative bg-white rounded-xl shadow max-h-[80vh] overflow-y-auto custom-scrollbar-task">

@@ -59,7 +59,7 @@ function OrganizationStatusModal({
       user: userInfo._id,
       userName: userInfo.name,
       userEmail: userInfo.email,
-      message: `The status of the entity was changed to ${selectedExport.value} with the message ${statusMessage}.`,
+      message: `The status of the entity '${orgStatusContent.title}' was changed to ${selectedExport.value} with the message ${statusMessage} by ${userInfo.name}.`,
     });
 
     const finalData = await JSON.stringify({
@@ -67,6 +67,7 @@ function OrganizationStatusModal({
       logData: logData,
       type: type,
       user: userInfo._id,
+      to: orgStatusContent.user,
     });
     await localStorage.setItem("stellrStatusUpdate", true);
     await localStorage.setItem("stellrStatusUpdateData", finalData);

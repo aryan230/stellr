@@ -20,6 +20,7 @@ import Banner from "./Components/Banner";
 import { useDispatch } from "react-redux";
 import { logout } from "./redux/actions/userActions";
 import ENV from "./Data/data.json";
+import MainRed from "./Redirections/MainRed";
 function App() {
   const dispatch = useDispatch();
 
@@ -43,7 +44,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Editor />} />
+          <Route path="/*" element={<Editor />} />
           <Route path="/admin/users" element={<Editor />} />
           <Route path="/account/setup" element={<AccountSetup />} />
           <Route path="/organization/setup" element={<OrganizationSetup />} />

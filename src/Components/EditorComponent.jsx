@@ -67,8 +67,11 @@ import {
   Settings,
   User2,
 } from "lucide-react";
-import Notification from "./Notifications/Notification";
+import { Notification } from "./Notifications/Notification";
 import TopHeaderMenu from "./TopHeaderMenu";
+import MainRed from "../Redirections/MainRed";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 function EditorComponent() {
   const mainDiv = useRef();
   const dispatch = useDispatch();
@@ -303,6 +306,19 @@ function EditorComponent() {
   const [CDUpdate, setCDUpdate] = useState(false);
   return (
     <div className="main-container">
+      <Routes>
+        <Route
+          path="/p/:id/*"
+          element={
+            <MainRed
+              setProtocolContent={setProtocolContent}
+              setProtocolModal={setProtocolModal}
+              setSopModal={setSopModal}
+              setSopContent={setSopContent}
+            />
+          }
+        />
+      </Routes>
       <MainToast />
       <Toaster position="top-center" reverseOrder={true} />
       {CDModal && (
@@ -397,7 +413,7 @@ function EditorComponent() {
         CDUpdate={CDUpdate}
         setCDUpdate={setCDUpdate}
       />
-      {/* <Notification /> */}
+      <Notification />
       <div className="main-content">
         {showBanner && <Banner setShowBanner={setShowBanner} />}
         {showBannerOrg && (

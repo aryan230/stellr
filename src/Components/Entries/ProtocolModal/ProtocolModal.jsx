@@ -15,6 +15,26 @@ import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import ShieldIcon from "@mui/icons-material/Shield";
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import {
+  CodeIcon,
+  DotsVerticalIcon,
+  FlagIcon,
+  StarIcon,
+} from "@heroicons/react/solid";
+import {
+  Eye,
+  MoreHorizontal,
+  MoreHorizontalIcon,
+  MoreVertical,
+} from "lucide-react";
+import ShareModal from "./ShareModal";
+import LogsModal from "../../Logs/LogsModal";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 function ProtocolModal({
   setProtocolModal,
@@ -29,7 +49,8 @@ function ProtocolModal({
   const [files, setFiles] = useState(doc.file && JSON.parse(doc.file));
   const [updateProtocolModal, setUpdateProtocolModal] = useState(false);
   const [isDrawerOpenLogs, setIsDrawerOpenLogs] = useState(false);
-
+  const [logs, setLogs] = useState(false);
+  const [share, setShare] = useState(false);
   const actions = [
     {
       icon: <ShieldIcon />,
@@ -55,6 +76,16 @@ function ProtocolModal({
 
   return (
     <div className="modal">
+      {share && (
+        <ShareModal
+          open={share}
+          setOpen={setShare}
+          setModal={setProtocolModal}
+          doc={doc}
+          setNew={setNewProtocol}
+        />
+      )}
+      <LogsModal setOpen={setLogs} open={logs} task={doc} />
       {updateProtocolModal && (
         <UpdateProtocolModal
           doc={doc}
@@ -78,8 +109,121 @@ function ProtocolModal({
           />
         </Box>
       </Drawer>
-      <div className="relative w-full max-w-7xl max-h-full">
-        <Box
+      <div className="relative w-full max-w-7xl max-h-full font-body">
+        {doc.access && doc.access === "view" ? (
+          <div className="absolute bottom-10 right-10 z-[9999999]">
+            <Menu as="div" className="relative inline-block text-left">
+              <div>
+                <Menu.Button className="flex items-center justify-center w-full rounded-full p-3 border border-gray-300 shadow-sm bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                  <Eye size={16} className="mr-2" />
+                  View Only
+                </Menu.Button>
+              </div>
+            </Menu>
+          </div>
+        ) : (
+          <div className="absolute bottom-10 right-10 z-[9999999]">
+            <Menu as="div" className="relative inline-block text-left">
+              <div>
+                <Menu.Button className="inline-flex justify-center w-full rounded-full p-3 border border-gray-300 shadow-sm bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                  <MoreHorizontalIcon size={20} />
+                </Menu.Button>
+              </div>
+
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="origin-bottom-right absolute right-[100%] bottom-0 mt-2 mr-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setLogs(true);
+                          }}
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          View Logs
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setUpdateProtocolModal(true);
+                          }}
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          Edit
+                        </a>
+                      )}
+                    </Menu.Item>
+                    {/* <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          License
+                        </a>
+                      )}
+                    </Menu.Item> */}
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        setShare(true);
+                      }}
+                    >
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            type="submit"
+                            className={classNames(
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block w-full text-left px-4 py-2 text-sm"
+                            )}
+                          >
+                            Share
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </form>
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          </div>
+        )}
+
+        {/* <Box
           sx={{
             position: "absolute",
             height: 320,
@@ -116,10 +260,10 @@ function ProtocolModal({
               />
             ))}
           </SpeedDial>
-        </Box>
+        </Box> */}
         {/* Modal content */}
         {/* border-2 border-slate-700 */}
-        <div className="relative bg-white rounded-xl shadow max-h-[80vh] overflow-y-auto custom-scrollbar-task">
+        <div className="relative bg-white rounded-xl shadow max-h-[80vh] overflow-y-auto custom-scrollbar-task font-body">
           {/* Modal header */}
           <div className="flex items-center justify-between p-5 border-b rounded-t sticky top-0 bg-white z-50 py-8">
             <h3 className="text-xl font-medium text-gray-900">{doc.title}</h3>
@@ -154,7 +298,7 @@ function ProtocolModal({
           </div>
           {/* Modal body */}
           <div className="p-6 space-y-6 min-h-[50%]">
-            <a
+            {/* <a
               href="#"
               className="block max-full p-6 bg-white border border-gray-200 rounded-lg"
             >
@@ -216,21 +360,24 @@ function ProtocolModal({
                   )}
                 </dl>
               </div>
-            </a>
-            {insideData &&
-              insideData.map((d) => (
-                <a
-                  href="#"
-                  className="block max-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
-                >
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
-                    {_.startCase(d[0])}
-                  </h5>
-                  <p className="font-normal text-gray-700 quill-read-only-editor">
-                    <ReactQuill theme="snow" readOnly value={d[1]} />
-                  </p>
-                </a>
-              ))}
+            </a> */}
+            <div
+              href="#"
+              className="block max-full p-6 bg-white border border-gray-200 rounded-lg shadow"
+            >
+              {insideData &&
+                insideData.map((d) => (
+                  <div className="border-b border-gray-500 p-5 border-dashed">
+                    {" "}
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
+                      {_.startCase(d[0])}
+                    </h5>
+                    <p className="font-normal text-gray-700 quill-read-only-editor">
+                      <ReactQuill theme="snow" readOnly value={d[1]} />
+                    </p>
+                  </div>
+                ))}
+            </div>
             {images &&
               images.length > 0 &&
               images.map((i) => (

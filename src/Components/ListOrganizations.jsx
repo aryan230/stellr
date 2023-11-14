@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { addSOPLogs } from "./Functions/addSOPLogs";
+import { addNotification } from "./Functions/addNotification";
 function ListOrganizations({
   newOrg,
   setUpdatedUserCollabRoleOrg,
@@ -47,7 +48,7 @@ function ListOrganizations({
   const [newAccountName, setNewAccountName] = useState();
   const userDetails = useSelector((state) => state.userDetails);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const [rowsPerPage, setRowsPerPage] = React.useState(4);
   const {
     loading: loadingUserDetails,
     error: errorLoadingDetails,
@@ -178,7 +179,7 @@ function ListOrganizations({
 
   useEffect(() => {
     if (localStorage.getItem("stellrStatusUpdate")) {
-      const { sendData: data, logData, type, user } = JSON.parse(
+      const { sendData: data, logData, type, user, to } = JSON.parse(
         localStorage.getItem("stellrStatusUpdateData")
       );
       if (user) {
@@ -199,6 +200,15 @@ function ListOrganizations({
               .then(async function(response) {
                 console.log(response.data);
                 await addProtocolLogs(finalLogData);
+                await addNotification({
+                  id: to,
+                  type: "Not read",
+                  value: JSON.stringify({
+                    subject: finalLogData.message,
+                    date: new Date(),
+                  }),
+                  token: userInfo.token,
+                });
                 setNewCollab(true);
                 setOrgStatus(false);
                 localStorage.removeItem("stellrStatusUpdate");
