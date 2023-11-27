@@ -3567,7 +3567,7 @@ div.ql-tooltip {
 }
 
 .MuiDataGrid-root .MuiDataGrid-cell {
-  font-family: "GothamBook", sans-serif; /* Change this to your desired font family */
+  font-family: "Inter", sans-serif; /* Change this to your desired font family */
 }
 
 .loader-div-main-stellr {
@@ -5138,6 +5138,9 @@ div.ql-tooltip {
   border-bottom: 1px solid #ddd0d0;
   transition: 0.2s ease-in-out;
   background-color: transparent;
+}
+.project-component .project-c-bottom .sl-element.white {
+  background-color: white;
 }
 .project-component .project-c-bottom .sl-element:hover {
   cursor: pointer;

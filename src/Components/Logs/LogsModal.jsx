@@ -4,23 +4,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import LogEntryMain from "./LogEntryMain";
 
-const people = [
-  {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "jane.cooper@example.com",
-  },
-  {
-    name: "Cody Fisher",
-    title: "Product Directives Officer",
-    role: "Owner",
-    email: "cody.fisher@example.com",
-  },
-  // More people...
-];
-
-function LogsModal({ open, setOpen, task }) {
+function LogsModal({ open, setOpen, logs, name }) {
+  console.log(logs);
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -42,7 +27,7 @@ function LogsModal({ open, setOpen, task }) {
               leaveTo="translate-x-full"
             >
               <div className="w-screen max-w-3xl">
-                <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+                <div className="h-full flex flex-col bg-white shadow-xl">
                   <div className="py-6 px-4 bg-indigo-700 sm:px-6">
                     <div className="flex items-center justify-between">
                       <Dialog.Title className="text-lg font-medium text-white">
@@ -66,11 +51,11 @@ function LogsModal({ open, setOpen, task }) {
                       </p> */}
                     </div>
                   </div>
-                  <div className="relative flex-1 py-6 px-4 sm:px-6">
+                  <div className="relative flex-1 py-6 px-4 sm:px-6 h-full">
                     {/* Replace with your content */}
-                    <div className="relative overflow-x-auto">
-                      <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <div className="relative overflow-x-auto h-full">
+                      <table className="w-full h-full text-sm text-left text-gray-500">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                           <tr>
                             <th scope="col" className="px-6 py-3">
                               User
@@ -83,10 +68,10 @@ function LogsModal({ open, setOpen, task }) {
                             </th>
                           </tr>
                         </thead>
-                        <tbody>
-                          {task &&
-                            task.logs &&
-                            task.logs
+                        <tbody className="h-full overflow-y-scroll pb-10">
+                          {logs &&
+                            logs.length > 0 &&
+                            logs
                               .sort(function(a, b) {
                                 return new Date(b.date) - new Date(a.date);
                               })

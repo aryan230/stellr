@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import URL from "./../Data/data.json";
 import BannerOrg from "../Components/BannerOrg";
+import SessionExpired from "../SessionExpired/SessionExpired";
 
 function Editor() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ function Editor() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [newAccountName, setNewAccountName] = useState();
+  const [expire, setExpire] = useState(false);
   const userDetails = useSelector((state) => state.userDetails);
   const {
     loading: loadingUserDetails,
@@ -81,12 +83,14 @@ function Editor() {
           console.log(JSON.stringify(response.data));
         })
         .catch(function(error) {
-          console.log(error);
+          if (error.message === "Request failed with status code 401") {
+            setExpire(true);
+          }
         });
     }
   }, [userInfo]);
 
-  return <EditorComponent />;
+  return <EditorComponent expire={expire} setExpire={setExpire} />;
 }
 
 export default Editor;

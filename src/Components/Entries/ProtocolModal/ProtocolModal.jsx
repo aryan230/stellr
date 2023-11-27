@@ -31,6 +31,11 @@ import {
 } from "lucide-react";
 import ShareModal from "./ShareModal";
 import LogsModal from "../../Logs/LogsModal";
+import ConformationModal from "../../../UI/MainModals/ConformationModal";
+import URL from "./../../../Data/data.json";
+import axios from "axios";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -51,6 +56,9 @@ function ProtocolModal({
   const [isDrawerOpenLogs, setIsDrawerOpenLogs] = useState(false);
   const [logs, setLogs] = useState(false);
   const [share, setShare] = useState(false);
+  const [deleteEle, setDelete] = useState(false);
+  const userLogin = useSelector((state) => state.userLogin);
+  let { userInfo } = userLogin;
   const actions = [
     {
       icon: <ShieldIcon />,
@@ -74,6 +82,28 @@ function ProtocolModal({
     }
   }
 
+  const handleDelete = async (id) => {
+    var config = {
+      method: "delete",
+      url: `${URL[0]}api/protocols/p/${id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log(JSON.stringify(response.data));
+        toast.success("Template Deleted sucessfully");
+        setDelete(false);
+        setProtocolModal(false);
+        setNewProtocol(true);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="modal">
       {share && (
@@ -83,6 +113,18 @@ function ProtocolModal({
           setModal={setProtocolModal}
           doc={doc}
           setNew={setNewProtocol}
+        />
+      )}
+      {deleteEle && (
+        <ConformationModal
+          open={deleteEle}
+          setOpen={setDelete}
+          heading="Are you sure?"
+          details="You want to delete this entity."
+          onClick={(e) => {
+            e.preventDefault();
+            handleDelete(doc._id);
+          }}
         />
       )}
       <LogsModal setOpen={setLogs} open={logs} task={doc} />
@@ -216,6 +258,25 @@ function ProtocolModal({
                         )}
                       </Menu.Item>
                     </form>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setDelete(true);
+                          }}
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm"
+                          )}
+                        >
+                          Delete
+                        </a>
+                      )}
+                    </Menu.Item>
                   </div>
                 </Menu.Items>
               </Transition>

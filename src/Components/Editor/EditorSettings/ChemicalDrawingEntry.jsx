@@ -7,6 +7,7 @@ import Select from "react-select";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import URL from "./../../../Data/data.json";
+import { toast } from "sonner";
 
 function ChemicalDrawingEntry({ open, setOpen, quill, setCreateDrawingModal }) {
   const [loader, setLoader] = useState(false);
@@ -18,9 +19,16 @@ function ChemicalDrawingEntry({ open, setOpen, quill, setCreateDrawingModal }) {
   const submitHandler = async (e) => {
     e.preventDefault();
     const editor = quill.current.editor;
-    const value = data.find((d) => d._id === cd);
-    const imageUrl = value.data[0].image;
-    editor.insertEmbed(quill.current.getSelection(), "image", imageUrl);
+    const value = await data.find((d) => d._id === cd);
+    const imageUrl = await value.data[0].image;
+    console.log(value);
+    if (imageUrl) {
+      editor.insertEmbed(quill.current.getSelection(), "image", imageUrl);
+    } else {
+      toast.error("The image cannot be created for this drawing.", {
+        description: "Try changing the chemical drawing",
+      });
+    }
     setOpen(false);
   };
 

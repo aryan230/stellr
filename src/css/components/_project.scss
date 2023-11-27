@@ -256,6 +256,10 @@
       border-bottom: 1px solid #ddd0d0;
       transition: 0.2s ease-in-out;
       background-color: transparent;
+
+      &.white {
+        background-color: white;
+      }
       &:hover {
         cursor: pointer;
         background: rgba(0, 0, 0, 0.082);

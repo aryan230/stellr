@@ -2,14 +2,14 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { HeartIcon, XIcon } from "@heroicons/react/outline";
 import { PencilIcon, PlusSmIcon } from "@heroicons/react/solid";
+import { CheckCheck, FileText, User } from "lucide-react";
 
-function DetailSlideOver({ doc }) {
-  const [open, setOpen] = useState(true);
+function DetailSlideOver({ open, setOpen, data }) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 overflow-hidden"
+        className="fixed inset-0 overflow-hidden z-[9999]"
         onClose={setOpen}
       >
         <div className="absolute inset-0 overflow-hidden">
@@ -55,31 +55,28 @@ function DetailSlideOver({ doc }) {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="h-full bg-white p-8 overflow-y-auto">
+                <div className="h-full bg-white p-8 overflow-y-auto font-sans">
                   <div className="pb-16 space-y-6">
                     <div>
-                      <div className="block w-full aspect-w-10 aspect-h-7 rounded-lg overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80"
-                          alt=""
-                          className="object-cover"
-                        />
-                      </div>
+                      {/* <div className="block w-xs aspect-w-10 aspect-h-7 rounded-lg overflow-hidden">
+                        
+                      </div> */}
                       <div className="mt-4 flex items-start justify-between">
                         <div>
                           <h2 className="text-lg font-medium text-gray-900">
                             <span className="sr-only">Details for </span>
-                            IMG_4985.HEIC
+                            {data.name}
                           </h2>
                           <p className="text-sm font-medium text-gray-500">
-                            3.9 MB
+                            {data.description}
                           </p>
                         </div>
                         <button
                           type="button"
-                          className="ml-4 h-8 w-8 bg-white rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="ml-4 h-8 w-8 bg-white rounded-full flex items-center justify-center text-indigo-600"
                         >
-                          <HeartIcon className="h-6 w-6" aria-hidden="true" />
+                          {data.type === "Task" && <CheckCheck />}
+                          {data.type === "Entry" && <FileText />}
                           <span className="sr-only">Favorite</span>
                         </button>
                       </div>
@@ -88,28 +85,24 @@ function DetailSlideOver({ doc }) {
                       <h3 className="font-medium text-gray-900">Information</h3>
                       <dl className="mt-2 border-t border-b border-gray-200 divide-y divide-gray-200">
                         <div className="py-3 flex justify-between text-sm font-medium">
-                          <dt className="text-gray-500">Uploaded by</dt>
-                          <dd className="text-gray-900">Marie Culver</dd>
+                          <dt className="text-gray-500">Created by</dt>
+                          <dd className="text-gray-900">{data.createdby}</dd>
                         </div>
                         <div className="py-3 flex justify-between text-sm font-medium">
                           <dt className="text-gray-500">Created</dt>
-                          <dd className="text-gray-900">June 8, 2020</dd>
+                          <dd className="text-gray-900">{data.created}</dd>
                         </div>
                         <div className="py-3 flex justify-between text-sm font-medium">
                           <dt className="text-gray-500">Last modified</dt>
-                          <dd className="text-gray-900">June 8, 2020</dd>
+                          <dd className="text-gray-900">{data.modified}</dd>
                         </div>
                         <div className="py-3 flex justify-between text-sm font-medium">
-                          <dt className="text-gray-500">Dimensions</dt>
-                          <dd className="text-gray-900">4032 x 3024</dd>
-                        </div>
-                        <div className="py-3 flex justify-between text-sm font-medium">
-                          <dt className="text-gray-500">Resolution</dt>
-                          <dd className="text-gray-900">72 x 72</dd>
+                          <dt className="text-gray-500">Size</dt>
+                          <dd className="text-gray-900">{data.size}</dd>
                         </div>
                       </dl>
                     </div>
-                    <div>
+                    {/* <div>
                       <h3 className="font-medium text-gray-900">Description</h3>
                       <div className="mt-2 flex items-center justify-between">
                         <p className="text-sm text-gray-500 italic">
@@ -123,51 +116,35 @@ function DetailSlideOver({ doc }) {
                           <span className="sr-only">Add description</span>
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                     <div>
                       <h3 className="font-medium text-gray-900">Shared with</h3>
                       <ul
                         role="list"
                         className="mt-2 border-t border-b border-gray-200 divide-y divide-gray-200"
                       >
-                        <li className="py-3 flex justify-between items-center">
-                          <div className="flex items-center">
-                            <img
-                              src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=1024&h=1024&q=80"
-                              alt=""
-                              className="w-8 h-8 rounded-full"
-                            />
-                            <p className="ml-4 text-sm font-medium text-gray-900">
-                              Aimee Douglas
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            className="ml-6 bg-white rounded-md text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >
-                            Remove
-                            <span className="sr-only"> Aimee Douglas</span>
-                          </button>
-                        </li>
-                        <li className="py-3 flex justify-between items-center">
-                          <div className="flex items-center">
-                            <img
-                              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=oilqXxSqey&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                              alt=""
-                              className="w-8 h-8 rounded-full"
-                            />
-                            <p className="ml-4 text-sm font-medium text-gray-900">
-                              Andrea McMillan
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            className="ml-6 bg-white rounded-md text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >
-                            Remove
-                            <span className="sr-only"> Andrea McMillan</span>
-                          </button>
-                        </li>
+                        {data.shared &&
+                          data.shared.length > 0 &&
+                          data.shared.map((s) => (
+                            <li className="py-3 flex justify-between items-center">
+                              <div className="flex items-center">
+                                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                                  <User size={16} className="text-stone-700" />
+                                </div>
+                                <p className="ml-4 text-sm font-medium text-gray-900">
+                                  {s.userName}
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                className="ml-6 bg-white rounded-md text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
+                                Remove
+                                <span className="sr-only"> Aimee Douglas</span>
+                              </button>
+                            </li>
+                          ))}
+
                         <li className="py-2 flex justify-between items-center">
                           <button
                             type="button"

@@ -158,21 +158,23 @@ function Home({
               defaultView="month"
               events={
                 newArr &&
-                newArr.map(
-                  ({
-                    subject: title,
-                    due_date: start,
-                    due_date: end,
-                    ...rest
-                  }) => ({
-                    title,
-                    start: new Date(start),
-                    end: new Date(end),
-                    allDay: true,
-                    typeEvent: "normal",
-                    ...rest,
-                  })
-                )
+                newArr
+                  .filter((t) => t.deleted === false)
+                  .map(
+                    ({
+                      subject: title,
+                      due_date: start,
+                      due_date: end,
+                      ...rest
+                    }) => ({
+                      title,
+                      start: new Date(start),
+                      end: new Date(end),
+                      allDay: true,
+                      typeEvent: "normal",
+                      ...rest,
+                    })
+                  )
               }
               eventPropGetter={getEventProp}
               style={{ height: "100%" }}
@@ -243,20 +245,23 @@ function Home({
               {age && age === 10 && (
                 <div className="calender-todays-task">
                   {newArr &&
-                    newArr.map(
-                      (doc) =>
-                        doc.due_date === todaysDate && (
-                          <TaskEntries
-                            doc={doc}
-                            setTaskModal={setTaskModal}
-                            setTaskContent={setTaskContent}
-                            taskFrom={true}
-                          />
-                        )
-                    )}
+                    newArr
+                      .filter((t) => t.deleted === false)
+                      .map(
+                        (doc) =>
+                          doc.due_date === todaysDate && (
+                            <TaskEntries
+                              doc={doc}
+                              setTaskModal={setTaskModal}
+                              setTaskContent={setTaskContent}
+                              taskFrom={true}
+                            />
+                          )
+                      )}
                   {newArr &&
-                    newArr.findIndex((o) => o.due_date === todaysDate) ==
-                      -1 && (
+                    newArr
+                      .filter((t) => t.deleted === false)
+                      .findIndex((o) => o.due_date === todaysDate) == -1 && (
                       <div className="no-task-container">
                         <img src="./assets/task.svg" alt="" />
                         <h1>No tasks pending for today.</h1>
@@ -276,19 +281,23 @@ function Home({
               {age && age === 20 && (
                 <div className="calender-todays-task">
                   {newArr &&
-                    newArr.map(
-                      (doc) =>
-                        doc.due_date > todaysDate && (
-                          <TaskEntries
-                            doc={doc}
-                            setTaskModal={setTaskModal}
-                            setTaskContent={setTaskContent}
-                            taskFrom={true}
-                          />
-                        )
-                    )}
+                    newArr
+                      .filter((t) => t.deleted === false)
+                      .map(
+                        (doc) =>
+                          doc.due_date > todaysDate && (
+                            <TaskEntries
+                              doc={doc}
+                              setTaskModal={setTaskModal}
+                              setTaskContent={setTaskContent}
+                              taskFrom={true}
+                            />
+                          )
+                      )}
                   {newArr &&
-                    newArr.findIndex((o) => o.due_date > todaysDate) == -1 && (
+                    newArr
+                      .filter((t) => t.deleted === false)
+                      .findIndex((o) => o.due_date > todaysDate) == -1 && (
                       <div className="no-task-container">
                         <img src="./assets/task.svg" alt="" />
                         <h1>No tasks here.</h1>
@@ -308,15 +317,17 @@ function Home({
               {age && age === 30 && (
                 <div className="calender-todays-task">
                   {tasksList &&
-                    tasksList.map((doc, index) => (
-                      <TaskEntries
-                        doc={doc}
-                        index={index}
-                        setTaskModal={setTaskModal}
-                        setTaskContent={setTaskContent}
-                        taskFrom={true}
-                      />
-                    ))}
+                    tasksList
+                      .filter((t) => t.deleted === false)
+                      .map((doc, index) => (
+                        <TaskEntries
+                          doc={doc}
+                          index={index}
+                          setTaskModal={setTaskModal}
+                          setTaskContent={setTaskContent}
+                          taskFrom={true}
+                        />
+                      ))}
                   {tasksList && tasksList.length == 0 && (
                     <div className="no-task-container">
                       <img src="./assets/task.svg" alt="" />
@@ -337,17 +348,19 @@ function Home({
               {age && age === 40 && (
                 <div className="calender-todays-task">
                   {newArr &&
-                    newArr.map(
-                      (doc) =>
-                        doc.due_date < todaysDate && (
-                          <TaskEntries
-                            doc={doc}
-                            setTaskModal={setTaskModal}
-                            setTaskContent={setTaskContent}
-                            taskFrom={true}
-                          />
-                        )
-                    )}
+                    newArr
+                      .filter((t) => t.deleted === false)
+                      .map(
+                        (doc) =>
+                          doc.due_date < todaysDate && (
+                            <TaskEntries
+                              doc={doc}
+                              setTaskModal={setTaskModal}
+                              setTaskContent={setTaskContent}
+                              taskFrom={true}
+                            />
+                          )
+                      )}
                   {newArr &&
                     newArr.findIndex((o) => o.due_date < todaysDate) == -1 && (
                       <div className="no-task-container">

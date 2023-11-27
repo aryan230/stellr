@@ -117,7 +117,7 @@ function ListSamplesAll({
 
   return (
     <div className="project-component">
-      <div className="project-component-inside">
+      <div className="project-component-inside font-sans">
         {showStats && (
           <StatsAndGraphs setShowStats={setShowStats} samples={samples} />
         )}
@@ -189,7 +189,7 @@ function ListSamplesAll({
             </button>
           </div>
         </div>
-        <div className="p-c-s-charts">
+        <div className="p-c-s-charts font-sans">
           {loadingSamples ? (
             <div className="loader-div-main-stellr">
               <div role="status">
@@ -216,6 +216,7 @@ function ListSamplesAll({
             <Box sx={{ height: "90%", width: "100%" }}>
               <DataGrid
                 slots={{ toolbar: GridToolbar }}
+                className="font-sans"
                 slotProps={{
                   toolbar: {
                     printOptions: { disableToolbarButton: true },

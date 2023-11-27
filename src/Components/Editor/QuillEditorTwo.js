@@ -20,12 +20,18 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import ReactQuill from "react-quill";
 import {
   AlertTriangle,
+  BadgeCheck,
   Biohazard,
   Book,
   Cloud,
+  CloudCog,
   FileText,
+  Info,
   LayoutPanelTop,
+  LockKeyhole,
   Table2,
+  Trash,
+  Vote,
 } from "lucide-react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
@@ -83,6 +89,12 @@ import EditNameEditor from "./EditorSettings/EditNameEditor";
 import ChemicalDrawingEntry from "./EditorSettings/ChemicalDrawingEntry";
 import Quill from "quill";
 import LogsModal from "../Logs/LogsModal";
+import DropdownBasic from "../../UI/Dropdown/DropdownBasic";
+import { Details } from "@mui/icons-material";
+import moment from "moment";
+import ConformationModal from "../../UI/MainModals/ConformationModal";
+import axios from "axios";
+import { CART_RESET } from "../../redux/constants/cartConstants";
 
 const zip = new JSZip();
 
@@ -226,6 +238,24 @@ function TextEditorTwo({
   const [users, setUsers] = useState([]);
   const [chemicalDrawing, setChemicalDrawing] = useState(false);
   const [logs, setLogs] = useState(false);
+  const [savingData, setSavingData] = useState(false);
+  const sampleListMy = useSelector((state) => state.sampleListMy);
+  const {
+    samples,
+    loading: loadingSamples,
+    error: errorSamples,
+  } = sampleListMy;
+
+  const protocolListMy = useSelector((state) => state.protocolListMy);
+  const {
+    protocols,
+    loading: loadingProtocols,
+    error: errorProtocols,
+  } = protocolListMy;
+
+  const sopListMy = useSelector((state) => state.sopListMy);
+  const { sops, loading: loadingSops, error: errorSops } = sopListMy;
+
   const entriesListMy = useSelector((state) => state.entriesListMy);
   const {
     entries,
@@ -340,6 +370,8 @@ function TextEditorTwo({
     // console.log(localStorage.getItem("project"));
   };
 
+  const diplayLoader = async () => {};
+
   useEffect(() => {
     if (socket == null || quill.current == null) return;
     const handler = (delta, oldDelta, source) => {
@@ -348,7 +380,6 @@ function TextEditorTwo({
       socket.emit("send-changes", delta);
     };
     quill.current.on("text-change", handler);
-
     return () => {
       quill.current.off("text-change", handler);
     };
@@ -435,11 +466,35 @@ function TextEditorTwo({
 
   const [entryOptions, setEntryOptions] = useState(
     entries
-      ? entries.map(({ name: key, _id: value, type: type }) => ({
-          key,
+      ? entries
+          .filter((entry) => entry.deleted === false)
+          .map(({ name: key, _id: value, type: type }) => ({
+            key,
+            value,
+            type,
+            mainType: "Entry",
+          }))
+      : []
+  );
+
+  const [sampleOptions, setSampleOptions] = useState(
+    samples
+      ? samples.map(({ _id: value, data: key }) => ({
           value,
-          type,
-          mainType: "Entry",
+          key: JSON.parse(key).sampleName ? JSON.parse(key).sampleName : "",
+          type: "Sample",
+          mainType: "Sample",
+        }))
+      : []
+  );
+
+  const [protocolOptions, setProtocolOptions] = useState(
+    protocols
+      ? protocols.map(({ _id: value, title: key }) => ({
+          value,
+          key,
+          type: "Protocol",
+          mainType: "Protocol",
         }))
       : []
   );
@@ -448,6 +503,8 @@ function TextEditorTwo({
     userCollabs,
     userOrgCollabs,
     entryOptions,
+    sampleOptions,
+    protocolOptions,
     "value"
   );
 
@@ -487,17 +544,25 @@ function TextEditorTwo({
           if (item.original.type === "Lab Notebook") {
             return `<span class="tribute-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
-              ${item.original.key}</span>`;
+              LabNotebook_${item.original.key}</span>`;
           } else if (item.original.type === "Lab Sheet") {
             return `<span class="tribute-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
-            ${item.original.key}</span>`;
+            LabSheet_${item.original.key}</span>`;
+          } else if (item.original.type === "Sample") {
+            return `<span class="tribute-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
+          Sample_${item.original.key}</span>`;
+          } else if (item.original.type === "Protocol") {
+            return `<span class="tribute-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-minus"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M9 10h6"/></svg>
+          Protocol_${item.original.key}</span>`;
           } else {
             return `<span class="tribute-item">
                 
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5d00d2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
          
-       ${item.original.key}</span>`;
+       User_${item.original.key}</span>`;
           }
         },
         selectTemplate: (item) => {
@@ -527,7 +592,6 @@ function TextEditorTwo({
           user: userInfo._id,
         });
       }, SAVE_INTERVAL_MS);
-
       return () => {
         clearInterval(interval);
       };
@@ -573,9 +637,31 @@ function TextEditorTwo({
   //     console.log()
   //   }
   // }, [document.querySelectorAll('li[data-list="bullet"]')]);
-
+  const [details, setDetails] = useState(false);
+  const [deleteEnt, setDelete] = useState(false);
   const modules = 1;
+  const handleDelete = async (id) => {
+    var config = {
+      method: "delete",
+      url: `${URL[0]}api/entries/p/${id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
+    axios(config)
+      .then(function(response) {
+        console.log(JSON.stringify(response.data));
+        toast.success("Entry Deleted");
+        setDelete(false);
+        setEntryUpdate(true);
+        setWhichTabisActive("projectList");
+        dispatch({ type: CART_RESET });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
   return (
     <>
       {warningModal && (
@@ -586,7 +672,38 @@ function TextEditorTwo({
       )}
 
       {loader && <Loader />}
-
+      {
+        <DetailSlideOver
+          open={details}
+          setOpen={setDetails}
+          data={{
+            name: tab.name,
+            type: "Entry",
+            description: `This entry was created ${tab.createdAt &&
+              moment(tab.createdAt).fromNow()}`,
+            createdby: userInfo.name,
+            created: moment(tab.createdAt)
+              .locale("en-in")
+              .format("ll"),
+            modified: moment(tab.updatedAt)
+              .locale("en-in")
+              .format("ll"),
+            size: "5KB",
+            shared: [],
+          }}
+        />
+      }
+      {
+        <ConformationModal
+          open={deleteEnt}
+          setOpen={setDelete}
+          heading="Are you sure?"
+          details="You want to delete this entity."
+          onClick={async () => {
+            handleDelete(tab._id);
+          }}
+        />
+      }
       {/* <DrawerHistory
         quill={quill}
         tab={tab}
@@ -594,7 +711,7 @@ function TextEditorTwo({
         open={isDrawerOpen}
         setOpen={setIsDrawerOpen}
       /> */}
-  {/* <LogsModal setOpen={setLogs} open={logs}/> */}
+      {/* <LogsModal setOpen={setLogs} open={logs}/> */}
       <Drawer
         anchor="right"
         open={isDrawerOpen}
@@ -688,10 +805,10 @@ function TextEditorTwo({
               </Popover.Button>
             </div>
             <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
-              <Popover.Group as="nav" className="flex space-x-6">
+              <Popover.Group as="nav" className="flex space-x-2">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border-gray-0 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       File
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -743,6 +860,7 @@ function TextEditorTwo({
                             </a>
                           )}
                         </Menu.Item>
+
                         <Menu.Item>
                           {({ active }) => (
                             <a
@@ -763,6 +881,38 @@ function TextEditorTwo({
                                 aria-hidden="true"
                               />
                               Save as Template
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const editor = quill.current.editor;
+                                setDetails(true);
+                                //
+                                // const imageUrl =
+                                //   "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg";
+                                // editor.insertEmbed(
+                                //   quill.current.getSelection(),
+                                //   "image",
+                                //   imageUrl
+                                // );
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <Info
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              View Details
                             </a>
                           )}
                         </Menu.Item>
@@ -871,6 +1021,29 @@ function TextEditorTwo({
                             </a>
                           )}
                         </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setDelete(true);
+                              }}
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "group flex items-center px-4 py-2 text-base"
+                              )}
+                            >
+                              <Trash
+                                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                              Delete Entry
+                            </a>
+                          )}
+                        </Menu.Item>
                         {/* <Menu.Item>
                           {({ active }) => (
                             <a
@@ -899,7 +1072,7 @@ function TextEditorTwo({
                 </Menu>
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       Insert
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -907,7 +1080,6 @@ function TextEditorTwo({
                       />
                     </Menu.Button>
                   </div>
-
                   <Transition
                     as={Fragment}
                     enter="transition ease-out duration-100"
@@ -982,7 +1154,7 @@ function TextEditorTwo({
                 </Menu>
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       Export
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -1235,6 +1407,57 @@ function TextEditorTwo({
                 </Popover> */}
               </Popover.Group>
               <div className="flex items-center md:ml-12">
+                {savingData ? (
+                  <div aria-label="Loading..." role="status">
+                    <svg
+                      className="animate-spin w-6 h-6 fill-slate-800"
+                      viewBox="3 3 18 18"
+                    >
+                      <path
+                        className="opacity-20"
+                        d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
+                      ></path>
+                      <path d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+                    </svg>
+                  </div>
+                ) : (
+                  <p className="flex items-center justify-center font-sans text-xs">
+                    {" "}
+                    <svg
+                      className="w-6 h-6 mr-1 text-indigo-300"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
+                      <g
+                        id="SVGRepo_tracerCarrier"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        stroke="#CCCCCC"
+                        strokeWidth="0.72"
+                      />
+                      <g id="SVGRepo_iconCarrier">
+                        {" "}
+                        <path
+                          d="M9 13.2222L10.8462 15L15 11M8.4 19C5.41766 19 3 16.6044 3 13.6493C3 11.2001 4.8 8.9375 7.5 8.5C8.34694 6.48637 10.3514 5 12.6893 5C15.684 5 18.1317 7.32251 18.3 10.25C19.8893 10.9449 21 12.6503 21 14.4969C21 16.9839 18.9853 19 16.5 19L8.4 19Z"
+                          stroke="gray"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />{" "}
+                      </g>
+                    </svg>
+                    This file is being autosaved.
+                  </p>
+                )}
+                <a
+                  href="#"
+                  className="ml-5 font-sans flex items-center text-sm justify-center bg-indigo-600 text-white py-2 px-5 rounded-full"
+                >
+                  <Vote className="mr-2" size={14} />
+                  Submit for Approval
+                </a>
                 {/* {users &&
                   users.length > 0 &&
                   users.map((u) => (

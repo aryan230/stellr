@@ -9,6 +9,15 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import URL from "./../../../Data/data.json";
 import ReactQuill from "react-quill";
+import HeaderOne from "../../headers/HeaderOne";
+import MainModalTailwind from "../../../UI/MainModals/MainModalTailwind";
+import MainModalEntity from "../../../UI/MainModals/MainModalEntity";
+import moment from "moment";
+import DetailSlideOver from "../../../UI/SlideOvers/DetailSlideOver";
+import LogsModal from "../../Logs/LogsModal";
+import ConformationModal from "../../../UI/MainModals/ConformationModal";
+import EmptySlideOvers from "../../../UI/SlideOvers/EmptySlideOvers";
+
 function TaskModal({
   setTaskModal,
   doc,
@@ -19,6 +28,7 @@ function TaskModal({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDrawerOpenLogs, setIsDrawerOpenLogs] = useState(false);
   const [viewLogs, setViewLogs] = useState(false);
+  const [details, setDetails] = useState(false);
   const [edit, setEdit] = useState(false);
   const [assignedMembers, setAssignedMembers] = useState(false);
   const date1 = new Date(doc.due_date);
@@ -56,402 +66,151 @@ function TaskModal({
       ownerUser();
     }
   }, [ownerUserData]);
+  const [deleteTask, setDelete] = useState(false);
+
+  const handleDelete = async (id) => {
+    var config = {
+      method: "delete",
+      url: `${URL[0]}api/tasks/p/${id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log(JSON.stringify(response.data));
+        toast.success("Task Deleted");
+        setDelete(false);
+        setTaskModal(false);
+        setTaskUpdateController(true);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  const [editTask, setEditTask] = useState(false);
+
   return (
-    <div className="modal">
-      <div className="task-modal-container-main">
-        <Drawer
-          anchor="right"
-          open={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-        >
-          <Box width="500px" p={2} role="presentation">
-            <DrawerEditTask
-              task={doc}
-              setIsDrawerOpen={setIsDrawerOpen}
-              setTaskUpdateController={setTaskUpdateController}
-              setTaskModal={setTaskModal}
-            />
-          </Box>
-        </Drawer>
-        <div className="top-modal">
-          <button
-            onClick={(e) => {
-              setTaskModal(false);
-            }}
+    <MainModalEntity open={true} setOpen={setTaskModal}>
+      <DrawerEditTask
+        setEditTask={setEditTask}
+        editTask={editTask}
+        setTaskModal={setTaskModal}
+        setTaskUpdateController={setTaskUpdateController}
+        task={doc}
+      />
+      <LogsModal open={viewLogs} setOpen={setViewLogs} logs={doc.logs} />
+      <ConformationModal
+        open={deleteTask}
+        setOpen={setDelete}
+        heading="Are you sure?"
+        details="You want to delete this entity."
+        onClick={async () => {
+          handleDelete(doc._id);
+        }}
+      />
+      <DetailSlideOver
+        open={details}
+        setOpen={setDetails}
+        data={{
+          name: doc.subject,
+          type: "Task",
+          description: `This task was created ${doc.createdAt &&
+            moment(doc.createdAt).fromNow()} by ${ownerUserData &&
+            ownerUserData.name}`,
+          createdby: ownerUserData && ownerUserData.name,
+          created: moment(doc.createdAt)
+            .locale("en-in")
+            .format("ll"),
+          modified: moment(doc.updatedAt)
+            .locale("en-in")
+            .format("ll"),
+          size: "2KB",
+          shared: doc.assigned,
+        }}
+      />
+      <HeaderOne
+        name={doc.subject}
+        status={doc.status}
+        description={`This task was created ${doc.createdAt &&
+          moment(doc.createdAt).fromNow()} by ${ownerUserData &&
+          ownerUserData.name}`}
+        menu={[
+          {
+            name: "Edit Task",
+            onClick: async () => {
+              setEditTask(true);
+            },
+          },
+          {
+            name: "View Details",
+            onClick: async () => {
+              setDetails(true);
+            },
+          },
+          {
+            name: "View Logs",
+            onClick: async () => {
+              setViewLogs(true);
+            },
+          },
+          // {
+          //   name: "Share",
+          //   onClick: async () => {},
+          // },
+          {
+            name: "Delete",
+            onClick: async () => {
+              setDelete(true);
+            },
+          },
+        ]}
+      />
+      <div className="border-t border-gray-200 pt-8 lg:flex lg:items-center lg:justify-between xl:mt-0">
+        <div>
+          <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+            Priority
+          </h3>
+          <span
+            class={`${
+              doc.priority === "High"
+                ? "bg-emerald-100 text-emerald-700 border-emerald-500"
+                : "bg-gray-100 text-gray-800 border-gray-500"
+            } text-xs font-medium inline-flex items-center px-2.5 py-0.5 mt-2 rounded me-2 border`}
           >
             <svg
+              class="w-2.5 h-2.5 me-1.5"
+              aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
-              width="46"
-              height="46"
-              viewBox="0 0 46 46"
-              fill="none"
+              fill="currentColor"
+              viewBox="0 0 20 20"
             >
-              <path
-                d="M28.2838 15.7712L22.6269 21.4281L16.9701 15.7712C16.72 15.5212 16.3809 15.3807 16.0273 15.3807C15.6737 15.3807 15.3345 15.5212 15.0845 15.7712C14.8344 16.0213 14.6939 16.3604 14.6939 16.714C14.6939 17.0676 14.8344 17.4068 15.0845 17.6568L20.7413 23.3137L15.0845 28.9705C14.8344 29.2206 14.6939 29.5597 14.6939 29.9134C14.6939 30.267 14.8344 30.6061 15.0845 30.8562C15.3345 31.1062 15.6737 31.2467 16.0273 31.2467C16.3809 31.2467 16.72 31.1062 16.9701 30.8562L22.6269 25.1993L28.2838 30.8562C28.5338 31.1062 28.873 31.2467 29.2266 31.2467C29.5802 31.2467 29.9194 31.1062 30.1694 30.8562C30.4195 30.6061 30.5599 30.267 30.5599 29.9134C30.5599 29.5597 30.4195 29.2206 30.1694 28.9705L24.5126 23.3137L30.1694 17.6568C30.4195 17.4068 30.5599 17.0676 30.5599 16.714C30.5599 16.3604 30.4195 16.0213 30.1694 15.7712C29.9194 15.5212 29.5802 15.3807 29.2266 15.3807C28.873 15.3807 28.5338 15.5212 28.2838 15.7712Z"
-                fill="#8F8585"
-              />
+              <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
             </svg>
-          </button>
-        </div>
-        <div className="project-main">
-          {viewLogs ? (
-            <></>
-          ) : (
-            <div className="project-main-inside">
-              {assignedMembers ? (
-                <>
-                  {" "}
-                  <Drawer
-                    anchor="right"
-                    open={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
-                  >
-                    <Box width="500px" p={2} role="presentation">
-                      <DrawerEditTask
-                        task={doc}
-                        setIsDrawerOpen={setIsDrawerOpen}
-                        setTaskUpdateController={setTaskUpdateController}
-                        setTaskModal={setTaskModal}
-                      />
-                    </Box>
-                  </Drawer>
-                  <Drawer
-                    anchor="right"
-                    open={isDrawerOpenLogs}
-                    onClose={() => setIsDrawerOpenLogs(false)}
-                  >
-                    <Box width="500px" p={2} role="presentation">
-                      <DrawerLogsTask
-                        task={doc}
-                        setIsDrawerOpenLogs={setIsDrawerOpenLogs}
-                      />
-                    </Box>
-                  </Drawer>
-                  <div className="project-s-header">
-                    {/* <div className="project-s-right">
-                      <h1>{doc.subject}</h1>
-                    </div> */}
-                    <div className="project-s-left">
-                      <button
-                        onClick={() => {
-                          setAssignedMembers(false);
-                        }}
-                      >
-                        View Task Details
-                      </button>
-                      <button
-                        style={{ marginRight: "10px" }}
-                        onClick={() => {
-                          setIsDrawerOpenLogs(true);
-                        }}
-                      >
-                        View Logs
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsDrawerOpen(true);
-                        }}
-                      >
-                        Edit Task
-                      </button>
-                    </div>
-                  </div>
-                  <div className="project-main-body-s">
-                    <div
-                      className="project-main-body-s-inside
-              "
-                    >
-                      <div className="invite-team-member-s-all">
-                        <h1>Assigned Members</h1>
-                        <div className="team-members-s-all">
-                          {" "}
-                          {edit ? (
-                            <div className="invite-team"></div>
-                          ) : (
-                            <div className="invite-team-right">
-                              {doc.assigned.length > 0 ? (
-                                <div className="team-already-right">
-                                  {doc.assigned.map((proj) => (
-                                    <div className="profile-header">
-                                      <div className="profile-header-left">
-                                        <img
-                                          src={`https://ui-avatars.com/api/?background=random&name=${proj.userName}`}
-                                          alt=""
-                                        />
-                                        <div className="phl-content">
-                                          <h1>{proj.userName}</h1>
-                                          <a href="">
-                                            getstellr.io/v/{proj.user}
-                                          </a>
-                                        </div>
-                                      </div>
-
-                                      <div className="profile-header-right">
-                                        <Tooltip
-                                          title="This user have access to the information related to your project"
-                                          followCursor
-                                        >
-                                          <a
-                                            className="button-user-type"
-                                            sx={{ m: 0, p: 0 }}
-                                          >
-                                            {proj.userType}
-                                          </a>
-                                        </Tooltip>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <div className="team-already-right">
-                                  No Task Members
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Drawer
-                    anchor="right"
-                    open={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
-                  >
-                    <Box width="500px" p={2} role="presentation">
-                      <DrawerEditTask
-                        task={doc}
-                        setIsDrawerOpen={setIsDrawerOpen}
-                        setTaskUpdateController={setTaskUpdateController}
-                        setTaskModal={setTaskModal}
-                      />
-                    </Box>
-                  </Drawer>
-                  <Drawer
-                    anchor="right"
-                    open={isDrawerOpenLogs}
-                    onClose={() => setIsDrawerOpenLogs(false)}
-                  >
-                    <Box width="500px" p={2} role="presentation">
-                      <DrawerLogsTask
-                        task={doc}
-                        setIsDrawerOpenLogs={setIsDrawerOpenLogs}
-                      />
-                    </Box>
-                  </Drawer>
-                  <div className="project-s-header">
-                    {/* <div className="project-s-right">
-                      <h1>{doc.subject}</h1>
-                    </div> */}
-                    <div className="project-s-left">
-                      <button
-                        onClick={() => {
-                          setAssignedMembers(true);
-                        }}
-                      >
-                        View Assigned Members
-                      </button>
-
-                      <button
-                        style={{ marginRight: "10px" }}
-                        onClick={() => {
-                          setIsDrawerOpenLogs(true);
-                        }}
-                      >
-                        View Logs
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsDrawerOpen(true);
-                        }}
-                      >
-                        Edit Task
-                      </button>
-                    </div>
-                  </div>
-                  <div className="bg-white shadow sm:rounded-lg  h-[70%] overflow-y-auto custom-scrollbar-task">
-                    <div className="px-4 py-5 sm:px-6">
-                      {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Task Details
-                      </h3> */}
-                      <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                        Created on{" "}
-                        {
-                          new Date(doc.createdAt)
-                            .toLocaleString("en-GB")
-                            .split(",")[0]
-                        }{" "}
-                        at{" "}
-                        {new Date(doc.createdAt).toLocaleString().split(",")[1]}
-                      </p>
-                    </div>
-                    <div className="border-t border-gray-200 px-4 py-15 sm:p-0">
-                      <dl className="sm:divide-y sm:divide-gray-200">
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Task Unique ID
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {doc._id}
-                          </dd>
-                        </div>
-
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Task Subject
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {doc.subject}
-                          </dd>
-                        </div>
-                        {doc.description && (
-                          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">
-                              Task Description
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                              <ReactQuill
-                                theme="snow"
-                                readOnly
-                                value={doc.description}
-                              />
-                            </dd>
-                          </div>
-                        )}
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Priority
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <div className="center relative inline-block select-none whitespace-nowrap rounded-lg bg-indigo-500 py-2 px-3.5 align-baseline font-sans text-xs font-bold uppercase leading-none text-white">
-                              {doc.priority}
-                            </div>
-                          </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Status
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {doc.status === "Completed" ? (
-                              <div className="center relative inline-block select-none whitespace-nowrap rounded-lg bg-emerald-600 py-2 px-3.5 align-baseline font-sans text-xs font-bold uppercase leading-none text-white">
-                                {doc.status}
-                              </div>
-                            ) : (
-                              <div className="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-2 px-3.5 align-baseline font-sans text-xs font-bold uppercase leading-none text-white">
-                                {doc.status}
-                              </div>
-                            )}
-                          </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Due Date
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {doc.due_date}
-                          </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Created By
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {ownerUserData && ownerUserData.email}
-                          </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Last Modified By
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {doc.logs.length > 0 &&
-                              doc.logs.slice(-1)[0].userEmail}
-                          </dd>
-                        </div>
-                        {/* <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Description
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            Fugiat ipsum ipsum deserunt culpa aute sint do
-                            nostrud anim incididunt cillum culpa consequat.
-                            Excepteur qui ipsum aliquip consequat sint. Sit id
-                            mollit nulla mollit nostrud in ea officia proident.
-                            Irure nostrud pariatur mollit ad adipisicing
-                            reprehenderit deserunt qui eu.
-                          </dd>
-                        </div> */}
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Assigned Members
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <ul
-                              role="list"
-                              className="border border-gray-200 rounded-md divide-y divide-gray-200"
-                            >
-                              {doc.assigned.map((proj) => (
-                                <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                                  <div className="w-0 flex-1 flex items-center">
-                                    <UserCircleIcon
-                                      className="flex-shrink-0 h-5 w-5 text-gray-400"
-                                      aria-hidden="true"
-                                    />
-                                    <span className="ml-2 flex-1 w-0 truncate">
-                                      {proj.userName}
-                                    </span>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </dd>
-                        </div>
-                        {/* <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Download
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <ul
-                              role="list"
-                              className="border border-gray-200 rounded-md divide-y divide-gray-200"
-                            >
-                              <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                                <div className="w-0 flex-1 flex items-center">
-                                  <PaperClipIcon
-                                    className="flex-shrink-0 h-5 w-5 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="ml-2 flex-1 w-0 truncate">
-                                    Download Task
-                                  </span>
-                                </div>
-                                <div className="ml-4 flex-shrink-0">
-                                  <a
-                                    href="#"
-                                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                                  >
-                                    Download
-                                  </a>
-                                </div>
-                              </li>
-                            </ul>
-                          </dd>
-                        </div> */}
-                      </dl>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+            {doc.priority}
+          </span>
         </div>
       </div>
-    </div>
+      <div className="mt-10">
+        <h2 className="text-sm font-medium text-gray-900">Description</h2>
+
+        <div
+          className="mt-2 prose prose-sm text-gray-500"
+          dangerouslySetInnerHTML={{ __html: doc.description }}
+        />
+      </div>
+
+      <div className="mt-8 border-t border-gray-200 pt-8">
+        <h2 className="text-sm font-medium text-gray-900">Due Date</h2>
+
+        <div className="mt-2 prose prose-sm text-gray-500">
+          {moment(doc.due_date).fromNow()}{" "}
+          <span className="text-sm">({doc.due_date})</span>
+        </div>
+      </div>
+    </MainModalEntity>
   );
 }
 

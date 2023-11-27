@@ -28,7 +28,9 @@ import {
   Home,
   KanbanSquare,
   LayoutGrid,
+  PackageOpen,
   Plus,
+  Recycle,
   Search,
   Settings,
   Shield,
@@ -692,6 +694,20 @@ function SideNav({
             </a>
             <div className="drop-down-content">
               <div className="middle-navbar-container">
+                <button
+                  onClick={async () => {
+                    await dispatch(addToState("archive"));
+                    setWhichTabisActive("archive");
+                  }}
+                  className="mnc-element"
+                >
+                  <div className="mnc-element-inside">
+                    <div className="mnc-element-left">
+                      <Recycle size={20} />
+                      <p>Archive Settings</p>
+                    </div>
+                  </div>
+                </button>
                 <button
                   onClick={async () => {
                     await dispatch(addToState("orgList"));

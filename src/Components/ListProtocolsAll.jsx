@@ -37,26 +37,34 @@ function ListProtocolsAll({
     error: errorSamples,
   } = protocolListMy;
 
+  console.log(protocols && protocols.filter((p) => p.deleted === false));
+
   useEffect(() => {
     setTableData(
-      protocols.map(
-        ({
-          protocolId: id,
-          title: name,
-          createdAt: createdAt,
-          type: recordType,
-          updatedAt: updatedAt,
-        }) => ({
-          id: `PTCL-000${id}`,
-          name: name,
-          createdAt: new Date(createdAt).toLocaleString("en-GB").split(",")[0],
-          recordType,
-          updatedAt: new Date(updatedAt).toLocaleString("en-GB").split(",")[0],
-          createdDate: createdAt,
-          createdBy: userInfo.name,
-          view: "View",
-        })
-      )
+      protocols
+        .filter((p) => p.deleted === true)
+        .map(
+          ({
+            protocolId: id,
+            title: name,
+            createdAt: createdAt,
+            type: recordType,
+            updatedAt: updatedAt,
+          }) => ({
+            id: `PTCL-000${id}`,
+            name: name,
+            createdAt: new Date(createdAt)
+              .toLocaleString("en-GB")
+              .split(",")[0],
+            recordType,
+            updatedAt: new Date(updatedAt)
+              .toLocaleString("en-GB")
+              .split(",")[0],
+            createdDate: createdAt,
+            createdBy: userInfo.name,
+            view: "View",
+          })
+        )
     );
   }, []);
 
@@ -270,29 +278,31 @@ function ListProtocolsAll({
                     csvOptions: { disableToolbarButton: false },
                   },
                 }}
-                rows={protocols.map(
-                  ({
-                    protocolId: id,
-                    title: name,
-                    createdAt: createdAt,
-                    type: recordType,
-                    updatedAt: updatedAt,
-                  }) => ({
-                    id: `PTCL-000${id}`,
-                    name: name,
-                    createdAt: new Date(createdAt)
-                      .toLocaleString("en-GB")
-                      .split(",")[0],
-                    recordType,
-                    updatedAt: new Date(updatedAt)
-                      .toLocaleString("en-GB")
-                      .split(",")[0],
-                    createdDate: createdAt,
-                    createdBy: user.name ? user.name : userInfo.name,
-                    updatedBy: user.name ? user.name : userInfo.name,
-                    view: "View",
-                  })
-                )}
+                rows={protocols
+                  .filter((p) => p.deleted === false)
+                  .map(
+                    ({
+                      protocolId: id,
+                      title: name,
+                      createdAt: createdAt,
+                      type: recordType,
+                      updatedAt: updatedAt,
+                    }) => ({
+                      id: `PTCL-000${id}`,
+                      name: name,
+                      createdAt: new Date(createdAt)
+                        .toLocaleString("en-GB")
+                        .split(",")[0],
+                      recordType,
+                      updatedAt: new Date(updatedAt)
+                        .toLocaleString("en-GB")
+                        .split(",")[0],
+                      createdDate: createdAt,
+                      createdBy: user.name ? user.name : userInfo.name,
+                      updatedBy: user.name ? user.name : userInfo.name,
+                      view: "View",
+                    })
+                  )}
                 columns={columns}
               />
             </Box>

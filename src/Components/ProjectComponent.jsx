@@ -363,7 +363,7 @@ function ProjectComponent({
           ) : (
             <div className="project-c-bottom">
               <button
-                className="sl-element"
+                className="sl-element white sticky top-0"
                 onClick={async (e) => {
                   e.preventDefault();
                 }}
@@ -379,8 +379,12 @@ function ProjectComponent({
               </button>
               {entries &&
                 entries
-                  .filter((entry) =>
-                    entry.name.toLowerCase().includes(inputSearch.toLowerCase())
+                  .filter(
+                    (entry) =>
+                      entry.name
+                        .toLowerCase()
+                        .includes(inputSearch.toLowerCase()) &&
+                      entry.deleted === false
                   )
                   .map((doc, index) => (
                     <Entries
@@ -404,10 +408,12 @@ function ProjectComponent({
 
               {tasks &&
                 tasks
-                  .filter((entry) =>
-                    entry.subject
-                      .toLowerCase()
-                      .includes(inputSearch.toLowerCase())
+                  .filter(
+                    (entry) =>
+                      entry.subject
+                        .toLowerCase()
+                        .includes(inputSearch.toLowerCase()) &&
+                      entry.deleted === false
                   )
                   .map((doc, index) => (
                     <TaskEntries

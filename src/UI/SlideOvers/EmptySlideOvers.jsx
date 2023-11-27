@@ -7,13 +7,13 @@ function EmptySlideOvers({ open, setOpen, children, title }) {
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 overflow-hidden"
+        className="fixed inset-0 overflow-hidden z-[99999]"
         onClose={setOpen}
       >
         <div className="absolute inset-0 overflow-hidden">
           <Dialog.Overlay className="absolute inset-0" />
 
-          <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16">
+          <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16 font-sans">
             <Transition.Child
               as={Fragment}
               enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -27,9 +27,12 @@ function EmptySlideOvers({ open, setOpen, children, title }) {
                 <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
                   <div className="px-4 sm:px-6">
                     <div className="flex items-start justify-between">
-                      <Dialog.Title className="text-lg font-medium text-gray-900">
-                        {title}
-                      </Dialog.Title>
+                      {title && (
+                        <Dialog.Title className="text-lg font-medium text-gray-900">
+                          {title}
+                        </Dialog.Title>
+                      )}
+
                       <div className="ml-3 h-7 flex items-center">
                         <button
                           type="button"

@@ -205,28 +205,6 @@ function MiddleNavComponent({
         <CompleteLoader text="Loading your data" />
       ) : (
         <div className="sl-elements-content">
-          {/* <div className="h-full px-3 py-4 overflow-y-auto">
-            <ul className="font-medium">
-              {entries &&
-                entries
-                  .filter((entry) =>
-                    entry.name.toLowerCase().includes(inputSearch.toLowerCase())
-                  )
-                  .map((doc, index) => (
-                    <Entries
-                      doc={doc}
-                      projectId={id}
-                      setTabId={setTabId}
-                      project={project && project}
-                      setWhichTabisActive={setWhichTabisActive}
-                      orgs={orgs}
-                      orgsCollab={orgsCollab}
-                      index={index}
-                      entryType={true}
-                    />
-                  ))}
-            </ul>
-          </div> */}
           <ul className="flex flex-col py-2">
             <li className="px-5">
               <div className="flex flex-row items-center h-8">
@@ -237,8 +215,13 @@ function MiddleNavComponent({
             </li>
             {entries &&
               entries
-                .filter((entry) =>
-                  entry.name.toLowerCase().includes(inputSearch.toLowerCase())
+
+                .filter(
+                  (entry) =>
+                    entry.name
+                      .toLowerCase()
+                      .includes(inputSearch.toLowerCase()) &&
+                    entry.deleted === false
                 )
                 .map((doc, index) => (
                   <SmallEntries
@@ -294,10 +277,12 @@ function MiddleNavComponent({
             </li>
             {tasks &&
               tasks
-                .filter((entry) =>
-                  entry.subject
-                    .toLowerCase()
-                    .includes(inputSearch.toLowerCase())
+                .filter(
+                  (entry) =>
+                    entry.subject
+                      .toLowerCase()
+                      .includes(inputSearch.toLowerCase()) &&
+                    entry.deleted === false
                 )
                 .map((doc, index) => (
                   <SmallTasks

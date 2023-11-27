@@ -71,8 +71,10 @@ import { Notification } from "./Notifications/Notification";
 import TopHeaderMenu from "./TopHeaderMenu";
 import MainRed from "../Redirections/MainRed";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ArchiveMain from "../Archive/ArchiveMain";
+import SessionExpired from "../SessionExpired/SessionExpired";
 
-function EditorComponent() {
+function EditorComponent({ expire, setExpire }) {
   const mainDiv = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -306,6 +308,7 @@ function EditorComponent() {
   const [CDUpdate, setCDUpdate] = useState(false);
   return (
     <div className="main-container">
+      {expire && <SessionExpired open={expire} setOpen={setExpire} />}
       <Routes>
         <Route
           path="/p/:id/*"
@@ -1003,6 +1006,7 @@ function EditorComponent() {
                 />
               </div>
             )}
+            {whichTabisActive === "archive" && <ArchiveMain />}
             {whichTabisActive === "admin" && <AdminPannel />}
             {whichTabisActive === "search" && (
               <SearchPage

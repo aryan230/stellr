@@ -29,6 +29,7 @@ import { userRoleExtract } from "../Functions/userRoleFunction";
 import { addProjectLogs } from "../Functions/addProjectLogs";
 import LoaderInside from "../../css/utils/LoaderInside";
 import { addNotification } from "../Functions/addNotification";
+import ProjectSettingsNew from "./ProjectSettingsNew";
 
 function ProjectSettings({
   setProjectSettings,
@@ -697,6 +698,7 @@ function ProjectSettings({
               )}
             </div>
           ) : (
+            // <ProjectSettingsNew />
             <InsideLoader />
           )}
 
