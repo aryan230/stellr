@@ -25,6 +25,7 @@ import Select from "react-select";
 import MiddleNavComponent from "./MiddleNavComponent";
 import SmallProjectController from "./Projects/SmallProjectController";
 import CompleteLoader from "./Loaders/CompleteLoader";
+import NewMiddleNavbar from "./NewMiddleNavbar";
 
 function MiddleNav({
   id,
@@ -273,6 +274,13 @@ function MiddleNav({
         />
       ) : (
         <div className="sl-inside">
+          {/* <NewMiddleNavbar
+            projects={newArr ? newArr : []}
+            setProjectInsideActive={setProjectInsideActive}
+            setProjectInsideActiveId={setProjectInsideActiveId}
+            setProjectListActive={setProjectListActive}
+          /> */}
+          {/* Start here */}
           {projectSettings && (
             <ProjectSettings
               setProjectSettings={setProjectSettings}
@@ -375,10 +383,12 @@ function MiddleNav({
                   newArr &&
                   newArr.length > 0 &&
                   newArr
-                    .filter((entry) =>
-                      entry.name
-                        .toLowerCase()
-                        .includes(inputSearch.toLowerCase())
+                    .filter(
+                      (entry) =>
+                        entry.name
+                          .toLowerCase()
+                          .includes(inputSearch.toLowerCase()) &&
+                        entry.deleted === false
                     )
                     .map((order) => (
                       <SmallProjectController
@@ -428,6 +438,7 @@ function MiddleNav({
               </ul>
             </div>
           )}
+          {/* End here */}
           {/* {projectsCollab && projectsCollab.length > 0 ? (
           projectsCollab.map((order) => (
             <ProjectController

@@ -2,7 +2,7 @@ import React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
-import { CheckCheck } from "lucide-react";
+import { CheckCheck, CheckCircle, CheckSquare, Circle } from "lucide-react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -11,11 +11,16 @@ function HeaderOne({ name, description, status, menu }) {
   return (
     <div className="pb-5 border-b border-gray-200">
       <div className="sm:flex sm:justify-between sm:items-center">
-        <CheckCheck className="mr-4 px-2 text-indigo-600 w-fit" />
+        {status === "Open" ? (
+          <Circle className="mr-4 px-2 text-indigo-600 w-fit" />
+        ) : (
+          <CheckCircle className="mr-4 px-2 text-indigo-600 w-fit" />
+        )}
+
         <div className="sm:w-0 sm:flex-1">
           <h1
             id="message-heading"
-            className="text-lg font-medium text-gray-900"
+            className="font-dmsans text-lg font-medium text-gray-900"
           >
             {name}
           </h1>
@@ -24,7 +29,7 @@ function HeaderOne({ name, description, status, menu }) {
 
         <div className="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
           {status && (
-            <span className="inline-flex items-center px-3 py-0.5 rounded-md text-sm font-medium bg-indigo-600 text-white">
+            <span className="font-karla inline-flex items-center px-3 py-0.5 rounded-md text-sm font-medium bg-indigo-600 text-white">
               {status}
             </span>
           )}

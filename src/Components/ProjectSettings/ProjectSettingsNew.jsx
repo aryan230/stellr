@@ -13,20 +13,11 @@ import {
   UsersIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
-
-const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: false },
-  { name: "Jobs", href: "#", icon: BriefcaseIcon, current: false },
-  { name: "Applications", href: "#", icon: DocumentSearchIcon, current: false },
-  { name: "Messages", href: "#", icon: ChatIcon, current: false },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Settings", href: "#", icon: CogIcon, current: true },
-];
-const secondaryNavigation = [
-  { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
-  { name: "Logout", href: "#", icon: CogIcon },
-];
+import { MinusIcon, PencilIcon, SearchIcon } from "@heroicons/react/solid";
+import { PlusSmIcon } from "@heroicons/react/solid";
+import { PenIcon, Settings } from "lucide-react";
+import ConformationModal from "../../UI/MainModals/ConformationModal";
+import axios from "axios";
 const tabs = [
   { name: "General", href: "#", current: true },
   { name: "Password", href: "#", current: false },
@@ -39,7 +30,48 @@ const tabs = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-function ProjectSettingsNew() {
+function ProjectSettingsNew({
+  setEmail,
+  submitAddnewCollab,
+  submitDeleteCollab,
+  data,
+  setUpdateUserId,
+  setSettingsModal,
+  handleDelete,
+  deleteTask,
+  setDelete,
+}) {
+  const people = [
+    {
+      name: "Lindsay Walton",
+      handle: "lindsaywalton",
+      email: "lindsaywalton@example.com",
+      role: "Front-end Developer",
+      imageId: "1517841905240-472988babdf9",
+      imageUrl:
+        "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+    {
+      name: "Courtney Henry",
+      handle: "courtneyhenry",
+      email: "courtneyhenry@example.com",
+      role: "Designer",
+      imageId: "1438761681033-6461ffad8d80",
+      imageUrl:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+    {
+      name: "Tom Cook",
+      handle: "tomcook",
+      email: "tomcook@example.com",
+      role: "Director, Product Development",
+      imageId: "1472099645785-5658abf4ff4e",
+      imageUrl:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+  ];
+
+  const [activeTab, setActiveTab] = useState(data.tabs.find((t) => t.current));
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [automaticTimezoneEnabled, setAutomaticTimezoneEnabled] = useState(
     true
@@ -51,6 +83,15 @@ function ProjectSettingsNew() {
 
   return (
     <div className="">
+      <ConformationModal
+        open={deleteTask}
+        setOpen={setDelete}
+        heading="Are you sure?"
+        details="You want to archive this entity."
+        onClick={async () => {
+          handleDelete(data.id);
+        }}
+      />
       {/*
     This example requires updating your template:
     ```
@@ -62,58 +103,12 @@ function ProjectSettingsNew() {
         {/* Content area */}
         <div className="h-[100%]">
           <div className="max-w-4xl mx-auto flex flex-col md:px-8 xl:px-0">
-            <div className="sticky top-0 z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 flex">
-              <div className="flex-1 flex justify-between px-4 md:px-0">
-                <div className="flex-1 flex">
-                  <form className="w-full flex md:ml-0" action="#" method="GET">
-                    <label htmlFor="mobile-search-field" className="sr-only">
-                      Search
-                    </label>
-                    <label htmlFor="desktop-search-field" className="sr-only">
-                      Search
-                    </label>
-                    <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                        <SearchIcon
-                          className="flex-shrink-0 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        name="mobile-search-field"
-                        id="mobile-search-field"
-                        className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400 sm:hidden"
-                        placeholder="Search"
-                        type="search"
-                      />
-                      <input
-                        name="desktop-search-field"
-                        id="desktop-search-field"
-                        className="hidden h-full w-full border-transparent py-2 pl-8 pr-3 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400 sm:block"
-                        placeholder="Search jobs, applicants, and more"
-                        type="search"
-                      />
-                    </div>
-                  </form>
-                </div>
-                <div className="ml-4 flex items-center md:ml-6">
-                  <button
-                    type="button"
-                    className="bg-white rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                  >
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    <span className="sr-only">View notifications</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
             <main className="flex-1">
               <div className="relative max-w-4xl mx-auto md:px-8 xl:px-0">
                 <div className="pt-10 pb-16">
                   <div className="px-4 sm:px-6 md:px-0">
-                    <h1 className="text-3xl font-extrabold text-gray-900">
-                      Settings
+                    <h1 className="text-3xl font-extrabold text-gray-700 font-body flex items-center justify-left">
+                      Settings - {data.name}
                     </h1>
                   </div>
                   <div className="px-4 sm:px-6 md:px-0 font-body">
@@ -126,10 +121,10 @@ function ProjectSettingsNew() {
                         <select
                           id="selected-tab"
                           name="selected-tab"
-                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md"
+                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                           defaultValue={tabs.find((tab) => tab.current).name}
                         >
-                          {tabs.map((tab) => (
+                          {data.tabs.map((tab) => (
                             <option key={tab.name}>{tab.name}</option>
                           ))}
                         </select>
@@ -137,13 +132,17 @@ function ProjectSettingsNew() {
                       <div className="hidden lg:block">
                         <div className="border-b border-gray-200">
                           <nav className="-mb-px flex space-x-8">
-                            {tabs.map((tab) => (
+                            {data.tabs.map((tab) => (
                               <a
                                 key={tab.name}
-                                href={tab.href}
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setActiveTab(tab);
+                                }}
                                 className={classNames(
-                                  tab.current
-                                    ? "border-purple-500 text-purple-600"
+                                  activeTab.name === tab.name
+                                    ? "border-indigo-500 text-indigo-600"
                                     : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                                   "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
                                 )}
@@ -157,108 +156,245 @@ function ProjectSettingsNew() {
 
                       {/* Description list with inline editing */}
                       <div className="mt-10 divide-y divide-gray-200">
-                        <div className="space-y-1">
-                          <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Profile
-                          </h3>
-                          <p className="max-w-2xl text-sm text-gray-500">
-                            This information will be displayed publicly so be
-                            careful what you share.
-                          </p>
-                        </div>
                         <div className="mt-6">
                           <dl className="divide-y divide-gray-200">
-                            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                              <dt className="text-sm font-medium text-gray-500">
-                                Name
-                              </dt>
-                              <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                <span className="flex-grow">Chelsea Hagon</span>
-                                <span className="ml-4 flex-shrink-0">
-                                  <button
-                                    type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                  >
-                                    Update
-                                  </button>
-                                </span>
-                              </dd>
-                            </div>
-                            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:pt-5">
-                              <dt className="text-sm font-medium text-gray-500">
-                                Photo
-                              </dt>
-                              <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                <span className="flex-grow">
-                                  <img
-                                    className="h-8 w-8 rounded-full"
-                                    src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    alt=""
-                                  />
-                                </span>
-                                <span className="ml-4 flex-shrink-0 flex items-start space-x-4">
-                                  <button
-                                    type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                  >
-                                    Update
-                                  </button>
-                                  <span
-                                    className="text-gray-300"
-                                    aria-hidden="true"
-                                  >
-                                    |
-                                  </span>
-                                  <button
-                                    type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                  >
-                                    Remove
-                                  </button>
-                                </span>
-                              </dd>
-                            </div>
-                            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:pt-5">
-                              <dt className="text-sm font-medium text-gray-500">
-                                Email
-                              </dt>
-                              <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                <span className="flex-grow">
-                                  chelsea.hagon@example.com
-                                </span>
-                                <span className="ml-4 flex-shrink-0">
-                                  <button
-                                    type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                  >
-                                    Update
-                                  </button>
-                                </span>
-                              </dd>
-                            </div>
-                            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-b sm:border-gray-200">
-                              <dt className="text-sm font-medium text-gray-500">
-                                Job title
-                              </dt>
-                              <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                <span className="flex-grow">
-                                  Human Resources Manager
-                                </span>
-                                <span className="ml-4 flex-shrink-0">
-                                  <button
-                                    type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                  >
-                                    Update
-                                  </button>
-                                </span>
-                              </dd>
-                            </div>
+                            {data.tabs.find((t) => t.name === activeTab.name) &&
+                              data.tabs
+                                .find((t) => t.name === activeTab.name)
+                                .insideData.map((d) =>
+                                  d.type === "text" ? (
+                                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                                      <dt className="text-sm font-medium text-gray-500">
+                                        {d.key}
+                                      </dt>
+                                      <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        <span className="flex-grow">
+                                          {d.value}
+                                        </span>
+                                      </dd>
+                                    </div>
+                                  ) : d.type === "table" ? (
+                                    <>
+                                      {/* <button
+                                        type="submit"
+                                        className="mb-3 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                      >
+                                        Download Logs
+                                      </button> */}
+                                      <table className="min-w-full divide-y divide-gray-200 font-dmsans text-sm">
+                                        <thead className="bg-gray-50 sticky top-0">
+                                          <tr>
+                                            <th
+                                              scope="col"
+                                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                              User
+                                            </th>
+                                            <th
+                                              scope="col"
+                                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                              Message
+                                            </th>
+                                            <th
+                                              scope="col"
+                                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                              Time
+                                            </th>
+                                          </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                          {d.tableData.map((person) => (
+                                            <tr className="bg-white border-b">
+                                              <th
+                                                scope="row"
+                                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                              >
+                                                {person.userEmail}
+                                              </th>
+                                              <td className="px-6 py-4">
+                                                {person.message}
+                                              </td>
+                                              <td className="px-6 py-4">
+                                                {person.date.toLocaleString()}
+                                              </td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </table>
+                                    </>
+                                  ) : d.type === "dangerZone" ? (
+                                    <div className="w-sm">
+                                      <div className="space-y-1">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                          Archive
+                                        </h3>
+                                        <p className="max-w-2xl text-sm text-gray-500 pb-3">
+                                          All the data inside the project
+                                          including Lab Sheets, Lab Entries,
+                                          Tasks will be deleted.
+                                        </p>
+                                        <button
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            setDelete(true);
+                                          }}
+                                          type="submit"
+                                          className="mt-3 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        >
+                                          Archive this project
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="max-w-lg mx-auto">
+                                      <div>
+                                        <div className="text-center">
+                                          <svg
+                                            className="mx-auto h-12 w-12 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 48 48"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z"
+                                            />
+                                          </svg>
+                                          <h2 className="mt-2 text-lg font-medium text-gray-900">
+                                            Add team members
+                                          </h2>
+                                          <p className="mt-1 text-sm text-gray-500">
+                                            You haven’t added any team members
+                                            to your project yet. As the owner of
+                                            this project, you can manage team
+                                            member permissions.
+                                          </p>
+                                        </div>
+                                        <form action="#" className="mt-6 flex">
+                                          <label
+                                            htmlFor="email"
+                                            className="sr-only"
+                                          >
+                                            Email address
+                                          </label>
+                                          <input
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                            placeholder="Enter an email"
+                                            onChange={(e) =>
+                                              setEmail(e.target.value)
+                                            }
+                                          />
+                                          <button
+                                            type="submit"
+                                            onClick={(e) => {
+                                              submitAddnewCollab(e);
+                                            }}
+                                            className="ml-4 flex-shrink-0 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                          >
+                                            Send invite
+                                          </button>
+                                        </form>
+                                      </div>
+                                      <div className="mt-10">
+                                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                          Team members previously added to
+                                          projects
+                                        </h3>
+                                        <ul
+                                          role="list"
+                                          className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200"
+                                        >
+                                          {d.collabData.map(
+                                            (person, personIdx) => (
+                                              <li
+                                                key={personIdx}
+                                                className="py-4 flex items-center justify-between space-x-3"
+                                              >
+                                                <div className="min-w-0 flex-1 flex items-center space-x-3">
+                                                  <div className="flex-shrink-0">
+                                                    <img
+                                                      className="h-10 w-10 rounded-full"
+                                                      src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${person.userName}`}
+                                                      alt=""
+                                                    />
+                                                  </div>
+                                                  <div className="min-w-0 flex-1">
+                                                    <p className="text-sm font-medium text-gray-900 truncate">
+                                                      {person.userName}
+                                                    </p>
+                                                    <p className="text-sm font-medium text-gray-500 truncate">
+                                                      {person.userType}
+                                                    </p>
+                                                  </div>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                  <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                      setUpdateUserId(
+                                                        person.user
+                                                      );
+                                                      setSettingsModal(true);
+                                                    }}
+                                                    className="inline-flex items-center py-2 px-3 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2"
+                                                  >
+                                                    <PencilIcon
+                                                      className="-ml-1 mr-0.5 h-5 w-5 text-gray-400"
+                                                      aria-hidden="true"
+                                                    />
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                      {" "}
+                                                      Change Role{" "}
+                                                      <span className="sr-only">
+                                                        {person.name}
+                                                      </span>{" "}
+                                                    </span>
+                                                  </button>
+                                                  <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                      e.preventDefault();
+                                                      submitDeleteCollab(
+                                                        person.user,
+                                                        person.userEmail
+                                                      );
+                                                    }}
+                                                    className="inline-flex items-center py-2 px-3 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                  >
+                                                    <MinusIcon
+                                                      className="-ml-1 mr-0.5 h-5 w-5 text-gray-400"
+                                                      aria-hidden="true"
+                                                    />
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                      {" "}
+                                                      Remove{" "}
+                                                      <span className="sr-only">
+                                                        {person.name}
+                                                      </span>{" "}
+                                                    </span>
+                                                  </button>
+                                                </div>
+                                              </li>
+                                            )
+                                          )}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )
+                                )}
                           </dl>
                         </div>
                       </div>
 
-                      <div className="mt-10 divide-y divide-gray-200">
+                      {/* <div className="mt-10 divide-y divide-gray-200">
                         <div className="space-y-1">
                           <h3 className="text-lg leading-6 font-medium text-gray-900">
                             Account
@@ -278,7 +414,7 @@ function ProjectSettingsNew() {
                                 <span className="ml-4 flex-shrink-0">
                                   <button
                                     type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                    className="bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                   >
                                     Update
                                   </button>
@@ -294,7 +430,7 @@ function ProjectSettingsNew() {
                                 <span className="ml-4 flex-shrink-0 flex items-start space-x-4">
                                   <button
                                     type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                    className="bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                   >
                                     Update
                                   </button>
@@ -306,7 +442,7 @@ function ProjectSettingsNew() {
                                   </span>
                                   <button
                                     type="button"
-                                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                    className="bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                   >
                                     Remove
                                   </button>
@@ -330,9 +466,9 @@ function ProjectSettingsNew() {
                                   onChange={setAutomaticTimezoneEnabled}
                                   className={classNames(
                                     automaticTimezoneEnabled
-                                      ? "bg-purple-600"
+                                      ? "bg-indigo-600"
                                       : "bg-gray-200",
-                                    "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-auto"
+                                    "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-auto"
                                   )}
                                 >
                                   <span
@@ -364,9 +500,9 @@ function ProjectSettingsNew() {
                                   onChange={setAutoUpdateApplicantDataEnabled}
                                   className={classNames(
                                     autoUpdateApplicantDataEnabled
-                                      ? "bg-purple-600"
+                                      ? "bg-indigo-600"
                                       : "bg-gray-200",
-                                    "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-auto"
+                                    "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-auto"
                                   )}
                                 >
                                   <span
@@ -383,7 +519,7 @@ function ProjectSettingsNew() {
                             </Switch.Group>
                           </dl>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

@@ -9,7 +9,7 @@ function DetailSlideOver({ open, setOpen, data }) {
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 overflow-hidden z-[9999]"
+        className="fixed inset-0 overflow-hidden z-[9999999999]"
         onClose={setOpen}
       >
         <div className="absolute inset-0 overflow-hidden">
@@ -55,7 +55,7 @@ function DetailSlideOver({ open, setOpen, data }) {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="h-full bg-white p-8 overflow-y-auto font-sans">
+                <div className="h-full bg-white p-8 overflow-y-auto font-dmsans">
                   <div className="pb-16 space-y-6">
                     <div>
                       {/* <div className="block w-xs aspect-w-10 aspect-h-7 rounded-lg overflow-hidden">
@@ -129,7 +129,11 @@ function DetailSlideOver({ open, setOpen, data }) {
                             <li className="py-3 flex justify-between items-center">
                               <div className="flex items-center">
                                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                                  <User size={16} className="text-stone-700" />
+                                  <img
+                                    src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${s.userName}`}
+                                    alt=""
+                                    className="w-8 h-8 rounded-full"
+                                  />
                                 </div>
                                 <p className="ml-4 text-sm font-medium text-gray-900">
                                   {s.userName}

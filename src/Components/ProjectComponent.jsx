@@ -15,6 +15,7 @@ import ProjectSettings from "./ProjectSettings/ProjectSettings";
 import CompleteLoader from "./Loaders/CompleteLoader";
 import { Folders } from "lucide-react";
 import NewSpreadSheet from "./Modals/NewSpreadSheet";
+import NewProjectComponent from "./NewProjectComponent";
 
 function ProjectComponent({
   id,
@@ -211,6 +212,7 @@ function ProjectComponent({
         <div className="project-component-inside">
           {projectSettings && (
             <ProjectSettings
+              projectSettings={projectSettings}
               setProjectSettings={setProjectSettings}
               project={project}
               setNewCollab={setNewCollab}
@@ -233,6 +235,10 @@ function ProjectComponent({
               setIsSpreadSheetOpen={setIsSpreadSheetOpen}
             />
           )}
+          {/* <NewProjectComponent
+            project={project}
+            entries={entries ? entries : []}
+          /> */}
           <div className="project-c-header">
             <div className="project-c-header-left">
               <button

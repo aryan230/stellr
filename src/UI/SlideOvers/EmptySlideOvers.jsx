@@ -7,7 +7,7 @@ function EmptySlideOvers({ open, setOpen, children, title }) {
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 overflow-hidden z-[99999]"
+        className="fixed inset-0 overflow-hidden z-[999999999]"
         onClose={setOpen}
       >
         <div className="absolute inset-0 overflow-hidden">

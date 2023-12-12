@@ -73,6 +73,11 @@ import MainRed from "../Redirections/MainRed";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ArchiveMain from "../Archive/ArchiveMain";
 import SessionExpired from "../SessionExpired/SessionExpired";
+import axios from "axios";
+import { addEntryLogs } from "./Functions/addEntryLogs";
+import { addNotification } from "./Functions/addNotification";
+import URL from "./../Data/data.json";
+import { toast } from "sonner";
 
 function EditorComponent({ expire, setExpire }) {
   const mainDiv = useRef();
@@ -306,6 +311,55 @@ function EditorComponent({ expire, setExpire }) {
   const [CDModal, setCDModal] = useState(false);
   const [CDModalContent, setCDModalContent] = useState();
   const [CDUpdate, setCDUpdate] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("stellrStatusUpdate")) {
+      const { sendData: data, logData, type, user, to } = JSON.parse(
+        localStorage.getItem("stellrStatusUpdateData")
+      );
+
+      if (user) {
+        if (user === userInfo._id) {
+          if (type) {
+            const finalLogData = JSON.parse(logData);
+            var config = {
+              method: "put",
+              url: `${URL}api/${type}/status/${finalLogData.entryId}`,
+              headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+                "Content-Type": "application/json",
+              },
+              data: data,
+            };
+
+            axios(config)
+              .then(async function(response) {
+                console.log(response.data);
+                await addEntryLogs(finalLogData);
+                await addNotification({
+                  id: to,
+                  type: "Not read",
+                  value: JSON.stringify({
+                    subject: finalLogData.message,
+                    date: new Date(),
+                  }),
+                  token: userInfo.token,
+                });
+                setNewCollab(true);
+                setEntryUpdate(true);
+                localStorage.removeItem("stellrStatusUpdate");
+                localStorage.removeItem("stellrStatusUpdateData");
+                toast.success("The status was updated");
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          }
+        }
+      }
+    }
+  }, []);
+
   return (
     <div className="main-container">
       {expire && <SessionExpired open={expire} setOpen={setExpire} />}
@@ -1006,7 +1060,9 @@ function EditorComponent({ expire, setExpire }) {
                 />
               </div>
             )}
-            {whichTabisActive === "archive" && <ArchiveMain />}
+            {whichTabisActive === "archive" && (
+              <ArchiveMain setWhichTabisActive={setWhichTabisActive} />
+            )}
             {whichTabisActive === "admin" && <AdminPannel />}
             {whichTabisActive === "search" && (
               <SearchPage
@@ -1189,7 +1245,7 @@ function EditorComponent({ expire, setExpire }) {
                                 setCreateDrawingModal={setCreateDrawingModal}
                               />
                             ) : (
-                              <TextEditorTwoRead
+                              <TextEditorTwo
                                 tab={tab.doc}
                                 active={tab.doc._id == tabID ? true : false}
                                 project={tab.project}
@@ -1206,6 +1262,7 @@ function EditorComponent({ expire, setExpire }) {
                                 setWhichTabisActive={setWhichTabisActive}
                                 setSampleContent={setSampleContent}
                                 setSampleModal={setSampleModal}
+                                setCreateDrawingModal={setCreateDrawingModal}
                               />
                             )
                           ) : tab.userType == "Admin" ||

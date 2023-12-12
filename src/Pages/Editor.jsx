@@ -11,6 +11,8 @@ import axios from "axios";
 import URL from "./../Data/data.json";
 import BannerOrg from "../Components/BannerOrg";
 import SessionExpired from "../SessionExpired/SessionExpired";
+import { addEntryLogs } from "../Components/Functions/addEntryLogs";
+import { addNotification } from "../Components/Functions/addNotification";
 
 function Editor() {
   const dispatch = useDispatch();

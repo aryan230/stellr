@@ -27,13 +27,16 @@ import {
   Folders,
   Home,
   KanbanSquare,
+  LampCeiling,
   LayoutGrid,
+  Network,
   PackageOpen,
   Plus,
   Recycle,
   Search,
   Settings,
   Shield,
+  Store,
   User,
 } from "lucide-react";
 import CreateKetcher from "./Modals/CreateKetcher";
@@ -375,7 +378,7 @@ function SideNav({
                 >
                   <div className="mnc-element-inside">
                     <div className="mnc-element-left">
-                      <Biohazard size={16} />
+                      <Network size={16} />
                       <p>Chemical Drawing</p>
                     </div>
                   </div>
@@ -477,7 +480,7 @@ function SideNav({
                 setWhichTabisActive("chemicalList");
               }}
             >
-              <Biohazard size={16} />
+              <Network size={16} />
               Chemical Drawing
             </a>
           </li>

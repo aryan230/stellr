@@ -10,8 +10,12 @@ import SecondInsideLoader from "../Components/Loader/SecondInsideLoader";
 import CompleteLoader from "../Components/Loaders/CompleteLoader";
 import ArchiveProtocol from "./ArchiveProtocol";
 import ArchiveSOP from "./ArchiveSOP";
+import ArchiveProjects from "./ArchiveProjects";
+import axios from "axios";
+import toast from "react-hot-toast";
+import URL from "./../Data/data.json";
 
-const ArchiveMain = () => {
+const ArchiveMain = ({ setWhichTabisActive }) => {
   const dispatch = useDispatch();
 
   const protocolListMy = useSelector((state) => state.protocolListMy);
@@ -19,7 +23,28 @@ const ArchiveMain = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const handleRestore = async (name, id) => {
+    var config = {
+      method: "delete",
+      url: `${URL[0]}api/${name}/r/${id}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
+    axios(config)
+      .then(function(response) {
+        console.log(JSON.stringify(response.data));
+        toast.success("Project Restored");
+        setWhichTabisActive("home");
+        // setDelete(false);
+        // setProjectSettings(false);
+        // setNewCollab(true);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
   return (
     <div className="bg-gray-50 min-h-full">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
@@ -28,6 +53,7 @@ const ArchiveMain = () => {
             <PackageOpen className="mr-5 text-indigo-500" size={30} />
             Archive Settings
           </h2>
+          <ArchiveProjects handleRestore={handleRestore} />
           <ArchiveProtocol />
           <ArchiveSOP />
         </div>

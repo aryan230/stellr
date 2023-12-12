@@ -22,12 +22,18 @@ import {
   AlertTriangle,
   BadgeCheck,
   Biohazard,
+  Blocks,
   Book,
+  BookMarked,
+  Bookmark,
+  Check,
+  ClipboardCheck,
   Cloud,
   CloudCog,
   FileText,
   Info,
   LayoutPanelTop,
+  Lock,
   LockKeyhole,
   Table2,
   Trash,
@@ -95,6 +101,10 @@ import moment from "moment";
 import ConformationModal from "../../UI/MainModals/ConformationModal";
 import axios from "axios";
 import { CART_RESET } from "../../redux/constants/cartConstants";
+import SubmitForApproval from "../Approval/SubmitForApproval";
+import { addEntryLogs } from "../Functions/addEntryLogs";
+import ViewDetails from "../Approval/ViewDetails";
+import { addNotification } from "../Functions/addNotification";
 
 const zip = new JSZip();
 
@@ -396,7 +406,7 @@ function TextEditorTwo({
       socket.off("receive-change", handler);
     };
   }, [socket, quill]);
-
+  console.log(tab);
   useEffect(() => {
     if (socket == null || quill.current == null) return;
     socket.on("userJoined", (user) => {
@@ -440,7 +450,7 @@ function TextEditorTwo({
     dispatch(listMySops(userInfo._id));
   }, [dispatch, tab]);
 
-  console.log(entries);
+  console.log(userType);
 
   const [userCollabs, setUserCollabs] = useState(
     mainProjectList &&
@@ -544,25 +554,25 @@ function TextEditorTwo({
           if (item.original.type === "Lab Notebook") {
             return `<span class="tribute-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
-              LabNotebook_${item.original.key}</span>`;
+              Lab Entry: ${item.original.key}</span>`;
           } else if (item.original.type === "Lab Sheet") {
             return `<span class="tribute-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
-            LabSheet_${item.original.key}</span>`;
+            Lab Sheet: ${item.original.key}</span>`;
           } else if (item.original.type === "Sample") {
             return `<span class="tribute-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
-          Sample_${item.original.key}</span>`;
+          Sample: ${item.original.key}</span>`;
           } else if (item.original.type === "Protocol") {
             return `<span class="tribute-item">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-minus"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M9 10h6"/></svg>
-          Protocol_${item.original.key}</span>`;
+          Protocol: ${item.original.key}</span>`;
           } else {
             return `<span class="tribute-item">
                 
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5d00d2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
          
-       User_${item.original.key}</span>`;
+       User: ${item.original.key}</span>`;
           }
         },
         selectTemplate: (item) => {
@@ -655,13 +665,16 @@ function TextEditorTwo({
         toast.success("Entry Deleted");
         setDelete(false);
         setEntryUpdate(true);
-        setWhichTabisActive("projectList");
+        setWhichTabisActive("listProjects");
         dispatch({ type: CART_RESET });
       })
       .catch(function(error) {
         console.log(error);
       });
   };
+
+  const [approval, setApproval] = useState(false);
+  const [approvalDetails, setApprovalDetails] = useState(false);
   return (
     <>
       {warningModal && (
@@ -672,6 +685,7 @@ function TextEditorTwo({
       )}
 
       {loader && <Loader />}
+
       {
         <DetailSlideOver
           open={details}
@@ -702,6 +716,25 @@ function TextEditorTwo({
           onClick={async () => {
             handleDelete(tab._id);
           }}
+        />
+      }
+      {<SubmitForApproval open={approval} setOpen={setApproval} />}
+      {
+        <ViewDetails
+          open={approvalDetails}
+          setOpen={setApprovalDetails}
+          data={{
+            _id: tab._id,
+            user: tab.user,
+            name: tab.name,
+            description: `This entity was created ${tab.createdAt &&
+              moment(tab.createdAt).fromNow()}`,
+            type: "entries",
+            status: tab.status,
+            statusMessage: tab.statusMessage ? tab.statusMessage : "",
+            statusBy: tab.statusBy ? tab.statusBy : "",
+          }}
+          role={userType}
         />
       }
       {/* <DrawerHistory
@@ -790,9 +823,35 @@ function TextEditorTwo({
         id={tab._id}
       >
         {mainLoader && <MainLoaderWithText text="Getting your entry ready" />}
+        {tab && tab.submittedForApproval && tab.status === "Draft" && (
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2 w-[100%] h-[100%] bg-white bg-opacity-95 flex items-center justify-center z-[999999]">
+            <div className="main-loader-scss-inside">
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <Blocks className="text-indigo-600" size={36} />
 
-        <Popover className="relative bg-white font-body">
-          <div className="flex justify-between items-center px-4 py-6 sm:px-6 md:justify-start md:space-x-10">
+                <span className="text-xl text-slate-800 font-dmsans">
+                  This entry is under review.
+                  <br />
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setApprovalDetails(true);
+                    }}
+                    className="text-indigo-600 underline font-sans text-base"
+                  >
+                    View Details
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+        <Popover
+          className={`relative bg-white font-body ${userType === "Read" &&
+            "z-[99999999999999999]"}`}
+        >
+          <div className="flex justify-between items-center px-4 py-6 sm:px-6 md:justify-start md:space-x-6">
             <div>
               <a href="#" className="flex">
                 <FileText size={30} color="#2563eb" strokeWidth={1.5} />
@@ -808,7 +867,7 @@ function TextEditorTwo({
               <Popover.Group as="nav" className="flex space-x-2">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border-gray-0 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center shadow-sm hover:shadow-lg w-full rounded-md border-gray-0 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       File
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -1072,7 +1131,7 @@ function TextEditorTwo({
                 </Menu>
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center w-full shadow-sm hover:shadow-lg rounded-md border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       Insert
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -1154,7 +1213,7 @@ function TextEditorTwo({
                 </Menu>
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center shadow-sm hover:shadow-lg w-full rounded-md border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       Export
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -1451,13 +1510,66 @@ function TextEditorTwo({
                     This file is being autosaved.
                   </p>
                 )}
-                <a
-                  href="#"
-                  className="ml-5 font-sans flex items-center text-sm justify-center bg-indigo-600 text-white py-2 px-5 rounded-full"
-                >
-                  <Vote className="mr-2" size={14} />
-                  Submit for Approval
-                </a>
+                {tab.submittedForApproval ? (
+                  <a
+                    href="#"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setApprovalDetails(true);
+                    }}
+                    className="ml-5 font-karla flex items-center text-sm justify-center bg-indigo-600 text-white py-3 px-5 rounded-lg"
+                  >
+                    <Bookmark className="mr-2" size={16} />
+                    Check Status
+                  </a>
+                ) : (
+                  <a
+                    href="#"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setApproval(true);
+                      var data = JSON.stringify({
+                        submittedForApproval: true,
+                      });
+
+                      var config = {
+                        method: "put",
+                        url: `${URL[0]}api/entries/${tab._id}`,
+                        headers: {
+                          Authorization: `Bearer ${userInfo.token}`,
+                          "Content-Type": "application/json",
+                        },
+                        data: data,
+                      };
+
+                      axios(config)
+                        .then(async function(response) {
+                          setLoader(false);
+                          const logObject = {
+                            entryId: tab._id,
+                            user: userInfo._id,
+                            userName: userInfo.name,
+                            userEmail: userInfo.email,
+                            message: `Submitted the entry for approval`,
+                          };
+                          await addEntryLogs(logObject);
+                          setEntryUpdate(true);
+                          setWhichTabisActive("projectList");
+                          setApproval(false);
+                          toast.success("Updated");
+                        })
+                        .catch(function(error) {
+                          setLoader(false);
+                          console.log(error);
+                        });
+                    }}
+                    className="ml-5 font-karla flex items-center text-sm justify-center bg-indigo-600 text-white py-3 px-5 rounded-lg"
+                  >
+                    <ClipboardCheck className="mr-2" size={16} />
+                    Submit for Approval
+                  </a>
+                )}
+
                 {/* {users &&
                   users.length > 0 &&
                   users.map((u) => (
@@ -1561,7 +1673,9 @@ function TextEditorTwo({
             </Popover.Panel>
           </Transition>
         </Popover>
-
+        {userType && userType === "Read" && (
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2 w-[100%] h-[100%] bg-white bg-opacity-50 flex items-center justify-center z-[999999]"></div>
+        )}
         {/* <Disclosure
           as="nav"
           className="bg-white shadow"

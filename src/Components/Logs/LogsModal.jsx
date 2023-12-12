@@ -10,7 +10,7 @@ function LogsModal({ open, setOpen, logs, name }) {
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 overflow-hidden z-[999999]"
+        className="fixed inset-0 overflow-hidden z-[9999999999]"
         onClose={setOpen}
       >
         <div className="absolute inset-0 overflow-hidden">

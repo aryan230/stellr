@@ -289,12 +289,13 @@ body {
 .mention-here,
 .custom-element-mention {
   width: fit-content;
-  font-family: karla;
-  background-color: #0a80f3;
-  padding: 0.5rem 2rem !important;
-  color: white !important;
+  font-family: "Poppins";
+  font-weight: 600;
+  // background-color: #0a80f3;
+  // padding: 0.5rem 2rem !important;
+  color: #0a80f3 !important;
   text-decoration: none !important;
-  border-radius: 999px;
+  border-radius: 9999px;
   &:hover {
     cursor: pointer;
   }

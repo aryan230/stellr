@@ -301,12 +301,11 @@ body {
 .custom-element-mention {
   width: -moz-fit-content;
   width: fit-content;
-  font-family: karla;
-  background-color: #0a80f3;
-  padding: 0.5rem 2rem !important;
-  color: white !important;
+  font-family: "Poppins";
+  font-weight: 600;
+  color: #0a80f3 !important;
   text-decoration: none !important;
-  border-radius: 999px;
+  border-radius: 9999px;
 }
 .mention_tool_at:hover,
 .mention-here:hover,
@@ -5910,7 +5909,7 @@ div.ql-tooltip {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000000000000000;
+  z-index: 9999999;
 }
 .reports-and-dashboards {
   width: 79vw;
