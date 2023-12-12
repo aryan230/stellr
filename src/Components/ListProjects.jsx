@@ -192,7 +192,7 @@ function ListProjects({
             <div className="project-component-inside">
               <div className="project-c-header">
                 <div className="project-c-header-left">
-                  <h1>Browse Projects </h1>
+                  <h1>Browse Projects</h1>
 
                   <div className="project-c-header-right">
                     <button
@@ -242,10 +242,12 @@ function ListProjects({
                 </button>
                 {newArr && newArr.length > 0 ? (
                   newArr
-                    .filter((entry) =>
-                      entry.name
-                        .toLowerCase()
-                        .includes(inputSearch.toLowerCase())
+                    .filter(
+                      (entry) =>
+                        entry.name
+                          .toLowerCase()
+                          .includes(inputSearch.toLowerCase()) &&
+                        entry.deleted === false
                     )
                     .map((project, index) => (
                       <button

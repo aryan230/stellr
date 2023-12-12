@@ -213,6 +213,8 @@ function ProjectComponent({
           {projectSettings && (
             <ProjectSettings
               projectSettings={projectSettings}
+              setProjectInsideActive={setProjectInsideActive}
+              setWhichTabisActive={setWhichTabisActive}
               setProjectSettings={setProjectSettings}
               project={project}
               setNewCollab={setNewCollab}

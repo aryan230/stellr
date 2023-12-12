@@ -40,6 +40,8 @@ function ProjectSettings({
   setProjectUpdatedProfilers,
   setUpdatedUserCollabRole,
   userType,
+  setProjectInsideActive,
+  setWhichTabisActive,
 }) {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
@@ -326,6 +328,7 @@ function ProjectSettings({
         setDelete(false);
         setProjectSettings(false);
         setNewCollab(true);
+        setProjectInsideActive(false);
       })
       .catch(function(error) {
         console.log(error);

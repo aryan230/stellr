@@ -700,6 +700,7 @@ function SideNav({
                 <button
                   onClick={async () => {
                     await dispatch(addToState("archive"));
+                    setMiddleNav(false);
                     setWhichTabisActive("archive");
                   }}
                   className="mnc-element"
