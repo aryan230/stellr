@@ -1,8 +1,7 @@
 import moment from "moment";
 import React from "react";
 
-function LogEntryMain({ d }) {
-  const date = new Date(d.date);
+function CustomLogsInside({ d }) {
   const final = moment(d.date).format("DD/MM/YYYY");
   const time = moment(d.date).format("LT");
   return (
@@ -14,4 +13,4 @@ function LogEntryMain({ d }) {
   );
 }
 
-export default LogEntryMain;
+export default CustomLogsInside;

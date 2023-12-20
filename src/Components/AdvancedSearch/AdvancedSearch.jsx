@@ -11,6 +11,7 @@ import axios from "axios";
 import URL from "./../../Data/data.json";
 import SOPSearchResult from "./SearchResults/SOPSearchResutl";
 import { toast } from "sonner";
+import DrawingSearchResult from "./SearchResults/DrawingSearchResult";
 function AdvancedSearch({
   setAdvancedSearch,
   samples,
@@ -18,6 +19,7 @@ function AdvancedSearch({
   protocols,
   tasks,
   sops,
+  drawings,
   setSampleContent,
   setSampleModal,
   setWhichTabisActive,
@@ -107,6 +109,14 @@ function AdvancedSearch({
   const newPromptforTasks = `${message} using the data ${JSON.stringify(
     tasks
   )} and do not include any explanations, only return output in RFC8259 compliant JSON response without deviation and without missing brackets`;
+
+  const newPromptforDrawings = `${message} using the data ${JSON.stringify(
+    drawings
+  )} and do not include any explanations, only return output as ids in RFC8259 compliant JSON response without deviation and without missing brackets using following format.
+  
+  The JSON response: 
+  ["", ""]
+  `;
 
   const fetchOpenAIResultCase = async () => {
     if (message.includes("samples") || message.includes("sample")) {
@@ -200,6 +210,27 @@ function AdvancedSearch({
       });
       const { data } = response;
       setResponseType("SOP");
+      setSearchResult(data.choices[0].message);
+      setLoading(false);
+      console.log("data is ", data);
+      console.log(data.choices[0].message);
+    } else if (
+      message.includes("cd") ||
+      message.includes("chemical drawing") ||
+      message.includes("chemical drawings")
+    ) {
+      setLoading(true);
+      const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: newPromptforDrawings,
+          },
+        ],
+      });
+      const { data } = response;
+      setResponseType("Drawing");
       setSearchResult(data.choices[0].message);
       setLoading(false);
       console.log("data is ", data);
@@ -368,6 +399,21 @@ function AdvancedSearch({
                         .map((sample, index) => (
                           <SOPSearchResult
                             sop={sample}
+                            index={index}
+                            responseType={responseType}
+                            setSopContent={setSopContent}
+                            setSopModal={setSopModal}
+                          />
+                        ))}
+                    {responseType === "Drawing" &&
+                      searchResult &&
+                      JSON.parse(searchResult.content)
+                        .map((e) => {
+                          return drawings.find((ele) => ele._id == e);
+                        })
+                        .map((sample, index) => (
+                          <DrawingSearchResult
+                            drawing={sample}
                             index={index}
                             responseType={responseType}
                             setSopContent={setSopContent}

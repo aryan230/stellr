@@ -1,7 +1,7 @@
-import { Bell, InfoIcon, X } from "lucide-react";
+import { Bell, ClipboardCheck, InfoIcon, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon, PlusIcon } from "@heroicons/react/solid";
 import { Fragment } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useSelector } from "react-redux";
@@ -199,6 +199,16 @@ function Notification() {
       >
         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="notification-box">
+            {data && data.length === 0 && (
+              <div className="text-center font-body p-5">
+                <ClipboardCheck className="mx-auto h-12 w-12 text-gray-400" />
+
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                  No Notifications
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">You are all set.</p>
+              </div>
+            )}
             {data &&
               data.length > 0 &&
               data

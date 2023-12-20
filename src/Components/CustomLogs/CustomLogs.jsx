@@ -1,21 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Fragment, useState } from "react";
 import { Dialog, Transition, Menu } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
-import LogEntryMain from "./LogEntryMain";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { listMyEntries } from "../../redux/actions/entryActions";
+import CustomLogsInside from "./CustomLogsInside";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function LogsModal({ open, setOpen, logs, name }) {
+function CustomLogs({ open, setOpen, logs, name, project, tab }) {
+  const dispatch = useDispatch();
+  const entriesListMy = useSelector((state) => state.entriesListMy);
+  const {
+    entries,
+    loading: loadingEntries,
+    error: errorEntries,
+  } = entriesListMy;
+
+  useEffect(() => {
+    dispatch(listMyEntries(project._id));
+  }, [dispatch]);
+
   const exportAuditLog = async (e) => {
     e.preventDefault();
     const doc = new jsPDF();
-    const templateOptions = logs
-      .sort(function(a, b) {
+    console.log(tab.logs);
+    const templateOptions = entries
+      .find((e) => e._id == tab._id)
+      .logs.sort(function(a, b) {
         return new Date(b.date) - new Date(a.date);
       })
       .map(({ userEmail, message, date }) => [
@@ -29,7 +47,7 @@ function LogsModal({ open, setOpen, logs, name }) {
       head: [["Email", "Message", "Date"]],
       body: templateOptions,
     });
-    doc.save(`stellr-${name}.pdf`);
+    doc.save(`stellr-${tab.name}.pdf`);
   };
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -56,7 +74,7 @@ function LogsModal({ open, setOpen, logs, name }) {
                   <div className="py-6 px-4 bg-indigo-700 sm:px-6">
                     <div className="flex items-center justify-between">
                       <Dialog.Title className="text-lg font-medium text-white">
-                        Logs
+                        {tab.name} - Logs
                       </Dialog.Title>
                       <div className="ml-3 h-7 flex items-center">
                         <button
@@ -127,15 +145,15 @@ function LogsModal({ open, setOpen, logs, name }) {
                       <h2 className="w-[50%] text-center">Message</h2>
                       <h2 className="w-[30%] text-center">Date & Time</h2>
                     </div>
-
-                    {logs &&
-                      logs.length > 0 &&
-                      logs
-                        .sort(function(a, b) {
+                    {entries &&
+                      entries.find((e) => e._id == tab._id) &&
+                      entries.find((e) => e._id == tab._id).logs &&
+                      entries
+                        .find((e) => e._id == tab._id)
+                        .logs.sort(function(a, b) {
                           return new Date(b.date) - new Date(a.date);
                         })
-                        .map((d) => <LogEntryMain d={d} />)}
-
+                        .map((d) => <CustomLogsInside d={d} />)}
                     {/* /End replace */}
                   </div>
                 </div>
@@ -148,4 +166,4 @@ function LogsModal({ open, setOpen, logs, name }) {
   );
 }
 
-export default LogsModal;
+export default CustomLogs;

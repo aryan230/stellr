@@ -127,7 +127,7 @@ function ProtocolModal({
           }}
         />
       )}
-      <LogsModal setOpen={setLogs} open={logs} task={doc} />
+      <LogsModal setOpen={setLogs} open={logs} logs={doc ? doc.logs : []} />
       {updateProtocolModal && (
         <UpdateProtocolModal
           doc={doc}

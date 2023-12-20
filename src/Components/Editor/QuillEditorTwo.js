@@ -105,6 +105,7 @@ import SubmitForApproval from "../Approval/SubmitForApproval";
 import { addEntryLogs } from "../Functions/addEntryLogs";
 import ViewDetails from "../Approval/ViewDetails";
 import { addNotification } from "../Functions/addNotification";
+import CustomLogs from "../CustomLogs/CustomLogs";
 
 const zip = new JSZip();
 
@@ -249,6 +250,7 @@ function TextEditorTwo({
   const [chemicalDrawing, setChemicalDrawing] = useState(false);
   const [logs, setLogs] = useState(false);
   const [savingData, setSavingData] = useState(false);
+  const [customLogs, setCustomLogs] = useState(false);
   const sampleListMy = useSelector((state) => state.sampleListMy);
   const {
     samples,
@@ -707,6 +709,13 @@ function TextEditorTwo({
           }}
         />
       }
+      <CustomLogs
+        open={customLogs}
+        setOpen={setCustomLogs}
+        logs={[]}
+        project={project}
+        tab={tab}
+      />
       {
         <ConformationModal
           open={deleteEnt}
@@ -1063,7 +1072,8 @@ function TextEditorTwo({
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                setIsDrawerOpen(true);
+                                // setIsDrawerOpen(true);
+                                setCustomLogs(true);
                               }}
                               className={classNames(
                                 active

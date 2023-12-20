@@ -17,6 +17,8 @@ import {
 } from "../redux/actions/taskActions";
 import { listMySops } from "../redux/actions/sopActions";
 import { Helmet } from "react-helmet";
+import URL from "./../Data/data.json";
+import axios from "axios";
 
 function SearchPage({
   setSampleContent,
@@ -108,6 +110,46 @@ function SearchPage({
 
   const getAllMyEntries = async () => {};
 
+  //Chemical Drawing
+  const [drawings, setDrawings] = useState();
+  const getMyCDs = async () => {
+    var config = {
+      method: "get",
+      url: `${URL}api/cd`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log(JSON.stringify(response.data));
+        setDrawings(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  //Reports
+  const [reports, setReports] = useState(false);
+  const getReports = async () => {
+    var config = {
+      method: "get",
+      url: `${URL}api/reports/myreports`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    axios(config)
+      .then(function(response) {
+        setReports(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     dispatch(listMyProjects());
     dispatch(listMyCollabProjects());
@@ -117,6 +159,8 @@ function SearchPage({
     dispatch(listMySops(userInfo._id));
     dispatch(listMyTasksPersonal());
     dispatch(listMyCollabTasks());
+    getMyCDs();
+    getReports();
   }, [dispatch]);
 
   return (
@@ -130,7 +174,7 @@ function SearchPage({
         />
       </Helmet>
       <div className="search-page-inside">
-        <div className="search-page-input-element">
+        <div className="search-page-input-element font-sans">
           {advancedSearch && (
             <AdvancedSearch
               setAdvancedSearch={setAdvancedSearch}
@@ -148,6 +192,7 @@ function SearchPage({
               setProtocolModal={setProtocolModal}
               setSopContent={setSopContent}
               setSopModal={setSopModal}
+              drawings={drawings}
             />
           )}
           <div className="input-button-attached">
@@ -193,7 +238,7 @@ function SearchPage({
           {" "}
           <div className="relative overflow-x-auto mt-4 rounded-lg">
             <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 font-body">
                 <tr>
                   <th scope="col" className="px-6 py-3">
                     Record Id
@@ -412,6 +457,106 @@ function SearchPage({
                               e.preventDefault();
                               setSopContent(s);
                               setSopModal(true);
+                            }}
+                          >
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                {drawings &&
+                  drawings
+                    .filter(
+                      (entry) =>
+                        entry.name
+                          .toLowerCase()
+                          .includes(inputSearch.toLowerCase()) ||
+                        entry._id
+                          .toLowerCase()
+                          .includes(inputSearch.toLowerCase())
+                    )
+                    .map((s) => (
+                      <tr className="bg-white border-b">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                        >
+                          {s._id}
+                        </th>
+                        <td className="px-6 py-4">{s.name}</td>
+                        <td className="px-6 py-4">Chemical Drawing</td>
+                        <td className="px-6 py-4">
+                          {
+                            new Date(s.createdAt)
+                              .toLocaleString("en-GB")
+                              .split(",")[0]
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          {
+                            new Date(s.updatedAt)
+                              .toLocaleString("en-GB")
+                              .split(",")[0]
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          <a
+                            href="#"
+                            className="text-indigo-600"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              // setSopContent(s);
+                              // setSopModal(true);
+                            }}
+                          >
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                {reports &&
+                  reports
+                    .filter(
+                      (entry) =>
+                        entry.name
+                          .toLowerCase()
+                          .includes(inputSearch.toLowerCase()) ||
+                        entry._id
+                          .toLowerCase()
+                          .includes(inputSearch.toLowerCase())
+                    )
+                    .map((s) => (
+                      <tr className="bg-white border-b">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                        >
+                          {s._id}
+                        </th>
+                        <td className="px-6 py-4">{s.name}</td>
+                        <td className="px-6 py-4">Report</td>
+                        <td className="px-6 py-4">
+                          {
+                            new Date(s.createdAt)
+                              .toLocaleString("en-GB")
+                              .split(",")[0]
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          {
+                            new Date(s.updatedAt)
+                              .toLocaleString("en-GB")
+                              .split(",")[0]
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          <a
+                            href="#"
+                            className="text-indigo-600"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              // setSopContent(s);
+                              // setSopModal(true);
                             }}
                           >
                             View

@@ -72,10 +72,7 @@ function DrawerHistory({ quill, tab, project, open, setOpen }) {
             </svg>
             <h2>History</h2>
           </div>
-          <form
-            action="
-      "
-          >
+          <form action="">
             <label htmlFor="">Name</label>
             <input
               value={tab.name}

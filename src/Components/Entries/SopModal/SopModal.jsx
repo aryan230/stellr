@@ -13,6 +13,7 @@ import SpeedDialAction from "@mui/material/SpeedDialAction";
 import { Menu, Transition } from "@headlessui/react";
 import { Eye, MoreHorizontalIcon } from "lucide-react";
 import ShareSopModal from "./ShareSopModal";
+import LogsModal from "../../Logs/LogsModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -27,6 +28,7 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
   const [images, setImages] = useState(doc.image && JSON.parse(doc.image));
   const [files, setFiles] = useState(doc.image && JSON.parse(doc.file));
   const [share, setShare] = useState(false);
+  const [logs, setLogs] = useState(false);
   const actions = [
     {
       icon: <ShieldIcon />,
@@ -54,6 +56,7 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
           doc={doc}
         />
       )}
+      <LogsModal setOpen={setLogs} open={logs} logs={doc ? doc.logs : []} />
       <Drawer
         anchor="right"
         open={isDrawerOpenLogs}
@@ -102,8 +105,8 @@ function SopModal({ setSopModal, doc, setWhichTabisActive }) {
                             href="#"
                             onClick={(e) => {
                               e.preventDefault();
-                              setIsDrawerOpenLogs(true);
-                              // setLogs(true);
+                              // setIsDrawerOpenLogs(true);
+                              setLogs(true);
                             }}
                             className={classNames(
                               active

@@ -13,6 +13,7 @@ import AntiBody from "../../Modals/Sample/AntiBody";
 import AntibodyModal from "./Sample/AntibodyModal";
 import CustomSampleModal from "./Sample/CustomSampleModal";
 import MainModalTailwind from "../../../UI/MainModals/MainModalTailwind";
+import LogsModal from "../../Logs/LogsModal";
 
 function SampleModal({
   doc,
@@ -25,9 +26,10 @@ function SampleModal({
   const [isDrawerOpenLogs, setIsDrawerOpenLogs] = useState(false);
   const [isDrawerVersion, setIsDrawerVersion] = useState(false);
   let { loading, error, userInfo } = userLogin;
-
+  const [logs, setLogs] = useState(false);
   return (
     <div className="modal">
+      <LogsModal setOpen={setLogs} open={logs} logs={doc.logs} />
       <Drawer
         anchor="right"
         open={isDrawerOpenLogs}
@@ -58,6 +60,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
       {doc.type === "Subject/Patient" && (
@@ -69,6 +72,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
       {doc.type === "Clinical" && (
@@ -80,6 +84,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
       {doc.type === "Molecular Biology" && (
@@ -91,6 +96,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
       {doc.type === "Reagent" && (
@@ -102,6 +108,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
       {doc.type === "Primer" && (
@@ -113,6 +120,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
       {doc.type === "Antibody" && (
@@ -124,6 +132,7 @@ function SampleModal({
           setSampleUpdate={setSampleUpdate}
           setIsDrawerOpenLogs={setIsDrawerOpenLogs}
           setIsDrawerVersion={setIsDrawerVersion}
+          setLogs={setLogs}
         />
       )}
     </div>
