@@ -1,4 +1,5 @@
 import { Chip } from "@mui/material";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 
 function InsideUsers({ e, data }) {
@@ -18,6 +19,13 @@ function InsideUsers({ e, data }) {
   useEffect(() => {
     findOrgCollab();
   }, []);
+  console.log(
+    lastOnline &&
+      moment(lastOnline)
+        .locale("en-in")
+        .format("LT")
+  );
+  // const time = moment(d.date).format("LT");
   return (
     <tr className="bg-white border-b">
       <th
@@ -36,17 +44,14 @@ function InsideUsers({ e, data }) {
       <td className="px-6 py-4">
         <a
           href="#"
-          className="text-indigo-600"
+          className="text-gray-600"
           onClick={async (e) => {
             e.preventDefault();
           }}
         >
           {lastOnline == "Not Active"
             ? "Not Active"
-            : `${
-                new Date(lastOnline).toLocaleString("en-GB").split(",")[0]
-              },${" "}
-          ${new Date(lastOnline).toLocaleString().split(",")[1]}`}
+            : `${moment(new Date(lastOnline)).format("DD/MM/YYYY")}`}
 
           {/* {e.activeStatus.length > 0 ? (
             e.activeStatus

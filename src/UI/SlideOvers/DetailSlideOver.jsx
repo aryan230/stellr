@@ -97,9 +97,13 @@ function DetailSlideOver({ open, setOpen, data }) {
                           <dd className="text-gray-900">{data.modified}</dd>
                         </div>
                         <div className="py-3 flex justify-between text-sm font-medium">
+                          <dt className="text-gray-500">Last modified by</dt>
+                          <dd className="text-gray-900">{data.createdby}</dd>
+                        </div>
+                        {/* <div className="py-3 flex justify-between text-sm font-medium">
                           <dt className="text-gray-500">Size</dt>
                           <dd className="text-gray-900">{data.size}</dd>
-                        </div>
+                        </div> */}
                       </dl>
                     </div>
                     {/* <div>
@@ -149,7 +153,7 @@ function DetailSlideOver({ open, setOpen, data }) {
                             </li>
                           ))}
 
-                        <li className="py-2 flex justify-between items-center">
+                        {/* <li className="py-2 flex justify-between items-center">
                           <button
                             type="button"
                             className="group -ml-1 bg-white p-1 rounded-md flex items-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -164,7 +168,7 @@ function DetailSlideOver({ open, setOpen, data }) {
                               Share
                             </span>
                           </button>
-                        </li>
+                        </li> */}
                       </ul>
                     </div>
                     <div className="flex">

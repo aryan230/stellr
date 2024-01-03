@@ -150,6 +150,42 @@ function SearchPage({
         console.log(error);
       });
   };
+
+  // Entries
+  const [projectStats, setProjectStats] = useState(false);
+  const getProjectStats = async () => {
+    var data = JSON.stringify({
+      projectId: newArrProjects.map(({ _id, name }) => ({ _id, name })),
+    });
+
+    var config = {
+      method: "post",
+      url: `${URL}api/projects/entry-data`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log(response.data);
+        setProjectStats(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    if (newArrProjects) {
+      if (!projectStats) {
+        getProjectStats();
+      }
+    }
+  }, [newArrProjects, projectStats]);
+
   useEffect(() => {
     dispatch(listMyProjects());
     dispatch(listMyCollabProjects());
@@ -180,6 +216,7 @@ function SearchPage({
               setAdvancedSearch={setAdvancedSearch}
               samples={samples ? samples : []}
               projects={newArrProjects ? newArrProjects : []}
+              entries={projectStats ? projectStats : []}
               protocols={protocols ? protocols : []}
               sops={sops ? sops : []}
               setSampleContent={setSampleContent}
@@ -564,6 +601,48 @@ function SearchPage({
                         </td>
                       </tr>
                     ))}
+                {projectStats &&
+                  projectStats.stats.map((p) => {
+                    p.entries.map((s) => (
+                      <tr className="bg-white border-b">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                        >
+                          {s._id}
+                        </th>
+                        <td className="px-6 py-4">{s.name}</td>
+                        <td className="px-6 py-4">Entry</td>
+                        <td className="px-6 py-4">
+                          {
+                            new Date(s.createdAt)
+                              .toLocaleString("en-GB")
+                              .split(",")[0]
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          {
+                            new Date(s.updatedAt)
+                              .toLocaleString("en-GB")
+                              .split(",")[0]
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          <a
+                            href="#"
+                            className="text-indigo-600"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              // setSopContent(s);
+                              // setSopModal(true);
+                            }}
+                          >
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ));
+                  })}
               </tbody>
             </table>
           </div>

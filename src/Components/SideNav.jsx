@@ -40,6 +40,7 @@ import {
   User,
 } from "lucide-react";
 import CreateKetcher from "./Modals/CreateKetcher";
+import DataExportNew from "./DataExport/DataExportNew";
 
 function SideNav({
   setMiddleNav,
@@ -181,7 +182,9 @@ function SideNav({
           setCDUpdate={setCDUpdate}
         />
       )}
-      {dataExport && <DataExport setDataExport={setDataExport} />}
+      {dataExport && (
+        <DataExportNew setOpen={setDataExport} open={dataExport} />
+      )}
       {entryModal && (
         <CreateEntry
           setEntryModal={setEntryModal}

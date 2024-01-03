@@ -1,6 +1,7 @@
 import React from "react";
 import ListSampleOther from "../../Components/ListSampleComponent/ListSampleOther";
 import ListSampleSubject from "../../Components/ListSampleComponent/ListSampleSubject";
+import moment from "moment";
 
 function ASamples({ data }) {
   return (
@@ -46,12 +47,8 @@ function ASamples({ data }) {
                       e.preventDefault();
                     }}
                   >
-                    {
-                      new Date(e.createdAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0]
-                    }
-                    , {new Date(e.createdAt).toLocaleString().split(",")[1]}
+                    {moment(new Date(e.createdAt)).format("DD/MM/YYYY")},{" "}
+                    {moment(e.createdAt).format("LT")}
                   </a>
                 </td>
               </tr>

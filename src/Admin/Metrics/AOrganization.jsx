@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 
 function AOrganization({ data }) {
   return (
@@ -44,12 +45,8 @@ function AOrganization({ data }) {
                       e.preventDefault();
                     }}
                   >
-                    {
-                      new Date(e.createdAt)
-                        .toLocaleString("en-GB")
-                        .split(",")[0]
-                    }
-                    , {new Date(e.createdAt).toLocaleString().split(",")[1]}
+                    {moment(new Date(e.createdAt)).format("DD/MM/YYYY")},{" "}
+                    {moment(e.createdAt).format("LT")}
                   </a>
                 </td>
               </tr>
