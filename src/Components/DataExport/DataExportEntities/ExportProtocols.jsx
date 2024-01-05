@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RadioGroup } from "@headlessui/react";
+import { RadioGroup, Switch } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 import { PaperClipIcon } from "@heroicons/react/solid";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,9 @@ import html2pdf from "html2pdf.js";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import htmlDocx from "html-docx-fixed/dist/html-docx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 const zip = new JSZip();
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,6 +22,8 @@ function classNames(...classes) {
 
 function ExportProtocols({ setLoader }) {
   const dispatch = useDispatch();
+  const [enabled, setEnabled] = useState(false);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -41,21 +46,41 @@ function ExportProtocols({ setLoader }) {
     dispatch(listMyProtocols(userInfo._id));
   }, [dispatch]);
 
-  const singleConvert = async (p) => {
-    let entry = zip.folder("protocols");
+  const singleConvert = async (p, auditLog, auditType, type) => {
+    let entry = zip.folder("protocol");
     let data =
       (await p.data) &&
       JSON.parse(p.data) &&
       Object.entries(JSON.parse(p.data));
-    let html = await `
-    ${data.map((d) => `<h1>${d[0]}</h1> <br/> ${d[1]}`)}
-    `;
+    let html = await `${data.map((d) => `<h1>${d[0]}</h1> <br/> ${d[1]}`)}`;
 
     // html2pdf()
     //   .from(html)
     //   .saveAs("protoco");
     var converted = await htmlDocx.asBlob(html);
-    saveAs(converted, "test.docx");
+    entry.file(`${p.title}-${p._id}.docx`, converted);
+    const doc = new jsPDF();
+    const templateOptions =
+      p.logs &&
+      p.logs.map(({ userEmail, message, date }) => [
+        userEmail,
+        message,
+        new Date(date).toLocaleString(),
+      ]);
+
+    autoTable(doc, { html: "#my-table" });
+    autoTable(doc, {
+      head: [["Email", "Message", "Date"]],
+      body: templateOptions,
+    });
+    let finalDoc = doc.output("arraybuffer");
+    if (auditLog) {
+      entry.file(`${JSON.parse(p.data).sampleName}-${p._id}.pdf`, finalDoc);
+    }
+
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, `protocols-stellr-${userInfo._id}.zip`);
+    });
   };
 
   const bulkExport = async () => {
@@ -84,6 +109,12 @@ function ExportProtocols({ setLoader }) {
       }, 3000);
     });
   };
+
+  const memoryOptions = [
+    { name: "DOCX", inStock: true },
+    { name: "PDF", inStock: false },
+  ];
+  const [mem, setMem] = useState(memoryOptions[0]);
 
   return (
     <div className="py-6 px-4 sm:p-6 lg:pb-8">
@@ -163,20 +194,90 @@ function ExportProtocols({ setLoader }) {
                     ))}
                 </select>
                 {selectedProject && (
-                  <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
-                    <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                      <dl className="sm:divide-y sm:divide-gray-200">
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-500">
-                            Name
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {selectedProject.title}
-                          </dd>
-                        </div>
-                      </dl>
+                  <div className="pt-10">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-sm font-medium text-gray-900">
+                        Format
+                      </h2>
+                      <a
+                        href="#"
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        See export formats
+                      </a>
                     </div>
+
+                    <RadioGroup value={mem} onChange={setMem} className="mt-2">
+                      <RadioGroup.Label className="sr-only">
+                        Choose a memory option
+                      </RadioGroup.Label>
+                      <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+                        {memoryOptions.map((option) => (
+                          <RadioGroup.Option
+                            key={option.name}
+                            value={option}
+                            className={({ active, checked }) =>
+                              classNames(
+                                option.inStock
+                                  ? "cursor-pointer focus:outline-none"
+                                  : "opacity-25 cursor-not-allowed",
+                                mem.name === option.name
+                                  ? "ring-2 ring-offset-2 ring-indigo-500"
+                                  : "",
+                                checked
+                                  ? "bg-indigo-600 border-transparent text-white hover:bg-indigo-700"
+                                  : "bg-white border-gray-200 text-gray-900 hover:bg-gray-50",
+                                "border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1"
+                              )
+                            }
+                            disabled={!option.inStock}
+                          >
+                            <RadioGroup.Label as="p">
+                              {option.name}
+                            </RadioGroup.Label>
+                          </RadioGroup.Option>
+                        ))}
+                      </div>
+                    </RadioGroup>
                   </div>
+                )}{" "}
+                {selectedProject && (
+                  <Switch.Group
+                    as="div"
+                    className="flex items-center justify-between mt-8"
+                  >
+                    <span className="flex-grow flex flex-col">
+                      <Switch.Label
+                        as="span"
+                        className="text-sm font-medium text-gray-900"
+                        passive
+                      >
+                        Audit logs
+                      </Switch.Label>
+                      <Switch.Description
+                        as="span"
+                        className="text-sm text-gray-500"
+                      >
+                        Would you like to export the entity with audit logs?
+                      </Switch.Description>
+                    </span>
+                    <Switch
+                      checked={enabled}
+                      onChange={setEnabled}
+                      className={classNames(
+                        enabled ? "bg-indigo-600" : "bg-gray-200",
+                        "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      )}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={classNames(
+                          enabled ? "translate-x-5" : "translate-x-0",
+                          "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+                        )}
+                      />
+                    </Switch>
+                  </Switch.Group>
                 )}
               </div>
             ) : (
@@ -205,7 +306,7 @@ function ExportProtocols({ setLoader }) {
                       onClick={(e) => {
                         e.preventDefault();
 
-                        singleConvert(selectedProject);
+                        singleConvert(selectedProject, enabled);
                       }}
                       className="ml-5 bg-indigo-700 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
